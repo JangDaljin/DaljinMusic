@@ -1,8 +1,13 @@
 const express = require('express')
 const router = express.Router()
 
-router.post('/login' , (req , res) => {
 
+router.get('/' , (req, res) => {
+    res.redirect('/index.html')
+})
+
+router.post('/login' , (req , res) => {
+    console.log("login")
 })
 
 
