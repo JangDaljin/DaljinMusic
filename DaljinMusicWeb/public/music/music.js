@@ -8859,7 +8859,7 @@ if (content.locals) {
 
 exports = module.exports = __webpack_require__(15)(false);
 // Module
-exports.push([module.i, ".test {\r\n    background-color: blue;\r\n}", ""]);
+exports.push([module.i, ".test {\r\n    background-color: pink;\r\n}", ""]);
 
 
 /***/ })

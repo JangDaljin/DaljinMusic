@@ -8432,16 +8432,29 @@ function (_Component) {
   _createClass(IndexView, [{
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
-        className: "test"
-      }, "HELLO REACT"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "WHAT THE"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "maindiv"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        className: "mainform",
         method: "post",
         action: "/login"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+        className: "maintable"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "\uC544\uC774\uB514"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "idinput",
         type: "text"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "\uBE44\uBC00\uBC88\uD638"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "pwinput",
         type: "password"
-      })));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "signinbutton",
+        type: "button",
+        value: "\uC811\uC18D"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "signupbutton",
+        type: "button",
+        value: "\uC778\uC99D\uC2E0\uCCAD"
+      })))))));
     }
   }]);
 
@@ -8478,7 +8491,7 @@ if (content.locals) {
 
 exports = module.exports = __webpack_require__(15)(false);
 // Module
-exports.push([module.i, ".test {\r\n    background-color: blue;\r\n}", ""]);
+exports.push([module.i, ".maindiv {\r\n    margin-right: auto;\r\n    margin-left: auto;\r\n\r\n    border: 1px solid black;\r\n}\r\n\r\n.mainform {\r\n\r\n}\r\n\r\n.maintable {\r\n    \r\n}\r\n\r\n.maintable > td {\r\n    border: 1px solid black;\r\n}\r\n\r\n.idinput {\r\n    \r\n}\r\n\r\n.pwinput {\r\n    \r\n}\r\n\r\n.signinbutton {\r\n\r\n}\r\n\r\n.signupbutton {\r\n\r\n}", ""]);
 
 
 /***/ }),

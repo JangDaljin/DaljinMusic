@@ -1,3 +1,34 @@
-.test {
-    background-color: blue;
+.maindiv {
+    margin-right: auto;
+    margin-left: auto;
+
+    border: 1px solid black;
+}
+
+.mainform {
+
+}
+
+.maintable {
+    
+}
+
+.maintable > td {
+    border: 1px solid black;
+}
+
+.idinput {
+    
+}
+
+.pwinput {
+    
+}
+
+.signinbutton {
+
+}
+
+.signupbutton {
+
 }
