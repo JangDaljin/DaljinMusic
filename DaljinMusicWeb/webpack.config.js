@@ -3,14 +3,14 @@ const path = require("path");
 module.exports = {
   entry: {
       "index": "./src/index.js",
-      "music": "./src/music.js"
+      "music/music": "./src/music.js"
   },
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname + "/build")
+    path: path.resolve(__dirname + "/public")
   },
   devServer: {
-    contentBase: path.resolve("./build"),
+    contentBase: './public',
     index: "index.html",
     port: "8888"
   },
