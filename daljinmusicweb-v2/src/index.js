@@ -2,10 +2,10 @@ import * as serviceWorker from './serviceWorker';
 
 import React from 'react'
 import ReactDom from 'react-dom'
-import IndexView from './indexView'
+import app from './app'
 
 
-ReactDom.render(<IndexView /> , document.getElementById('root'));
+ReactDom.render(<app /> , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
