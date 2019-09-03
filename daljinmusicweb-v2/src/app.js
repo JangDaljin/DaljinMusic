@@ -1,25 +1,22 @@
 import React , { Component } from 'react'
-import './indexView.css'
 import {
     BrowserRouter,
-    Route,
-    Link
+    Route
 } from 'react-router-dom'
-import SignIn from './signIn'
 
+import IndexView from './indexView'
+import MusicView from './musicView'
 
-const app = () => {
-    
-}
 
 class app extends Component {
 
     render () {
-        
+        return (
         <BrowserRouter>
-
+            <Route exact path="/" component={IndexView} />
+            <Route path="/music" component={MusicView} />
         </BrowserRouter>
-        
+        )
     }
 }
 
