@@ -15,9 +15,6 @@ body {
     background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
 }
 
-div {
-    
-}
 
 .rootdiv {
     position: absolute;
@@ -28,7 +25,7 @@ div {
     clear: both;
     
     background-image: linear-gradient(-225deg, #7DE2FC 0%, #B9B6E5 100%);
-    border-radius: 1.2em;
+    border-radius: 8em;
     border: 0.4em solid #666;
 }
 
@@ -167,7 +164,16 @@ td {
 }
 
 
-@media ( max-width : 1300px ) {
+.idbox , .pwbox {
+    border: none;
+    border: 2px solid #006699;
+    border-radius: 0.4em;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+}
+
+
+@media ( max-width : 1350px ) {
     .rootdiv {
         top: 5%;
         bottom:5%;
@@ -228,7 +234,7 @@ td {
 
     .logodiv {
         top: 90%;
-        width: 40%;
+        width: 50%;
         transform: translate(-50%, -100%);
         background-color: #fff;
         border-radius: 0.5em;

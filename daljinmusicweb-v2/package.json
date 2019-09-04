@@ -12,8 +12,10 @@
     "babel-loader": "8.0.6",
     "babel-plugin-named-asset-import": "^0.3.3",
     "babel-preset-react-app": "^9.0.1",
+    "body-parser": "^1.19.0",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "cors": "^2.8.5",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
@@ -135,5 +137,5 @@
       "react-app"
     ]
   },
-  "proxy": "http://localhost/8888"
+  "proxy": "http://localhost:8888"
 }
