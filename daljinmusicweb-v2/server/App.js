@@ -6,9 +6,8 @@ const express = require('express')
 , cors = require('cors')
 
 //내부모듈
-const indexRouter = require('./routes/Index')
+const loginRouter = require('./routes/Login')
 , musicRouter = require('./routes/Music')
-, loginRouter = require('./routes/Login')
 
 
 var app = express()
@@ -17,12 +16,12 @@ var app = express()
 //크로스 브라우저 가능
 app.use(cors())
 
-//바디파서 사용
+//바디파서 사용(POST 사용)
 app.use(bodyparser.urlencoded({extended:true}))
 app.use(bodyparser.json())
 
 //공개 경로 설정
-app.use('/' , express.static('../public'))
+//app.use('/' , express.static('../public'))
 
 //세션
 app.use(session(
@@ -39,7 +38,6 @@ app.use(session(
 //라우팅
 app.use('/music' , musicRouter)
 app.use('/login' , loginRouter)
-app.use('/' , indexRouter)
 
 
 http.createServer(app).listen(8888)

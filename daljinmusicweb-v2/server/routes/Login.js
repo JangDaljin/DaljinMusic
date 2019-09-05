@@ -6,8 +6,15 @@ router.post('/' , (req , res) => {
     const userid = req.body.userid || ''
     const userpw = req.body.userpw || ''
 
+    console.dir(req.body)
 
-    res.json({ "isOK" : "jksdfnasdfasdfasdfasfdsdf" })
+
+    var isOK = false;
+    if(userid === 'daljin' && userpw === 'daljin') {
+        isOK = true;
+    }
+
+    res.json({ "isOK" : isOK})
 })
 
 

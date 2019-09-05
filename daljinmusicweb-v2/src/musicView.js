@@ -1,7 +1,5 @@
 import React , {Component} from 'react'
-
-
-
+import ListView from './listView'
 
 class MusicView extends Component {
 
@@ -10,7 +8,22 @@ class MusicView extends Component {
     render () {
         return (
         <div>
-            <h1>musicview</h1>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <ListView />
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            <ListView />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
         </div>
         )
     }

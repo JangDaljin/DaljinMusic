@@ -12,10 +12,10 @@ class app extends Component {
 
     render () {
         return (
-        <BrowserRouter>
-            <Route exact path="/" component={IndexView} />
-            <Route path="/music" component={MusicView} />
-        </BrowserRouter>
+            <BrowserRouter>
+                <Route exact path="/" component={IndexView} />
+                <Route path="/music" component={MusicView} />
+            </BrowserRouter>
         )
     }
 }

@@ -20,13 +20,15 @@ class IndexView extends Component {
         const userid = this.state.userid
         const userpw = this.state.userpw
         
+        const data = {
+            'userid' : userid,
+            'userpw' : userpw
+        }
+
         const req = { 
-            body : {
-                'userid' : userid,
-                'userpw' : userpw
-            },
+            body : JSON.stringify(data),
             headers : {
-                'contentType' : 'json'
+                'Content-Type' : 'application/json'
             },
             method : 'POST'
             
@@ -36,8 +38,11 @@ class IndexView extends Component {
         .then(res => res.json())
         .then(json =>  {
             console.log(json)
-            this.setState({isOK : json.isOK})}
-            )
+            if(json.isOK === true) {
+                console.log("OK");
+                this.props.history.push('/music');
+            }
+        })
         .catch(err => console.log(err))
     }
 
@@ -73,10 +78,6 @@ class IndexView extends Component {
                                     <tr>
                                         <td>비밀번호</td>
                                         <td><input className="pwbox" type="password" name="userpw" onChange={this.doPwChange} /></td>
-                                    </tr>
-                                    <tr>
-                                        <td>TEST</td>
-                                        <td>{this.state.isOK}</td>
                                     </tr>
                                 </tbody>
                             </table>
