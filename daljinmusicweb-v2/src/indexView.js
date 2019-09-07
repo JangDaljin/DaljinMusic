@@ -1,15 +1,13 @@
 import React , { Component } from 'react'
 import './indexView.css'
 
+import { connect } from 'react-redux'
+import * as Actions from './actions/login'
 class IndexView extends Component {
     
     constructor (props) {
         super(props)
-        this.state = {
-            userid : '',
-            userpw : '',
-            isOK : '대기'
-        }
+
         this.onLoginButtonClick = this.onLoginButtonClick.bind(this)
         this.doIdChange = this.doIdChange.bind(this)
         this.doPwChange = this.doPwChange.bind(this)
@@ -17,9 +15,9 @@ class IndexView extends Component {
 
     onLoginButtonClick = (e) => {
         e.preventDefault()
-        const userid = this.state.userid
-        const userpw = this.state.userpw
-        
+        const userid = this.props.userid
+        const userpw = this.props.userpw
+
         const data = {
             'userid' : userid,
             'userpw' : userpw
@@ -48,12 +46,12 @@ class IndexView extends Component {
 
     doIdChange = (e) => {
         const value = e.target.value
-        this.setState({userid: value})
+        this.props.handleUserIdChange(value)
     }
 
     doPwChange = (e) => {
         const value = e.target.value
-        this.setState({userpw: value}) 
+        this.props.handleUserPwChange(value)
     }
 
     render () {
@@ -90,7 +88,21 @@ class IndexView extends Component {
 
 }
 
+const mapStateToProps = (state) => {
+    return {
+        userid : state.Login.userid,
+        userpw : state.Login.userpw
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleUserIdChange : (id) => { dispatch(Actions.useridChange(id))},
+        handleUserPwChange : (pw) => { dispatch(Actions.userpwChange(pw))}
+    }
+}
 
 
 
-export default IndexView
+
+export default connect(mapStateToProps , mapDispatchToProps)(IndexView)

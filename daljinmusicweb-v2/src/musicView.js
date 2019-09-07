@@ -1,14 +1,12 @@
 import React , {Component} from 'react'
 import ListView from './listView'
-
+import './musicView.css'
 class MusicView extends Component {
-
-
 
     render () {
         return (
-        <div>
-            <table>
+        <div className="musictopdiv">
+            <table className="musicListLayoutTable">
                 <tbody>
                     <tr>
                         <td>
@@ -23,7 +21,9 @@ class MusicView extends Component {
                     </tr>
                 </tbody>
             </table>
-            
+            <div className="musicPlayer">
+                <h1>TEST</h1>
+            </div>
         </div>
         )
     }
