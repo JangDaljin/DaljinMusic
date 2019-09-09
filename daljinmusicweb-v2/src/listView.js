@@ -2,12 +2,6 @@ import React , { Component } from 'react'
 import './listView.css'
 class ListView extends Component {
 
-    constructor (props) {
-        super(props)
-
-
-    }
-
 
     render () {
 

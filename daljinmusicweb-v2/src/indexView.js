@@ -2,7 +2,10 @@ import React , { Component } from 'react'
 import './indexView.css'
 
 import { connect } from 'react-redux'
-import * as Actions from './actions/login'
+
+
+import * as Actions from './reduxmodules/login'
+
 class IndexView extends Component {
     
     constructor (props) {
@@ -13,35 +16,24 @@ class IndexView extends Component {
         this.doPwChange = this.doPwChange.bind(this)
     }
 
+    componentDidMount () {
+        if(this.props.isAuthenticated) {
+            this.props.history.push('/music')
+        }
+    }
+
+    componentDidUpdate (prevProps , prevState) {
+        //console.log(this.props.isAuthenticated);
+        if(this.props.isAuthenticated) {
+            this.props.history.push('/music')
+        }
+    }
+
+    
+
     onLoginButtonClick = (e) => {
         e.preventDefault()
-        const userid = this.props.userid
-        const userpw = this.props.userpw
-
-        const data = {
-            'userid' : userid,
-            'userpw' : userpw
-        }
-
-        const req = { 
-            body : JSON.stringify(data),
-            headers : {
-                'Content-Type' : 'application/json'
-            },
-            method : 'POST'
-            
-        }
-
-        fetch('http://localhost:8888/login' , req)
-        .then(res => res.json())
-        .then(json =>  {
-            console.log(json)
-            if(json.isOK === true) {
-                console.log("OK");
-                this.props.history.push('/music');
-            }
-        })
-        .catch(err => console.log(err))
+        this.props.handleLogin()
     }
 
     doIdChange = (e) => {
@@ -90,15 +82,17 @@ class IndexView extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        userid : state.Login.userid,
-        userpw : state.Login.userpw
+        userid : state.login.userid,
+        userpw : state.login.userpw,
+        isAuthenticated : state.login.isAuthenticated
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleUserIdChange : (id) => { dispatch(Actions.useridChange(id))},
-        handleUserPwChange : (pw) => { dispatch(Actions.userpwChange(pw))}
+        handleLogin : () => { dispatch(Actions.login())},
+        handleUserIdChange : (id) => { dispatch(Actions.useridchange(id))},
+        handleUserPwChange : (pw) => { dispatch(Actions.userpwchange(pw))}
     }
 }
 

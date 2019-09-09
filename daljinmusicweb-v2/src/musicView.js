@@ -1,6 +1,10 @@
 import React , {Component} from 'react'
 import ListView from './listView'
 import './musicView.css'
+
+import { connect } from 'react-redux'
+
+
 class MusicView extends Component {
 
     render () {
@@ -30,4 +34,11 @@ class MusicView extends Component {
 
 }
 
-export default MusicView;
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated : state.login.isAuthenticated
+    }
+}
+
+
+export default connect(mapStateToProps)(MusicView);

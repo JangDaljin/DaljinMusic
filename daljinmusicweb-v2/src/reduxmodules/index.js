@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import Login from './login'
+import login from './login'
 
 const reducers = combineReducers({
-    Login
+    login
 })
 
 export default reducers
