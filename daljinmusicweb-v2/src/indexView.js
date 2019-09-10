@@ -4,7 +4,7 @@ import './indexView.css'
 import { connect } from 'react-redux'
 
 
-import * as Actions from './reduxmodules/login'
+import * as Actions from './reduxModules/login'
 
 class IndexView extends Component {
     
@@ -16,11 +16,6 @@ class IndexView extends Component {
         this.doPwChange = this.doPwChange.bind(this)
     }
 
-    componentDidMount () {
-        if(this.props.isAuthenticated) {
-            this.props.history.push('/music')
-        }
-    }
 
     componentDidUpdate (prevProps , prevState) {
         //console.log(this.props.isAuthenticated);
@@ -90,7 +85,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleLogin : () => { dispatch(Actions.login())},
+        handleLogin : () => { dispatch(Actions.fetchLogin())},
         handleUserIdChange : (id) => { dispatch(Actions.useridchange(id))},
         handleUserPwChange : (pw) => { dispatch(Actions.userpwchange(pw))}
     }

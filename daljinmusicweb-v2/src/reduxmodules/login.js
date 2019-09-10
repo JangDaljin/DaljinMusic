@@ -1,16 +1,17 @@
 import { createAction , handleActions } from 'redux-actions'
 
-import config from '../config'
-
-
 const LOGIN = 'login/LOGIN'
 const USERIDCHANGE = 'login/USERIDCHANGE'
 const USERPWCHANGE = 'login/USERPWCHANGE'
 
+const FETCH_LOGIN = 'FETCH_LOGIN'
+
+
+
 export const login = createAction(LOGIN)
 export const useridchange = createAction(USERIDCHANGE) // id
 export const userpwchange = createAction(USERPWCHANGE) // pw
-
+export const fetchLogin = createAction(FETCH_LOGIN)
 
 const initialState = {
     userid : '',
@@ -20,33 +21,13 @@ const initialState = {
 
 export default handleActions({
     [LOGIN] : (state , action) => {
-        
         const newState = { ...state }
-
-        console.log("LOGIN ACTION HANDLERR")
-        /*
-        const data = {
-            userid : newState.userid,
-            userpw : newState.userpw
+        
+        if(action.payload.isOK === true) {
+            newState.isAuthenticated = true;
         }
         
-        const req = {
-            body : JSON.stringify(data),
-            headers : {
-                'Content-Type' : 'application/json'
-            },
-            method : 'POST'
-        }
-
-        fetch(config.SERVER + '/login' , req)
-        .then(res => res.json())
-        .then(json =>  {
-        newState.isAuthenticated = json.isOK;
-        console.log(newState.isAuthenticated);
-        })
-        .catch(err => console.log(err))
-        */
-        return newState;
+        return newState
     },
     [USERIDCHANGE] : (state, action) => {
         const newState = { ...state }

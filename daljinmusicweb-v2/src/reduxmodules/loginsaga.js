@@ -1,5 +1,42 @@
-import { takeLatest , put, call , select } from 'redux-saga/effects'
+import { takeLatest , select , call , put } from 'redux-saga/effects'
+import Config from '../config'
 
+
+function* fetchLogIn (action) {
+    const state = yield select()
+
+    const data = {
+        userid : state.login.userid,
+        userpw : state.login.userpw
+    }
+
+    const req = {
+        body : JSON.stringify(data),
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        method : 'POST'
+    }
+
+    const res = yield call(fetch , `${Config.SERVER}/login` , req )
+    const json = yield call([res , 'json'])
+
+    yield put({ type : 'login/LOGIN' , payload : json})
+}
+
+function* fetchLogOut (action) {
+
+}
+
+
+export default function* rootSaga () {
+    yield takeLatest('FETCH_LOGIN' , fetchLogIn)
+    yield takeLatest('FETCH_LOGOUT', fetchLogOut)    
+}
+
+
+
+/*
 function* login_Async() {
     const state = yield select((state)=>state.login)
 
@@ -25,4 +62,4 @@ function* login_Async() {
 
 export function* watchLogin() {
     yield takeLatest('login/LOGIN' , login_Async)
-}
+}*/
