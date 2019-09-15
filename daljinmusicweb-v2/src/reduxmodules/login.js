@@ -1,17 +1,17 @@
 import { createAction , handleActions } from 'redux-actions'
 
-const LOGIN = 'login/LOGIN'
-const USERIDCHANGE = 'login/USERIDCHANGE'
-const USERPWCHANGE = 'login/USERPWCHANGE'
+export const FETCH_LOGIN = 'login/FETCH_LOGIN'
+export const ACCEPT_LOGIN = 'login/ACCEPT_LOGIN'
+export const ABORT_LOGIN = 'login/ABORT_LOGIN'
+export const USERIDCHANGE = 'login/USERIDCHANGE'
+export const USERPWCHANGE = 'login/USERPWCHANGE'
 
-const FETCH_LOGIN = 'FETCH_LOGIN'
-
-
-
-export const login = createAction(LOGIN)
-export const useridchange = createAction(USERIDCHANGE) // id
-export const userpwchange = createAction(USERPWCHANGE) // pw
 export const fetchLogin = createAction(FETCH_LOGIN)
+export const acceptLogin = createAction(ACCEPT_LOGIN)
+export const abortLogin = createAction(ABORT_LOGIN)
+export const userIdChange = createAction(USERIDCHANGE) // id
+export const userPwChange = createAction(USERPWCHANGE) // pw
+
 
 const initialState = {
     userid : '',
@@ -20,13 +20,18 @@ const initialState = {
 }
 
 export default handleActions({
-    [LOGIN] : (state , action) => {
+    [ACCEPT_LOGIN] : (state , action) => {
         const newState = { ...state }
         
         if(action.payload.isOK === true) {
             newState.isAuthenticated = true;
         }
         
+        return newState
+    },
+    [ABORT_LOGIN] : (state , action) => {
+        const newState = { ...state }
+        newState.isAuthenticated = false;
         return newState
     },
     [USERIDCHANGE] : (state, action) => {

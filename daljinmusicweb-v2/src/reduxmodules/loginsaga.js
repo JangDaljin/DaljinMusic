@@ -1,4 +1,5 @@
 import { takeLatest , select , call , put } from 'redux-saga/effects'
+import { FETCH_LOGIN , ACCEPT_LOGIN , ABORT_LOGIN } from './login'
 import Config from '../config'
 
 
@@ -10,7 +11,7 @@ function* fetchLogIn (action) {
         userpw : state.login.userpw
     }
 
-    const req = {
+    const request = {
         body : JSON.stringify(data),
         headers : {
             'Content-Type' : 'application/json'
@@ -18,48 +19,20 @@ function* fetchLogIn (action) {
         method : 'POST'
     }
 
-    const res = yield call(fetch , `${Config.SERVER}/login` , req )
-    const json = yield call([res , 'json'])
-
-    yield put({ type : 'login/LOGIN' , payload : json})
+    try {
+        const response = yield call(fetch , `${Config.SERVER}/login` , request )
+        if(response.ok) {
+            yield put({ type : ACCEPT_LOGIN , payload : yield call([response , 'json'])})
+        }
+        else {
+            yield put({type : ABORT_LOGIN})
+        }
+    }
+    catch(error) {
+        yield put({type : ABORT_LOGIN})
+    }
 }
-
-function* fetchLogOut (action) {
-
-}
-
 
 export default function* rootSaga () {
-    yield takeLatest('FETCH_LOGIN' , fetchLogIn)
-    yield takeLatest('FETCH_LOGOUT', fetchLogOut)    
+    yield takeLatest(FETCH_LOGIN , fetchLogIn)
 }
-
-
-
-/*
-function* login_Async() {
-    const state = yield select((state)=>state.login)
-
-    const data = {
-        userid : state.userid,
-        userpw : state.userpw
-    }
-
-    console.log(`userid:${state.userid} userpw:${state.userpw}`)
-
-    const req = {
-        body : JSON.stringify(data),
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        method : 'POST'
-    }
-
-    const json = call(fetch , 'http://localhost:8888/login' , req)
-
-    console.log(json+"11");
-}
-
-export function* watchLogin() {
-    yield takeLatest('login/LOGIN' , login_Async)
-}*/

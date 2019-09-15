@@ -15,6 +15,7 @@
     "body-parser": "^1.19.0",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "classnames": "^2.2.6",
     "cors": "^2.8.5",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
@@ -71,7 +72,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "server": "nodemon server/App.js"
   },
   "eslintConfig": {
     "extends": "react-app"

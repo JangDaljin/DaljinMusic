@@ -1,10 +1,13 @@
 import React , { Component } from 'react'
-import './indexView.css'
-
+import styles from './indexView.css'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import classNames from 'classnames/bind'
+import * as loginActions from './reduxModules/login'
+
+const cn = classNames.bind(styles);
 
 
-import * as Actions from './reduxModules/login'
 
 class IndexView extends Component {
     
@@ -28,41 +31,45 @@ class IndexView extends Component {
 
     onLoginButtonClick = (e) => {
         e.preventDefault()
-        this.props.handleLogin()
+        const { LoginActions } = this.props
+        LoginActions.fetchLogin()
     }
 
     doIdChange = (e) => {
         const value = e.target.value
-        this.props.handleUserIdChange(value)
+        const { LoginActions } = this.props
+
+        LoginActions.userIdChange(value)
     }
 
     doPwChange = (e) => {
         const value = e.target.value
-        this.props.handleUserPwChange(value)
+        const { LoginActions } = this.props
+        LoginActions.userPwChange(value)
     }
 
     render () {
         return (
-            <div className="rootdiv">
-                <div className="leftdiv">
-                    <div className="logodiv">
+            <div className={cn('rootdiv')}>
+                <div className={cn('leftdiv')}>
+                    <div className={cn('logodiv')}>
                         <img alt="로고" src="daljin_logo_horizon.png" />
                     </div>
                 </div>
 
-                <div className="rightdiv">
-                    <div className="formdiv">
+                <div className={cn('rightdiv')}>
+                    <div className={cn('formdiv')}>
                         <form method="post" action="/login">
                             <table>
                                 <tbody>
                                     <tr>
                                         <td>아이디</td>
-                                        <td><input className="idbox" type="text" name="userid" onChange={this.doIdChange} /></td>
-                                        <td rowSpan="2"><button className="loginbutton" onClick={this.onLoginButtonClick}><i className="fas fa-sign-in-alt fa-2x"></i></button></td>
+                                        <td><input className={cn('idbox')} type="text" name="userid" onChange={this.doIdChange} /></td>
+                                        <td rowSpan="2"><button className={cn('loginbutton')} onClick={this.onLoginButtonClick}><i className="fas fa-sign-in-alt fa-2x"></i></button></td>
                                     </tr>
                                     <tr>
                                         <td>비밀번호</td>
-                                        <td><input className="pwbox" type="password" name="userpw" onChange={this.doPwChange} /></td>
+                                        <td><input className={cn('pwbox')} type="password" name="userpw" onChange={this.doPwChange} /></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -75,6 +82,7 @@ class IndexView extends Component {
 
 }
 
+/*
 const mapStateToProps = (state) => {
     return {
         userid : state.login.userid,
@@ -90,8 +98,17 @@ const mapDispatchToProps = (dispatch) => {
         handleUserPwChange : (pw) => { dispatch(Actions.userpwchange(pw))}
     }
 }
+*/
 
 
 
-
-export default connect(mapStateToProps , mapDispatchToProps)(IndexView)
+export default connect(
+    (state) => ({
+        userid : state.login.userid,
+        userpw : state.login.userpw,
+        isAuthenticated : state.login.isAuthenticated
+    }), 
+    (dispatch) => ({
+        LoginActions : bindActionCreators(loginActions, dispatch)
+    })
+)(IndexView)
