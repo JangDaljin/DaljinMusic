@@ -36,24 +36,40 @@ class MusicList extends Component {
                 </div>
 
                 <div className={cn('hidescroll')}>
+                    <div className={cn('tableheader')}>
+                        <div className={cn('musiclist-header-row')}>
+                            <div className={cn('musiclist-header-col' , 'table-checkbox')}>
+                                <input id='headerCheckbox' className={cn('musiclist-checkbox')} type="checkbox" />
+                                <label for='headerCheckbox'></label>
+                            </div>
+                        <div className={cn('musiclist-header-col' , 'table-singer')}>
+                                가수
+                            </div>
+                            <div className={cn('musiclist-header-col' , 'table-song')}>
+                                제목
+                            </div>
+                            <div className={cn('musiclist-header-col' , 'table-time')}>
+                                시간
+                            </div>
+                        </div>
+                    </div>
+
                     <div className={cn('musiclist-table scrollable')}>
                     {
                         musicList.map(
                             (item , index) => 
                                 <div key={index} className={cn('musiclist-row')}>
-                                    <div className={cn('musiclist-col' , 'checkbox')}>
-                                        <input type="checkbox" value={index}/>
+                                    <div className={cn('musiclist-col' , 'table-checkbox')}>
+                                        <input id={`checkbox${index}`} className={cn('musiclist-checkbox')} type="checkbox" value={index}/>
+                                        <label for={`checkbox${index}`}></label>
                                     </div>
-                                    <div className={cn('musiclist-col' , 'index')}>
-                                        {index}
-                                    </div>
-                                   <div className={cn('musiclist-col' , 'singer')}>
+                                   <div className={cn('musiclist-col' , 'table-singer')}>
                                         {item.singer}
                                     </div>
-                                    <div className={cn('musiclist-col' , 'song')}>
+                                    <div className={cn('musiclist-col' , 'table-song')}>
                                         {item.song}
                                     </div>
-                                    <div className={cn('musiclist-col' , 'time')}>
+                                    <div className={cn('musiclist-col' , 'table-time')}>
                                         {item.time}
                                     </div>
                                 </div>
@@ -65,9 +81,9 @@ class MusicList extends Component {
 
                 <div className={cn('menulist-div')}>
                     <ul className={cn('menulist-ul')}>
-                        <li className={cn('menulist-li')}><button>재생</button></li>
-                        <li className={cn('menulist-li')}><button>삭제</button></li>
-                        <li className={cn('menulist-li')}><button>저장</button></li>
+                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i class="far fa-play-circle"></i></button></li>
+                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i class="fas fa-trash"></i></button></li>
+                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i class="far fa-save"></i></button></li>
                     </ul>
                 </div>
             </div>

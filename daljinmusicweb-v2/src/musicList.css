@@ -36,16 +36,17 @@ ul , li {
     padding-left: 2px;
     padding-right: 2px;
     font-size: 1.2rem;
-    color:#CCC;
+    color:#EEE;
     border-top-left-radius: 0.6em;
     border-top-right-radius: 0.6em;
     border: 3px solid #CCC;
     height: 35px;
+    cursor: pointer;
 }
 
 .album-button:hover {
     color: black;
-    background-color: #CCC;
+    background-color: #EEE;
     border-right: 3px solid black;
     border-left: 3px solid black;
     border-top: 3px solid black;
@@ -72,15 +73,32 @@ ul , li {
 .musiclist-table{
     height: 100%;
     width: calc(100% + 1em);
+    text-align: center;
+}
+
+.musiclist-header-row {
+    display: block;
+    width: 100%;
+    line-height: 2em;
+    text-align: center;
+}
+
+.musiclist-header-col {
+    display: inline-block;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;
 }
 
 .musiclist-row {
     display: block;
     width: 100%;
+    line-height: 2em;
 }
 
 .musiclist-row:hover {
-    background-color: #006699;
+    background-color: #CCC;
 }
 
 .musiclist-col {
@@ -89,25 +107,65 @@ ul , li {
     border-top: 1px solid black;
 }
 
-.checkbox {
-    width: 5%;
+.table-checkbox {
+    width: 2em;
+    position: relative;
 }
 
-.index {
-    width: 10%;
+.table-song {
+    width: calc((100% - 2em)/8*4);
 }
 
-.song {
-    width: 45%;
+.table-singer {
+    width: calc((100% - 2em)/8*3);
 }
 
-.singer {
-    width: 25%;
+.table-time {
+    width: calc((100% - 2em)/8*1);
 }
 
-.time {
-    width: 15%;
+
+
+.musiclist-checkbox {
+    width: 0%;
+    height: 0%;
+    margin: 0px;
+    padding: 0px;
 }
+
+
+.musiclist-checkbox + label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    width: 1.3em;
+    height: 1.3em;
+    border : 2px solid black;
+    border-radius: 0.3em;
+    transition: background-color 0.4s;
+}
+
+
+
+.musiclist-checkbox + label::before {
+    content: '';
+    position: absolute;
+    width: 30%;
+    height: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-55% , -60%) rotate(40deg) scale(1);
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.musiclist-checkbox:checked + label::before {
+    opacity: 1;
+}
+
 
 
 
@@ -123,9 +181,31 @@ ul , li {
 
 .menulist-li {
     display: inline;
-    padding-right: 5px;
-    padding-left: 5px;
 }
+
+.menubutton {
+    border: none;
+    background : none;
+    width: 6em;
+    font-size: 1.2rem;
+    background-color: #00AAAA;
+    border-radius: 0.6em;
+    margin: 0px;
+    border-left: 3px solid #AAA;
+    border-top: 3px solid #AAA;
+    border-bottom: 3px solid #666;
+    border-right: 3px solid #666;
+    color: #EEE;
+    cursor: pointer;
+    margin-right: 3px;
+}
+
+.menubutton:hover {
+    color: #006699;
+    background-color: #EEE;
+}
+
+
 
 
 

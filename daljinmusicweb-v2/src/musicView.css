@@ -9,7 +9,7 @@
 }
 
 .left-wrap {
-    width: 30%;
+    width: 50%;
     height: 100%;
     overflow: hidden;
     float: left;
@@ -24,7 +24,7 @@
 
 .right-wrap {
     float: right;
-    width: 70%;
+    width: 50%;
     height: 100%;
     border : 1px solid black;
 }
