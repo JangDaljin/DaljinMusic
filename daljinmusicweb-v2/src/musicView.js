@@ -1,31 +1,30 @@
 import React , {Component} from 'react'
-import ListView from './listView'
-import './musicView.css'
+import MusicList from './musicList'
+import styles from './musicView.css'
+import classNames from 'classnames/bind'
 
 import { connect } from 'react-redux'
+
+const cn = classNames.bind(styles)
 
 
 class MusicView extends Component {
 
     render () {
         return (
-        <div className="musictopdiv">
-            <table className="musicListLayoutTable">
-                <tbody>
-                    <tr>
-                        <td>
-                            <ListView />
-                        </td>
-                        <td>
+        <div className={cn('musicview-div')}>
+            <div className={cn('center-wrap')}>
+                <div className={cn('left-wrap')}>
+                    <MusicList />
+                </div>
 
-                        </td>
-                        <td>
-                            <ListView />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div className="musicPlayer">
+                <div className={cn('right-wrap')}>
+                    오른쪽
+                </div>
+            </div>
+            
+
+            <div className={cn('musicPlayer')}>
                 <h1>TEST</h1>
             </div>
         </div>

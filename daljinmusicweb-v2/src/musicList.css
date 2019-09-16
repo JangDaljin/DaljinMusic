@@ -1,0 +1,131 @@
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
+}
+
+ul , li {
+    padding: 0px;
+    margin: 0px;
+}
+
+.list-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.albumlist-div {
+    height: 5%;
+}
+
+.albumlist-ul {
+    list-style: none;
+    height: 100%;
+}
+
+.albumlist-li {
+    display: inline-block;
+}
+
+.album-button {
+    width: 6rem;
+    background : none;
+    border: none;
+    background-color: #006699;
+    padding-top: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 1.2rem;
+    color:#CCC;
+    border-top-left-radius: 0.6em;
+    border-top-right-radius: 0.6em;
+    border: 3px solid #CCC;
+    height: 35px;
+}
+
+.album-button:hover {
+    color: black;
+    background-color: #CCC;
+    border-right: 3px solid black;
+    border-left: 3px solid black;
+    border-top: 3px solid black;
+}
+
+.album-button-on {
+    border: 3px solid black;
+}
+
+
+
+.hidescroll {
+    width: 100%;
+    position: relative;
+    height: 90%;
+    overflow: hidden;
+}
+
+.scrollable {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.musiclist-table{
+    height: 100%;
+    width: calc(100% + 1em);
+}
+
+.musiclist-row {
+    display: block;
+    width: 100%;
+}
+
+.musiclist-row:hover {
+    background-color: #006699;
+}
+
+.musiclist-col {
+    display: inline-block;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.checkbox {
+    width: 5%;
+}
+
+.index {
+    width: 10%;
+}
+
+.song {
+    width: 45%;
+}
+
+.singer {
+    width: 25%;
+}
+
+.time {
+    width: 15%;
+}
+
+
+
+
+.menulist-div {
+    height: 5%;
+}
+
+.menulist-ul {
+    list-style: none;
+    height: 100%;
+}
+
+.menulist-li {
+    display: inline;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+
+
