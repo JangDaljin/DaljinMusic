@@ -9,8 +9,10 @@ router.get('/' , (ctx) => {
     ctx.body = '홈'
 })
 
-router.get('/about' , (ctx) => {
-    ctx.body = '소개'
+router.get('/about/:name?' , (ctx) => {
+    const { name } = ctx.params
+    const { id } = ctx.query
+    ctx.body = (name ? `NAME : ${name}` : 'I don\'t have name') + '\n' + (id ? `ID : ${id}` : `I don\'t have ID`)
 })
 
 
