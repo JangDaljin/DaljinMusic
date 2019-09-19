@@ -20,7 +20,7 @@ function* fetchLogIn (action) {
     }
 
     try {
-        const response = yield call(fetch , `${Config.SERVER}/login` , request )
+        const response = yield call(fetch , `${Config.SERVER}/auth/login` , request )
         if(response.ok) {
             yield put({ type : ACCEPT_LOGIN , payload : yield call([response , 'json'])})
         }

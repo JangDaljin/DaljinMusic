@@ -40,7 +40,7 @@ class MusicList extends Component {
                         <div className={cn('musiclist-header-row')}>
                             <div className={cn('musiclist-header-col' , 'table-checkbox')}>
                                 <input id='headerCheckbox' className={cn('musiclist-checkbox')} type="checkbox" />
-                                <label for='headerCheckbox'></label>
+                                <label htmlFor='headerCheckbox'></label>
                             </div>
                         <div className={cn('musiclist-header-col' , 'table-singer')}>
                                 가수
@@ -61,7 +61,7 @@ class MusicList extends Component {
                                 <div key={index} className={cn('musiclist-row')}>
                                     <div className={cn('musiclist-col' , 'table-checkbox')}>
                                         <input id={`checkbox${index}`} className={cn('musiclist-checkbox')} type="checkbox" value={index}/>
-                                        <label for={`checkbox${index}`}></label>
+                                        <label htmlFor={`checkbox${index}`}></label>
                                     </div>
                                    <div className={cn('musiclist-col' , 'table-singer')}>
                                         {item.singer}
@@ -81,9 +81,9 @@ class MusicList extends Component {
 
                 <div className={cn('menulist-div')}>
                     <ul className={cn('menulist-ul')}>
-                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i class="far fa-play-circle"></i></button></li>
-                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i class="fas fa-trash"></i></button></li>
-                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i class="far fa-save"></i></button></li>
+                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i className="far fa-play-circle"></i></button></li>
+                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i className="fas fa-trash"></i></button></li>
+                        <li className={cn('menulist-li')}><button className={cn('menubutton')}><i className="far fa-save"></i></button></li>
                     </ul>
                 </div>
             </div>

@@ -23,7 +23,7 @@ export default handleActions({
     [ACCEPT_LOGIN] : (state , action) => {
         const newState = { ...state }
         
-        if(action.payload.isOK === true) {
+        if(action.payload.authenticated === true) {
             newState.isAuthenticated = true;
         }
         

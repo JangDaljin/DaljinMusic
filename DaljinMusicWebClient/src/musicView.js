@@ -2,8 +2,10 @@ import React , {Component} from 'react'
 import MusicList from './musicList'
 import styles from './musicView.css'
 import classNames from 'classnames/bind'
-
 import { connect } from 'react-redux'
+
+import MusicPlayer from './musicPlayer'
+
 
 const cn = classNames.bind(styles)
 
@@ -24,8 +26,8 @@ class MusicView extends Component {
             </div>
             
 
-            <div className={cn('musicPlayer')}>
-                <h1>TEST</h1>
+            <div className={cn('bottom-wrap')}>
+                <MusicPlayer />
             </div>
         </div>
         )
