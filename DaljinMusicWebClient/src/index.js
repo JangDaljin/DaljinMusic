@@ -4,12 +4,11 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { createStore , applyMiddleware } from 'redux'
 import createSagaMiddleWare from 'redux-saga'
-import reducers from './reduxModules';
+import reducers from './ReduxModules';
 import { Provider } from 'react-redux'
 
-import RootSaga from './reduxModules/loginsaga'
-
-import App from './app'
+import RootSaga from './ReduxModules/loginsaga'
+import Router from './router'
 
 const sagaMiddleWare = createSagaMiddleWare()
 
@@ -19,7 +18,7 @@ sagaMiddleWare.run(RootSaga)
 
 ReactDom.render(
     <Provider store={store}>
-        <App />
+        <Router />
     </Provider>, 
     document.getElementById('root')
 );

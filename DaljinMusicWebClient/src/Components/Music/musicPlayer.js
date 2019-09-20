@@ -1,7 +1,7 @@
 import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as musicActions from './reduxModules/music'
+import * as musicActions from '../../ReduxModules/music'
 
 import styles from './musicPlayer.css'
 import classNames from 'classnames/bind'

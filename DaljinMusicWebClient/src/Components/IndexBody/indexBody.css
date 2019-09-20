@@ -1,0 +1,26 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.indexbody {
+    margin-left: 180px;
+    margin-right: 180px;
+}
+
+.first {
+    width: 100%;
+}
+
+.second {
+    width: 100%;
+}
+
+.second-left {
+    width: 40%;
+}
+
+.second-right {
+    width: 60%;
+}

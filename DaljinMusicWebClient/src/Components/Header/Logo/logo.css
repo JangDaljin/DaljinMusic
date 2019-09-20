@@ -1,0 +1,17 @@
+.header-logo {
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+    display: inline-block;
+    height: 100%;
+    margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.header-logo-img {
+    height: 75%;
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+}

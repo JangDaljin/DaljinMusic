@@ -1,0 +1,87 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+
+.header-auth {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    vertical-align: top;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.header-auth > div {
+    display: inline-block;
+}
+
+
+
+.auth-userinfo {
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+    color: #BBB;
+}
+
+.auth-userinfo-icon-wrap {
+    color: #BBB;
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+.auth-userinfo-icon {
+    color: #00EE88;
+}
+
+.auth-userinfo > div{
+    display: inline-block
+}
+
+
+
+
+
+
+
+.auth-login-button {
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+    
+    color: #BBB;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.auth-login-button:hover {
+    color: #0AC;
+    opacity: 0.55;
+}
+
+
+.auth-login-button > i {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.loginout-text {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.hidden {
+    display: hidden;
+}

@@ -1,9 +1,9 @@
 import React , { Component } from 'react'
-import styles from './indexView.css'
+import styles from './loginView.css'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import classNames from 'classnames/bind'
-import * as loginActions from './reduxModules/login'
+import * as loginActions from '../ReduxModules/login'
 
 const cn = classNames.bind(styles);
 
@@ -18,7 +18,7 @@ class IndexView extends Component {
         this.doIdChange = this.doIdChange.bind(this)
         this.doPwChange = this.doPwChange.bind(this)
     }
-
+        
 
     componentDidUpdate (prevProps , prevState) {
         //console.log(this.props.isAuthenticated);
