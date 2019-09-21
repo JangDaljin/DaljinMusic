@@ -1,0 +1,129 @@
+.toptenmusic {
+    width: 100%;
+}
+
+.toptenmusic-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-top : 2px solid #BBB;
+    border-left: 2px solid #BBB;
+    border-bottom : 3px solid #303030;
+    border-right: 3px solid #303030;
+
+    text-align: center;
+    color: #303030;
+    margin-bottom: 10px;
+    border-radius: 1.2rem;
+}
+
+.toptenmusic-list {
+    width: 100%;   
+}
+
+.toptenmusic-list-item {
+    width: 100%;
+    height: 40px;
+    position: relative;
+}
+
+.toptenmusic-list-item:hover {
+    background-color: #EEE;
+    color: #069;
+}
+
+.toptenmusic-list-item::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    border: 1px solid #BBB;
+}
+
+.toptenmusic-list-item:last-child::after {
+    border: none;
+}
+
+.toptenmusic-list-item > div {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    height : 100%;
+}
+
+.toptenmusic-list-item > div > p {
+    position: absolute;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+
+.toptenmusic-list-button {
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+
+
+.toptenmusic-list-rank {
+    width: 10%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.toptenmusic-list-rank > p {
+    text-align: center;
+    width: 100%;
+}
+
+.rank1 {
+    font-size: 1.5rem;
+    color: #ffd700;
+}
+
+.rank1 > p > i{
+    border: 2px solid #ffd700;
+    padding: 1px;
+}
+
+.rank2 {
+    font-size: 1.5rem;
+    color: #c0c0c0;
+}
+
+.rank2 > p > i{
+    border: 2px solid #c0c0c0;
+    padding: 1px;
+}
+
+.rank3 {
+    font-size: 1.5rem;
+    color: #cd7f32;
+}
+
+.rank3 > p > i{
+    border: 2px solid #cd7f32;
+    padding: 1px;
+}
+
+
+.toptenmusic-list-song {
+    width: 40%;
+}
+
+.toptenmusic-list-singer {
+    width: 30%;
+}
+
+.toptenmusic-list-buttons {
+    width: 20%;
+    text-align: center;
+}
+
+.toptenmusic-list-button {
+    width: 50%;
+    cursor: pointer;
+}
+

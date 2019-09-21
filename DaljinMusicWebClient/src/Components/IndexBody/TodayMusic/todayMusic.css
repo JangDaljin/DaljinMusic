@@ -10,6 +10,13 @@
     box-shadow: 0px 0px 4px 4px #CCC;
 }
 
+.todaymusic-title {
+    color: #303030;
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
 .todaymusic-img {
     position: relative;
     width: 100%;
@@ -21,6 +28,7 @@
 
 .todaymusic-info {
     height: 40px;
+    text-align: center;
 }
 
 .todaymusic-info-text {
@@ -50,7 +58,7 @@
     border-top-left-radius: 0.75rem;
     border-bottom-left-radius: 0.75rem;
     font-weight: bold;
-    border-right: 3px dashed #303030;
+    border-right: 3px dotted #303030;
 }
 
 .todaymusic-info-text > .nonfixed {
@@ -58,7 +66,6 @@
     border-right: 3px solid #303030;
     border-top-right-radius: 0.75rem;
     border-bottom-right-radius: 0.75rem;
-    padding-left: 10px;
     margin-right: 10px;
 }
 

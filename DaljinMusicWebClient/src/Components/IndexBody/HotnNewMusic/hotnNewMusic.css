@@ -1,0 +1,143 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.hotnnewmusic {
+    width: 100%;
+    display: inline-block;
+
+
+}
+
+.hotnnewmusic-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-top : 3px double #FF5A5A;
+    border-left: 4px solid #FF5A5A;
+    border-bottom : 3px double #069;
+    border-right : 4px solid #069;
+    border-top-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    text-align: center;
+    color: #303030;
+    margin-bottom: 10px;
+}
+
+.hotnnewmusic-content {
+    width: 100%;
+    border: 2px solid #BBB;
+}
+
+.hotnnewmusic-left {
+    width: 240px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+.hotnnewmusic-left::before {
+    content : '';
+    display: block;
+    padding-top: 100%;
+}
+
+.hotnnewmusic-album-img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;    
+    right: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    cursor: pointer;
+}
+
+
+.hotnnewmusic-right {
+    width: calc(100% - 240px);
+    display: inline-block;
+    vertical-align: top;
+    padding: 0px;
+    height: 240px;
+}
+
+.hotnnewmusic-list {
+    width: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.hotnnewmusic-list-item {
+    height: 80px;
+    width: 100%;
+    padding-left: 10px;
+    position: relative;
+    border-left: 2px solid #BBB;
+    position: relative;
+}
+
+.hotnnewmusic-list-item:hover {
+    background-color: #EEE;
+}
+
+
+
+.hotnnewmusic-list-item::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    bottom: 0%;
+    left: 0%;
+    border: 1px solid #BBB;
+}
+
+.hotnnewmusic-list-item:last-child::after {
+    border: 1px solid transparent;
+}
+
+
+
+.hotnnewmusic-list-item-info {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.hot {
+    position: relative;
+    overflow: hidden;
+}
+
+.hot::before {
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+    content: 'HOT';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 3px;
+    color: #FF5A5A;
+}
+
+.new {
+    position: relative;
+    overflow: hidden;
+}
+
+.new::before {
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+    content: 'NEW';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 3px;
+    color: #069;
+}

@@ -28,7 +28,7 @@ export default class SuggestMusicList extends Component {
         return (
             <div className={cn('suggest-music')}>
                 <div className="suggest-title">
-                    <p>SUGGEST</p>
+                    <p>추천 음악</p>
                 </div>
                 <ul className={cn('suggest-music-list')}>
                     {

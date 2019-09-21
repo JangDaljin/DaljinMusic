@@ -5,10 +5,11 @@
 .suggest-title {
     font-weight: bold;
     font-size: 1.5rem;
-    border-top : 3px double #303030;
-    border-bottom : 3px double #303030;
+    border-top : 3px solid #666;
+    border-bottom : 3px solid #666;
+    border-radius: 0.8rem;
     text-align: center;
-    color: #666;
+    color: #303030;
 }
 
 
@@ -45,6 +46,7 @@
     width: 80px;
     height: 100%;
     background-size: 80px 80px;
+    background-repeat: no-repeat;
 }
 
 .suggest-music-list-singer {

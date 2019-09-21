@@ -2,6 +2,8 @@ import React , { Component } from 'react'
 
 import TodayMusic from './TodayMusic/todayMusic'
 import SuggestMusic from './SuggestMusic/suggestMusic'
+import HotnNewMusic from './HotnNewMusic/hotnNewMusic'
+import TopTenMusic from './TopTenMusic/TopTenMusic'
 
 import classNames from 'classnames/bind'
 import styles from './indexBody.css'
@@ -21,11 +23,14 @@ class IndexBody extends Component {
                 </div>
                 
                 <div className={cn('second')}>
-                    <div className={cn('second-left')}>
+                    <div className={cn('second-first')}>
                         <SuggestMusic />
                     </div>
-                    <div className={cn('second-right')}>
-                        
+                    <div className={cn('second-second')}>
+                        <HotnNewMusic />
+                    </div>
+                    <div className={cn('second-third')}>
+                        <TopTenMusic />
                     </div>
                 </div>
                 
