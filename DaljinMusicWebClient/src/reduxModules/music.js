@@ -1,4 +1,4 @@
-import { createAction , handleActions } from './node_modules/redux-actions'
+import { createAction , handleActions } from 'redux-actions'
 
 export const PLAY = 'music/PLAY'
 export const PAUSE = 'music/PAUSE'
