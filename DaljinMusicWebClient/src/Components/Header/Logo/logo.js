@@ -3,7 +3,7 @@ import styles from './logo.css'
 import classNames from 'classnames/bind'
 const cn = classNames.bind(styles)
 
-class Logo extends Component {
+export default class Logo extends Component {
     render () {
         return (
             <div className={cn('header-logo')}>
@@ -12,5 +12,3 @@ class Logo extends Component {
         )
     }
 }
-
-export default Logo;

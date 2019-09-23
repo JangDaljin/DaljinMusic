@@ -1,4 +1,4 @@
-import { takeLatest , select , call , put } from 'redux-saga/effects'
+import { takeLatest , select , call , put } from './node_modules/redux-saga/effects'
 import { FETCH_LOGIN , ACCEPT_LOGIN , ABORT_LOGIN } from './login'
 import Config from '../config'
 
