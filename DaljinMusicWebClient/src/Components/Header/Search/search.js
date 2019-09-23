@@ -12,7 +12,7 @@ class Search extends Component {
                     <i className={cn('header-search-icon' , 'fas fa-search')} ></i>
                 </div>
                 <div className={cn('header-search-text-wrap')}>
-                    <input className={cn('header-search-text')} type="text" placeholder="Anything" />
+                    <input className={cn('header-search-text')} type="text" placeholder="노래를 찾아보세요." />
                 </div>
                 <div className={cn('header-search-button')}>
                     검색

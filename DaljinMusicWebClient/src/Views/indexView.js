@@ -1,7 +1,7 @@
 import React , { Component } from 'react'
 import Header from '../Components/Header/header'
-import IndexBody from '../Components/IndexBody/indexBody'
-class IndexView extends Component {
+import IndexBody from '../Components/IndexViewBody/indexViewBody'
+export default class IndexView extends Component {
 
     render () {
         return (
@@ -17,5 +17,3 @@ class IndexView extends Component {
     }
 
 }
-
-export default IndexView;

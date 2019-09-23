@@ -4,18 +4,19 @@ import {
     Route
 } from 'react-router-dom'
 import IndexView from './Views/indexView'
-import LoginView from './Views/loginView'
-import MusicView from './Views/musicView'
-
+import AuthView from './Views/authView'
 
 class Router extends Component {
 
     render () {
         return (
             <BrowserRouter>
-                <Route path="/" component={IndexView} />
-                <Route path="/login" component={LoginView} />
-                <Route path="/music" component={MusicView} />
+                <Route exact path="/" component={IndexView} />
+                <Route path="/home" component={IndexView} />
+                <Route path="/top100" component={IndexView} />
+                <Route path="/mymusic" component={IndexView} />
+                <Route path="/othermusic" component={IndexView} />
+                <Route path="/auth"  component={AuthView} />
             </BrowserRouter>
         )
     }

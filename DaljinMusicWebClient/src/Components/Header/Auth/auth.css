@@ -14,20 +14,25 @@
     margin-right: 20px;
 }
 
-.header-auth > div {
+
+
+.auth-userinfo-wrap {
+    position: relative;
     display: inline-block;
+    height: 100%;
+    color: #BBB;
+    vertical-align: top;
 }
 
-
-
 .auth-userinfo {
+    display: inline-block;
     position: relative;
     top: 50%;
     transform: translate(0% , -50%);
-    color: #BBB;
 }
 
 .auth-userinfo-icon-wrap {
+    display: inline-block;
     color: #BBB;
     margin-right: 3px;
     margin-left: 3px;
@@ -45,26 +50,29 @@
 
 
 
+.auth-loginout-button-wrap {
+    display: inline-block;
+    height: 100%;
+}
 
-
-.auth-login-button {
-    position: relative;
-    top: 50%;
-    transform: translate(0, -50%);
-    
+.auth-loginout-button {
+    display: inline-block;
     color: #BBB;
     cursor: pointer;
     margin-left: 10px;
     margin-right: 10px;
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
 }
 
-.auth-login-button:hover {
+.auth-loginout-button:hover {
     color: #0AC;
     opacity: 0.55;
 }
 
 
-.auth-login-button > i {
+.auth-loginout-button > i {
     display: inline-block;
     height: 100%;
     vertical-align: middle;
@@ -77,10 +85,13 @@
     display: inline-block;
     height: 100%;
     vertical-align: middle;
-    
     margin-left: 2px;
     margin-right: 2px;
+    font-weight: bold;
+    text-decoration: none;
 }
+
+
 
 .hidden {
     display: hidden;

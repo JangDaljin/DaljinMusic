@@ -1,0 +1,76 @@
+.loginform {
+    width: 100%;
+    
+    border: 3px solid #EFEFEF;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 10px 10px #BBB;
+    padding: 10px;
+
+    background-color: #FEFEFE;
+}
+
+.loginform-left {
+    display: inline-block;
+    width: calc(100% - 120px);
+    vertical-align: top;
+    height: 100%;
+}
+
+.loginform-left > div {
+    height: 60px;
+    padding-right: 20px;
+}
+
+.loginform-id {
+    padding-bottom: 10px;
+}
+
+.loginform-pw {
+    padding-top: 10px;
+}
+
+.loginform-left > div > input {
+    border: none;
+    background: none;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    background-color: #EEE;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    border : 1px solid #DDD;
+}
+
+.loginform-left > div > input:focus {
+    outline: none;
+}
+
+
+
+
+
+.loginform-right {
+    display: inline-block;
+    width: 120px;
+    vertical-align: top;
+    position: relative;
+}
+
+.loginform-loginbutton {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    border-radius: 1rem;
+    border : 3px solid #EEE;
+    background-color: #EEE;
+    box-shadow: 0px 0px 3px 3px #BBB;
+    color: #3C3C3C;
+    cursor: pointer;
+}
+
+.loginform-loginbutton > i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+}
