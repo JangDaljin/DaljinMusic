@@ -43,6 +43,8 @@ export default class AuthViewBody extends Component {
                             <li className={cn('speaker-button' , 'START')}><p><i className="fas fa-play"></i>START</p></li>
                             <li className={cn('speaker-button' , 'PAUSE')}><p><i className="fas fa-pause"></i>PAUSE</p></li>
                             <li className={cn('speaker-button' , 'STOP')}><p><i className="fas fa-stop"></i>STOP</p></li>
+                            
+                            <li className={cn('speaker-button' , 'STOP')}><p><i className="fas fa-forward"></i>NEXT</p></li>
                             <li className={cn('speaker-button' , 'VOLUME')}></li>
                         </ul>
                     </div>
