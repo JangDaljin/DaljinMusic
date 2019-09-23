@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from './node_modules/redux'
 import login from './login'
 import music from './music'
 

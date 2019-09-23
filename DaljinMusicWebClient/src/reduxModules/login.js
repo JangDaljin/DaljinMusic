@@ -1,4 +1,4 @@
-import { createAction , handleActions } from 'redux-actions'
+import { createAction , handleActions } from './node_modules/redux-actions'
 
 export const FETCH_LOGIN = 'login/FETCH_LOGIN'
 export const ACCEPT_LOGIN = 'login/ACCEPT_LOGIN'
