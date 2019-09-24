@@ -1,0 +1,107 @@
+* {
+    border: 1px solid black;
+}
+
+.top100 {
+    margin-left: 180px;
+    margin-right: 180px;
+}
+
+.top100 > div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.top100-main {
+    width: 70%;
+}
+
+.top100-list-item {
+    display: inline-block;
+    min-width: 1050px;
+    height: 100px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: 3px solid #069;
+    border-radius: 1rem;
+}
+
+.top100-list-item > div {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 1.1rem;
+    height: 100%;
+}
+
+.top100-list-item> div > p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50% , -50%);
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+.top100-list-item-ranking {
+    width: 50px;
+    text-align: center;
+}
+
+.top100-list-item-img {
+    position: relative;
+    width: 100px;
+    border: 1px solid black;
+}
+
+.top100-list-item-album-img {
+    position: absolute;
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
+}
+
+.top100-list-item-img::before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+
+.top100-list-item-song {
+    width: 200px;
+}
+
+.top100-list-item-singer {
+    width: 150px;
+}
+
+
+.top100-list-item-album {
+    width: 200px;
+}
+
+.top100-list-item-buttons {
+    width: 250px;
+    text-align: center;
+}
+
+.top100-list-item-buttons > input[type="button"] {
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+
+
+.top100-modal {
+    position: fixed;
+    width: 30%;
+    min-width: 450px;
+}

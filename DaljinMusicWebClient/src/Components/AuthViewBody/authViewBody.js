@@ -15,17 +15,22 @@ export default class AuthViewBody extends Component {
 
             <div className={cn('speaker-body')}>
                 
-                <div className={cn('background-shadow')}>
-
-                </div>
-
+                <div className={cn('background-shadow')}></div>
+                
                 <div className={cn('speaker-left')}>
-                    <div className={cn('speaker')}>
+                    <div className={cn('speaker' , 'speaker-small')}>
+                        <div className={cn('speaker-outter')}>
+                            <div className={cn('speaker-inner')}></div>
+                        </div>
+                    </div>
+
+                    <div className={cn('speaker', 'speaker-big')}>
                         <div className={cn('speaker-outter')}>
                             <div className={cn('speaker-inner')}></div>
                         </div>
                     </div>
                 </div>
+
 
                 <div className={cn('speaker-center')}>
                     <div className={cn('speaker-center-top')}>
@@ -51,7 +56,13 @@ export default class AuthViewBody extends Component {
                 </div>
 
                 <div className={cn('speaker-right')}>
-                    <div className={cn('speaker')}>
+                    <div className={cn('speaker' , 'speaker-small')}>
+                        <div className={cn('speaker-outter')}>
+                            <div className={cn('speaker-inner')}></div>
+                        </div>
+                    </div>
+
+                    <div className={cn('speaker', 'speaker-big')}>
                         <div className={cn('speaker-outter')}>
                             <div className={cn('speaker-inner')}></div>
                         </div>

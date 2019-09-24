@@ -23,5 +23,5 @@ app.use(bodyParser())
 app.use(router.routes()).use(router.allowedMethods())
 
 app.listen(8888 , () => {
-    console.log('listening to port 8888');
+
 })
