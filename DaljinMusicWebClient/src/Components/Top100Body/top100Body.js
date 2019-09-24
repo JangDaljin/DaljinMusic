@@ -9,7 +9,7 @@ export default class Top100Body extends Component {
 
 
         const data = [];
-        for(let i = 0 ; i < 100 ; i ++) {
+        for(let i = 0 ; i < 3 ; i ++) {
             data.push({
                 singer : `SINGER ${i}`,
                 song : `SONG ${i}`,
@@ -19,7 +19,7 @@ export default class Top100Body extends Component {
 
         return (
             <div className={cn('top100')}>
-                <div className={cn('top100-main')}>
+                <div className={cn('top100-left')}>
                     {
                         data.map((value , index) => (
                             <div key={index} className={cn('top100-list-item')}>
@@ -31,15 +31,19 @@ export default class Top100Body extends Component {
 
                                     </div>
                                 </div>
-                                <div className={cn('top100-list-item-song')}>
-                                    <p>{value.song}</p>
+
+                                <div className={cn('top100-list-item-info')}>
+                                    <div className={cn('top100-list-item-song')}>
+                                        <p>{value.song}</p>
+                                    </div>
+                                    <div className={cn('top100-list-item-singer')}>
+                                        <p>{value.singer}</p>
+                                    </div>
+                                    <div className={cn('top100-list-item-album')}>
+                                        <p>{value.album}</p>
+                                    </div>
                                 </div>
-                                <div className={cn('top100-list-item-singer')}>
-                                    <p>{value.singer}</p>
-                                </div>
-                                <div className={cn('top100-list-item-album')}>
-                                    <p>{value.album}</p>
-                                </div>
+                                
                                 <div className={cn('top100-list-item-buttons')}>
                                     <input type="button" value='Play' />
                                     <input type="button" value='Add List' />
@@ -48,10 +52,9 @@ export default class Top100Body extends Component {
                             </div>
                         ))
                     }
-
                 </div>
 
-                <div className={cn('top100-modal')}>
+                <div className={cn('top100-right')}>
                     
 
                 </div>
