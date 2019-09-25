@@ -8,7 +8,6 @@
     position: absolute;
     left: 50%;
     transform: translate(-50% , 0%);
-    border : 1px solid blue;
 }
 
 .top100 > div {
@@ -17,13 +16,31 @@
 }
 
 .top100-left {
-    border: 1px solid black;
-    padding-right: 10px;
+    padding: 10px;
+}
+.top100-list {
+    text-align: center;
 }
 
-.top100-list-item {
-    width: 100%;
-    margin-bottom: 20px;
+.top100-list-item { 
+    position: relative;
+    width: 706px;
+    border: 2px solid #CCC;
+    margin-bottom: 1px;
+}
+
+.top100-list-checked {
+    background-color: #EEE;
+}
+
+
+.top100-list-item:hover {
+    transform: scale(1.05);
+    border: 3px solid #EEE;
+    box-shadow: 0px 0px 8px 8px #CCC;
+    transition: all 0.5s 0s;
+    margin-bottom: 10px;
+    margin-top: 15px;
 }
 
 .top100-list-item > div {
@@ -35,8 +52,10 @@
 
 .top100-list-item-ranking {
     width: 100px;
-    border: 3px solid black;
-    border-radius: 1rem;
+    font-family: 'Righteous' , 'cursive';
+    font-size: 2rem;
+    
+    border-right: 2px solid #CCC;
 }
 
 .top100-list-item-ranking > p {
@@ -66,10 +85,11 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    border-radius: 0.
 }
 
 .top100-list-item-info {
-    width: 250px;
+    width: 300px;
     padding-left: 20px;
 }
 
@@ -98,11 +118,36 @@
 }
 
 .top100-list-item-buttons {
-    width: 250px;
+    position: relative;
+    width: 200px;
+    text-align: center;
+    
+    border-left: 2px solid #CCC;
 }
 
+
+.top100-list-button {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+    padding: 8px;
+    color: #303030;
+    cursor: pointer;
+}
+
+.top100-list-button:hover {
+    border: 2px solid #069;
+    border-radius: 0.5rem;
+}
+
+.top100-list-button:hover > i {
+    color: #069;
+    transform: rotateX(360deg);
+    transition: transform 0.6s 0s ease-in-out;
+}   
+
 .top100-right {
-    width: 400px;
-    border: 1px solid black;
-    padding-left: 10px;
+
 }
