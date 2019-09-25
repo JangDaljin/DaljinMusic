@@ -1,5 +1,4 @@
 import React , { Component } from 'react'
-import { List , Map } from 'immutable'
 
 import classNames from 'classnames/bind'
 import styles from './top100Body.css'
@@ -9,64 +8,60 @@ export default class Top100Body extends Component {
 
     constructor (props) {
         super(props)
-        this.state = Map({
-            itemCount : 10,
-            items : List(Map({TEST:'TTTT'}))
-        })
         this.getMoreItem = this.getMoreItem.bind(this);
+
+
+        this.state = {
+            itemCount : 0,
+            items : []
+        }
     }
+
 
     componentDidMount () {
         console.log('DidMount');
-        this.getMoreItem(0 , this.state.get('itemCount'))
-
+        this.getMoreItem(0 , 10);
         window.addEventListener('scroll' , () => {
             let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
             let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
             let clientHeight = document.documentElement.clientHeight;
             if(scrollTop+clientHeight === scrollHeight) {
-                console.log('scroll end');
-                this.setState(this.state.set('itemCount' , this.state.get('itemCount')+10))
+                if(this.state.itemCount < 100) {
+                    this.getMoreItem(this.state.itemCount , this.state.itemCount+10)
+                }
             }
         } , true)
     }
 
-    componentDidUpdate (prevProps , prevState) {
-        //10개 더 요청
-        console.log('didupdate');
-        if(prevState !== this.state) {
-            //prevState.get('itemCount') ~ this.state.get('itemCount') 까지 요청
-
-            
-        }
-    }
 
     getMoreItem(prevCount , nowCount) {
+        const newState = { ...this.state }
+        newState.itemCount = this.state.itemCount + nowCount-prevCount
 
-        
         for(let i = prevCount ; i < nowCount; i ++) {
-            this.setState(this.state.set('items' , this.state.get('items').push(
-                    Map({
-                        singer : `SINGER ${prevCount + i}`,
-                        song : `SONG ${prevCount + i}`,
-                        album : `ALBUM ${prevCount + i}`
-                    })
-                ))
+            newState.items.push(
+                {
+                    singer : `SINGER ${prevCount + i}`,
+                    song : `SONG ${prevCount + i}`,
+                    album : `ALBUM ${prevCount + i}`
+                }
             )
         }
 
-        console.log(this.state.get('items'));
+        this.setState(newState);
     }
 
 
 
     render () {
 
+
         return (
             <div className={cn('top100')}>
                 <div className={cn('top100-left')}>
-                    {/*
-                        this.state.get('items').toJS().map((value , index) => (
+                    {
+
+                        this.state.items.map((value , index) => (
                             <div key={index} className={cn('top100-list-item')}>
                                 <div className={cn('top100-list-item-ranking')}>
                                     <p>{index+1}</p>
@@ -96,7 +91,8 @@ export default class Top100Body extends Component {
                                 </div>
 
                             </div>
-                        ))*/
+                        ))
+                        
                     }
                 </div>
 
