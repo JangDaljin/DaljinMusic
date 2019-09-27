@@ -1,17 +1,17 @@
 import React , { Component } from 'react'
+
 import Header from '../Components/Header/header'
-import Top100ViewBody from '../Components/Top100ViewBody/top100ViewBody'
+import MyMusicViewBody from '../Components/MyMusicViewBody/myMusicViewBodyc'
 
-export default class Top100View extends Component {
+export default class MyMusicView extends Component {
+
+
     render () {
-
         return (
             <div>
                 <Header />
-                <Top100ViewBody />
+                <MyMusicViewBody />
             </div>
         )
-
-
     }
 }

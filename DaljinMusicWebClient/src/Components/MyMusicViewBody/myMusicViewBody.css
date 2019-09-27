@@ -1,0 +1,187 @@
+.mymusic {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translate(-50% , 0);
+}
+
+.mymusic > div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+.mymusic-left {
+    min-width: 300px;
+}
+
+.mymusic-list-item-wrap {
+    width: 100%;
+    padding-right: 50px;
+}
+
+.mymusic-list-item-wrap:hover {
+    padding-right: 0px;
+    padding-left: 50px;
+    transition: padding 0.5s 0s;
+}
+
+
+.mymusic-list-item {
+    position: relative;
+    height: 60px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid #888;
+    cursor: pointer;
+}
+
+.mymusic-list-item:hover {
+    background-color: #EEE;
+}
+
+
+.mymusic-list-item > p {
+    position: absolute;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+
+
+/*
+* ===================================================
+* CENTER
+* ===================================================
+*/
+
+.mymusic-center {
+    width: 800px;
+    border-top: 2px solid #CCC;
+    border-bottom: 2px solid #CCC;
+    overflow : hidden;
+}
+
+.mymusic-table-wrap {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: calc(100% + 18px);
+    max-height: calc(100vh - 80px);
+}
+
+.mymusic-table-header {
+    position: relative;
+    font-weight: bold;
+    height: 50px;
+    background-color: #EEE;
+    border-bottom: 3px double #CCC;
+}
+
+.mymusic-table-header > div {
+    position: relative;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.mymusic-table-header > div > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+    text-align: center;
+}
+
+.mymusic-table-items {
+    height: 50px;
+    cursor: pointer;
+}
+
+.mymusic-table-items:hover {
+    border-top: 2px dotted #CCC;
+    border-bottom: 2px dotted #CCC;
+    background-color: #EEE;
+    transition: background 0.6s 0s;
+}
+
+.mymusic-table-items > div {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.mymusic-table-items > div > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+.mymusic-table-number {
+    position: relative;
+    width: 10%;
+}
+
+.mymusic-table-number > p {
+    text-align: center;
+}
+
+.mymusic-table-song {
+    width: 40%;
+}
+
+
+.mymusic-table-singer {
+    width: 40%;
+}
+
+
+.mymusic-table-time {
+    width: 10%;
+}
+
+.table-vertical-line {
+    border-right: 2px solid #CCC;
+}
+
+
+
+
+/*
+* ===================================================
+* RIGHT
+* ===================================================
+*/
+.mymusic-right {
+    min-width: 250px;
+    border: 1px solid #CCC;
+    margin-left: 20px;
+}
+
+.mymusic-buttons {
+    position: relative;
+    height: 50px;
+    border: 1px solid #CCC;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #303030;
+}
+
+.mymusic-buttons:hover {
+    background-color: #EEE;
+}
+
+.mymusic-buttons > p {
+    position: absolute;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+.mymusic-buttons > p > i {
+    color: #333;
+}

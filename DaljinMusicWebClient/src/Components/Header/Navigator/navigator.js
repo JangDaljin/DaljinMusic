@@ -9,7 +9,24 @@ class Navigator extends Component {
 
     render () {
 
-        const menuNames = ['HOME' , 'TOP 100' , 'MY MUSIC' , 'OTHER MUSIC']
+        const menuNames = [
+            {
+                name : '홈' ,
+                link : 'HOME'
+            },
+            {
+                name : 'TOP 100' ,
+                link : 'TOP 100'
+            },
+            {
+                name : '내음악' ,
+                link : 'MY MUSIC'
+            },
+            {
+                name : '모든 음악' ,
+                link : 'ALL MUSIC'
+            }
+        ]
 
         return (
             <div className={cn('header-navigator')}>
@@ -17,7 +34,7 @@ class Navigator extends Component {
                 <ul>
                     {menuNames.map(
                         (value , index) => {
-                            return (<Link to={menuNames[index].replace(/ /gi , '').toLowerCase()} key={index} className={cn(`navigator-item`)}><p>{value}</p></Link>)
+                            return (<Link to={menuNames[index].link.replace(/ /gi , '').toLowerCase()} key={index} className={cn(`navigator-item`)}><p>{menuNames[index].name}</p></Link>)
                         }
                     )}
                 </ul>

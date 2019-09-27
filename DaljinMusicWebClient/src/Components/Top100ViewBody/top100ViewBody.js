@@ -1,10 +1,10 @@
 import React , { Component } from 'react'
 
 import classNames from 'classnames/bind'
-import styles from './top100Body.css'
+import styles from './top100ViewBody.css'
 const cn = classNames.bind(styles)
 
-export default class Top100Body extends Component {
+export default class Top100ViewBody extends Component {
 
     constructor (props) {
         super(props)
