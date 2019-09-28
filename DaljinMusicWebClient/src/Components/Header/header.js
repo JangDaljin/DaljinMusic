@@ -1,12 +1,13 @@
 import React , { Component } from 'react'
 
-import styles from './header.css'
-import classNames from 'classnames/bind'
 
 import Logo from './Logo/logo'
 import Search from './Search/search'
 import Navigator from './Navigator/navigator'
 import Auth from './Auth/auth'
+
+import styles from './header.css'
+import classNames from 'classnames/bind'
 const cn = classNames.bind(styles)
 
 class Header extends Component {

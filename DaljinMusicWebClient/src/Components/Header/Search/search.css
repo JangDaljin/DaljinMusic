@@ -60,5 +60,6 @@
 }
 
 .header-search-button:active {
-    background-color: #069;
+    font-weight: bold;
+    color: #069;
 }

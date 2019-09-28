@@ -21,10 +21,6 @@ class Navigator extends Component {
             {
                 name : '내음악' ,
                 link : 'MY MUSIC'
-            },
-            {
-                name : '모든 음악' ,
-                link : 'ALL MUSIC'
             }
         ]
 
