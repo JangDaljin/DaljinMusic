@@ -9,32 +9,13 @@ class Navigator extends Component {
 
     render () {
 
-        const menuNames = [
-            {
-                name : '홈' ,
-                link : 'HOME'
-            },
-            {
-                name : 'TOP 100' ,
-                link : 'TOP 100'
-            },
-            {
-                name : '내음악' ,
-                link : 'MY MUSIC'
-            }
-        ]
-
         return (
             <div className={cn('header-navigator')}>
-
                 <ul>
-                    {menuNames.map(
-                        (value , index) => {
-                            return (<Link to={menuNames[index].link.replace(/ /gi , '').toLowerCase()} key={index} className={cn(`navigator-item`)}><p>{menuNames[index].name}</p></Link>)
-                        }
-                    )}
+                    <Link to='/home' className={cn(`navigator-item`)}><p><i className="fas fa-home"></i> 홈</p></Link>
+                    <Link to='/top100' className={cn(`navigator-item`)}><p><i className="fas fa-trophy"></i> TOP 100</p></Link>
+                    <Link to='/mymusic' className={cn(`navigator-item`)}><p><i className="fas fa-headphones-alt"></i> 내음악</p></Link>
                 </ul>
-
             </div> 
         )
 

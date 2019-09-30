@@ -1,0 +1,130 @@
+.musicplayer {
+    bottom: 0;
+    border: 2px solid #303030;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #FEFEFE;
+    min-width: 370px;
+    text-align: left;
+    position: absolute;
+    right: 0;
+}
+
+.top-wrap {
+    display: block;
+}
+
+.top-wrap > div {
+    display: inline-block;
+    vertical-align: top;    
+}
+
+.img-wrap {
+    position: relative;
+    width: 66px;
+
+}
+
+.img-wrap::before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.info {
+    width: 170px;
+    height: 100%;
+    border-right: 1px solid #303030;
+    border-left: 1px solid #303030;
+}
+
+.info > div {
+    position: relative;
+    height: 50%;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.info > div > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.singer {
+    font-weight: bold;      
+}
+
+.buttons {
+    width: 130px;
+    height: 100%;
+    position: relative;
+}
+
+.button {
+    height: 60%;
+}
+
+.button > div {
+    vertical-align: top;
+    display: inline-block;
+    width: calc(100% / 4);
+}
+
+.button > div  {
+    position: relative;
+    width: calc(100% / 4);
+    height: 100%;
+}
+
+.button > div > i {
+    position : relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+}
+
+.musicplayer-list-up {
+    position: relative;
+    width: 100%;
+    height: 40%;
+    border: 1px solid #CCC;
+    background-color: #303030;
+    text-align: center;
+    color: #CCC;
+    cursor: pointer;
+}
+
+.musicplayer-list-up:hover {
+    color: white;;
+}
+
+.musicplayer-list-up > i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.musicplayer-list {
+    display: block;
+    width: 200px;
+    height: 200px;
+    border: 1px solid red;
+}
+
+.bottom-wrap {
+    display: block;
+}

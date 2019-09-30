@@ -4,4 +4,23 @@
     transform: translate(-50% , 0);
     text-align: center;
     padding: 20px;
+    overflow: hidden;
+}
+
+.rightmenu {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    border: 2px solid #CCC;
+}
+
+.menu {
+    padding : 10px;
+    border: 2px solid #CCC;
+    background-color: #EFEFEF;
+    cursor: pointer;
+}
+.menu:hover {
+    background: #303030;
+    color: #CCC;
 }

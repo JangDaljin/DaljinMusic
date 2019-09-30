@@ -2,7 +2,7 @@
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     display: inline-block;
     width: 500px;
     border: 3px solid #EEE;
@@ -21,7 +21,7 @@
 
 .list {
     box-shadow: 0px 0px 5px 5px #AAA;
-    height: 700px;
+    height: 600px;
     margin-bottom: 10px;
 }
 
@@ -29,6 +29,13 @@
     height: 100px;
     border-top: 1px solid #CCC; 
     border-bottom: 1px solid #CCC;
+    cursor: pointer;
+}
+
+.list-item-checked {
+    background-color: #ccd4fc;
+    border: 1px solid white;
+    transition: background-color 0.4s 0s;
 }
 
 .list-item:hover {
@@ -92,5 +99,70 @@
 
 .pages {
     height: 40px;
-    border: 1px solid black;
+    
+    position: relative;
+    text-align: center;
+}
+
+.pages > div {
+    height: 100%;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+.page-wrap {
+    width: calc(100% / 7 * 5);
+    height: 100%;
+    position: relative;
+}
+
+.page-wrap > div {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% / 5);
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+    font-weight: bold;
+    border: 1px solid #CCC;
+    font-size: 1.2rem;
+}
+
+.prev {
+    width: calc(100% / 7);
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.prev:active {
+    color: #069;
+}
+
+.prev > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.next {
+    width: calc(100% / 7);
+
+}
+
+.next:active {
+    color: #069;
+}
+
+.next > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.pagechoice {
+    color: #069;
+    background-color: #CCC;
 }

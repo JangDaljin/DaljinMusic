@@ -12,8 +12,6 @@ class Search extends Component {
         this.state = {
             searchtext : queryString.parse(this.props.location.search).searchtext || ''
         }
-
-        console.log(this.state.searchtext);
         this.searchTextChanged = this.searchTextChanged.bind(this);
     }
 
