@@ -5,14 +5,14 @@
     display: inline-block;
     vertical-align: top;
     background-color: #FEFEFE;
-    min-width: 370px;
+    width: 370px;
     text-align: left;
-    position: absolute;
-    right: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .top-wrap {
-    display: block;
+    height: 100%;
 }
 
 .top-wrap > div {
@@ -23,7 +23,6 @@
 .img-wrap {
     position: relative;
     width: 66px;
-
 }
 
 .img-wrap::before {
@@ -44,23 +43,43 @@
 }
 
 .info {
+    position: relative;
     width: 170px;
     height: 100%;
     border-right: 1px solid #303030;
     border-left: 1px solid #303030;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 2px;
 }
 
 .info > div {
     position: relative;
-    height: 50%;
-    padding-right: 10px;
-    padding-left: 10px;
+    height: calc(100% /3);
+    overflow: hidden;
 }
 
 .info > div > p {
     position: relative;
     top: 50%;
     transform: translate(0 , -50%);
+    
+
+}
+
+.progress-wrap {
+    width: 100%;
+    border: 2px solid #303030;
+    border-radius: 1rem;
+}
+
+.progress {
+    background-color: #0AC8;
+    height: 100%;
+    text-align: center;
+    border-radius: 0.8rem;
+    color: #303030;
+    font-size: 0.8rem;
 }
 
 .singer {
@@ -74,20 +93,22 @@
 }
 
 .button {
-    height: 60%;
+    height: calc(100% / 3 * 2);
 }
 
 .button > div {
     vertical-align: top;
     display: inline-block;
-    width: calc(100% / 4);
+    width: calc(100% / 3);
+    position: relative;
+    height: 100%;
+    cursor: pointer;
 }
 
-.button > div  {
-    position: relative;
-    width: calc(100% / 4);
-    height: 100%;
+.button > div:hover {
+    color: #069;
 }
+
 
 .button > div > i {
     position : relative;
@@ -99,7 +120,7 @@
 .musicplayer-list-up {
     position: relative;
     width: 100%;
-    height: 40%;
+    height: calc(100% / 3);
     border: 1px solid #CCC;
     background-color: #303030;
     text-align: center;
@@ -118,13 +139,114 @@
     transform: translate(-50%, -50%)
 }
 
-.musicplayer-list {
-    display: block;
-    width: 200px;
-    height: 200px;
-    border: 1px solid red;
-}
+
+
+
 
 .bottom-wrap {
     display: block;
+    width: 100%;
+    overflow : hidden;
+}
+
+.playing-list {
+    display: block;
+    width: calc(100% + 17px);
+    overflow-y: scroll;
+    height: 30vh;
+    overflow-x: hidden;
+}
+
+.playing-list-item {
+    height: 40px;
+    border-right: 2px solid #CCC;
+    border-left: 2px solid #CCC;
+    
+    border-top: 1px solid #CCC;
+    
+    border-bottom: 1px solid #CCC;
+
+    background-color: #FEFEFE;
+    cursor: pointer;
+}
+
+.playing-list-item:hover {
+    border: 2px solid #069;
+    background-color: #CCC;
+}
+
+.playing-list-item > div{
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+}
+
+.playing-list-number {
+    width: 15%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.playing-list-singer {
+    width: 30%;
+}
+
+.playing-list-song {
+    width: 40%;
+}
+
+.playing-list-time {
+    width: 15%;
+    color: black;
+    text-align: center;
+}
+
+.playing-list-item > div > p {
+    position : relative;
+    top: 50%;
+    transform: translate(0  , -50%);
+}
+
+.showlist {
+    display: none;
+    transition: all 1s 0s;
+}
+
+
+.playing-list-button {
+    width: 100%;
+    background-color: #FEFEFE;
+    height: 35px;
+}
+
+.playing-list-button > div {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% / 3);
+    text-align: center;
+    cursor: pointer;
+    
+    border: 2px solid #CCC;
+    height: 100%;
+    position: relative;
+}
+
+.playing-list-button > div > i {
+    position: relative;
+    vertical-align: top;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+.unchecked {
+    color: #CCC;
+}
+
+.removemode {
+    color: red;
+}
+
+.isplaying {
+    display: none;
 }

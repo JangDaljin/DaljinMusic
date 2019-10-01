@@ -5,7 +5,7 @@ import MyMusicViewListNames from './ListNames/listNames'
 import MyMusicViewButtons from './Buttons/buttons'
 
 import classNames from 'classnames/bind'
-import styles from './myMusicViewBody.css'
+import styles from './myMusicView.css'
 const cn = classNames.bind(styles)
 
 

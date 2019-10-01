@@ -27,7 +27,7 @@
     overflow-x: hidden;
     overflow-y: scroll;
     width: calc(100% + 18px);
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 130px);
 }
 
 .mymusic-table-items {

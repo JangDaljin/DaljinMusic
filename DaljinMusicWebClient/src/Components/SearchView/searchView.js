@@ -6,7 +6,7 @@ import SearchResult from './SearchResult/searchResult'
 
 
 import classNames from 'classnames/bind'
-import styles from './searchViewBody.css'
+import styles from './searchView.css'
 const cn = classNames.bind(styles)
 
 class SearchViewBody extends Component {

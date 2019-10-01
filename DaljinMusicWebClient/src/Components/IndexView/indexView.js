@@ -6,7 +6,7 @@ import HotnNewMusic from './HotnNewMusic/hotnNewMusic'
 import TopTenMusic from './TopTenMusic/TopTenMusic'
 
 import classNames from 'classnames/bind'
-import styles from './indexViewBody.css'
+import styles from './indexView.css'
 const cn = classNames.bind(styles)
 
 class IndexBody extends Component {

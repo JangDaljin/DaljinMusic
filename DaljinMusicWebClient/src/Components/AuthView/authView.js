@@ -4,7 +4,7 @@ import LoginForm from './LoginForm/loginForm'
 import Logo from '../Header/Logo/logo'
 
 import classNames from 'classnames/bind'
-import styles from './authViewBody.css'
+import styles from './authView.css'
 const cn = classNames.bind(styles)
 
 

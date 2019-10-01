@@ -1,7 +1,7 @@
 import React , { Component } from 'react'
 
 import classNames from 'classnames/bind'
-import styles from './top100ViewBody.css'
+import styles from './top100View.css'
 const cn = classNames.bind(styles)
 
 export default class Top100ViewBody extends Component {
