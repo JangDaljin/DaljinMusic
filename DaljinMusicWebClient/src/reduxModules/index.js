@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
-import login from './login'
-import music from './music'
+import Login from './login'
+import Top100 from './top100'
 
 const reducers = combineReducers({
-    login,
-    music
+    Login,
+    Top100
 })
 
 export default reducers

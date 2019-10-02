@@ -1,14 +1,14 @@
-import { takeLatest , select , call , put } from 'redux-saga/effects'
+import { takeLatest , call , put } from 'redux-saga/effects'
 import { FETCH_LOGIN , ACCEPT_LOGIN , ABORT_LOGIN } from './login'
 import Config from '../config'
 
 
 function* fetchLogIn (action) {
-    const state = yield select()
+    //const state = yield select() //'redux-saga/effects'
 
     const data = {
-        userid : state.login.userid,
-        userpw : state.login.userpw
+        userid : action.payload.id,
+        userpw : action.payload.pw
     }
 
     const request = {
@@ -33,6 +33,6 @@ function* fetchLogIn (action) {
     }
 }
 
-export default function* rootSaga () {
+export default function* loginSaga () {
     yield takeLatest(FETCH_LOGIN , fetchLogIn)
 }
