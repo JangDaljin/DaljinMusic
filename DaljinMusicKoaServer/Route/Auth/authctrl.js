@@ -1,3 +1,10 @@
+const response = {
+    userId : '',
+    userName : '',
+    authenticate : false,
+    token : '',
+}
+
 exports.check = (ctx) => {
     ctx.body = {
         authenticated : false
@@ -6,21 +13,29 @@ exports.check = (ctx) => {
 
 exports.login = (ctx) => {
 
-    const { userid , userpw } = ctx.request.body
+    const { userId , userPw } = ctx.request.body
 
-    let response = {
-        authenticated : false
+    const newResponse = { ...response }
+    if(userId === "daljin" && userPw === "daljin") {
+        newResponse.userId = userId
+        newResponse.userName = 'daljin'
+        newResponse.authenticate = true
+        newResponse.token = 'daljin'
     }
 
-    if(userid === "daljin" && userpw === "daljin") {
-        response.authenticated = true;
-    }
-
-    ctx.body = response;
+    ctx.session.views = 0;
+    
+    ctx.body = newResponse;
 }
 
 exports.logout = (ctx) => {
-    ctx.body = {
-        authenticated : false
-    }
+    
+    console.log(ctx.session.views)
+    ctx.body = { ...response } 
+    
+}
+
+exports.tokenVerify = (ctx) => {
+    
+
 }

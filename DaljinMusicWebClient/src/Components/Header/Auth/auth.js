@@ -1,6 +1,9 @@
 import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
+import * as authActions from '../../../ReduxModules/auth'
+
 
 import classNames from 'classnames/bind'
 import styles from './auth.css'
@@ -15,28 +18,30 @@ class Auth extends Component {
 
         return (
             <div className={cn('header-auth')}>
-
+            {this.props.isAuthenticated ? 
                 <div className={cn('auth-userinfo-wrap')}>
-                    {!this.props.isAuthticated &&
-                        <div className={cn('auth-userinfo')}>
-                            <div className={cn('auth-userinfo-icon-wrap')}>
-                                <i className={cn('fas fa-user' , {'auth-userinfo-icon' : this.props.isAuthenticated})}></i>
-                            </div>
-                            <div className={cn('auth-userinfo-text')}>
-                                <p>안녕하세요. {this.props.userid}님.</p>
-                            </div>
+                    <div className={cn('auth-userinfo')}>
+                        <div className={cn('auth-userinfo-icon-wrap')}>
+                            <i className={cn('fas fa-user' , 'auth-userinfo-icon')}></i>
                         </div>
-                    }
-                </div>
-
-                <Link to="/auth" className={cn('auth-loginout-button-wrap')}>
-                    <div className={cn('auth-loginout-button')}>
-                        <i className="far fa-address-card fa-2x"></i>
-                        <p className={cn('loginout-text')}>{this.props.isAuthenticated? '로그아웃' : '로그인'}</p>
+                        <div className={cn('auth-userinfo-text')}>
+                            <p>안녕하세요. {this.props.userName}님.</p>
+                        </div>
                     </div>
+                    <div className={cn('auth-loginout-button')} onClick={() => {this.props.AuthActions.fetchLogout()}}>
+                        <i className="far fa-address-card fa-2x"></i>
+                        <p className={cn('loginout-text')}>로그아웃</p>
+                    </div>
+                </div>
+                :
+                <Link to="/auth" className={cn('auth-loginout-button-wrap')}>
+                        <div className={cn('auth-loginout-button')}>
+                            <i className="far fa-address-card fa-2x"></i>
+                            <p className={cn('loginout-text')}>로그인</p>
+                        </div>
                 </Link>
 
-
+            }
             </div>
         )
     }
@@ -46,6 +51,10 @@ class Auth extends Component {
 
 export default connect(
     (state) => ({
-        isAuthenticated : state.login.isAuthenticated,
-        userid : state.login.userid
-    }))(Auth);
+        isAuthenticated : state.auth.isAuthenticated,
+        userName : state.auth.userName
+    }),
+    (dispatch) => ({
+        AuthActions : bindActionCreators(authActions , dispatch)
+    })
+    )(Auth);
