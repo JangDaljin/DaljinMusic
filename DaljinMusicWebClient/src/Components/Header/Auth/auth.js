@@ -14,8 +14,11 @@ const cn = classNames.bind(styles)
 class Auth extends Component {
 
 
-    render () {
+    componentDidMount() {
+        this.props.AuthActions.checkLogged();
+    }
 
+    render () {
         return (
             <div className={cn('header-auth')}>
             {this.props.isAuthenticated ? 

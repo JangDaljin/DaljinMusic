@@ -18,7 +18,11 @@ router.use('/auth' , authRouter.routes())
 
 app.use(cors())
 app.use(bodyParser())
-app.use(session({ maxAge : 86400000 } , app))
+
+const sessionConfig = {
+    maxAge : 86400000,
+}
+app.use(session(sessionConfig , app))
 app.keys = ['DaljinMusicWebClient']
 
 app.use(router.routes()).use(router.allowedMethods())

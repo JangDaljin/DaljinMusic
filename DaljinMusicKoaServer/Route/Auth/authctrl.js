@@ -23,14 +23,20 @@ exports.login = (ctx) => {
         newResponse.token = 'daljin'
     }
 
-    ctx.session.views = 0;
-    
+    ctx.session.authenticate = true;
+    ctx.session.save()
     ctx.body = newResponse;
 }
 
 exports.logout = (ctx) => {
-    
-    console.log(ctx.session.views)
+
+    if(ctx.session.authenticate) {
+        console.log("logged")
+    }
+    else {
+        console.log("not logged")
+    }
+
     ctx.body = { ...response } 
     
 }

@@ -6,15 +6,19 @@ const express = require('express')
 , cors = require('cors')
 
 //내부모듈
-const loginRouter = require('./routes/Login')
-, musicRouter = require('./routes/Music')
+const AuthRouter = require('./routes/auth')
+const MongoDB = require('./Database/mongoDB')
 
+const {
+    PORT : port = 8888,
+    SESSION_KEY : sessionKey
+} = process.env
 
 var app = express()
 
 
 //크로스 브라우저 가능
-app.use(cors())
+app.use(cors({credentials:true , origin:'http://localhost:3000'}))
 
 //바디파서 사용(POST 사용)
 app.use(bodyparser.urlencoded({extended:true}))
@@ -26,18 +30,22 @@ app.use(bodyparser.json())
 //세션
 app.use(session(
     {
-        secret:'daljinMusic',
+        secret: 'DaljinMusicWebClient',
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000
         }
     }
 ))
 
 //라우팅
-app.use('/music' , musicRouter)
-app.use('/login' , loginRouter)
+app.use('/auth' , AuthRouter)
 
 
-http.createServer(app).listen(8888)
+
+
+http.createServer(app).listen(port , () => {
+    console.log(`SERVER OPEN (PORT : ${port})`)
+    MongoDB.connect();
+})

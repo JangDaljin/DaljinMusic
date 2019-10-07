@@ -21,25 +21,27 @@ export const acceptLogout = createAction(ACCEPT_LOGOUT)
 export const ABORT_LOGOUT = 'auth/ABORT_LOGOUT'
 export const abortLogout = createAction(ABORT_LOGOUT)
 
+export const CHECK_LOGGED = 'auth/CHECK_LOGGED'
+export const checkLogged = createAction(CHECK_LOGGED)
+
+export const ALREADY_LOGGED = 'auth/ALREADY_LOGGED'
+export const alreadyLogged = createAction(ALREADY_LOGGED)
+
 const initialState = {
     userId : '',
     userName : '',
     isAuthenticated : false,
-    token : '',
 }
 
 export const authReducer = handleActions({
     [ACCEPT_LOGIN] : (state , action) => {
         const newState = { ...state }
 
-        const { userId , userName , authenticate , token } = action.payload
+        const { userId , userName , isAuthenticated } = action.payload
         newState.userId = userId
         newState.userName = userName
-        newState.isAuthenticated = authenticate
-        newState.token = token
+        newState.isAuthenticated = isAuthenticated
         
-
-        console.dir(action.payload)
         return newState
     },
     [ABORT_LOGIN] : (state , action) => {
@@ -48,19 +50,24 @@ export const authReducer = handleActions({
     },
     [ACCEPT_LOGOUT] : (state , action) => {
         const newState = { ...state }
-
-        const { userId , userName , authenticate , token } = action.payload
+        const { userId , userName , isAuthenticated } = action.payload
         newState.userId = userId
         newState.userName = userName
-        newState.isAuthenticated = authenticate
-        newState.token = token
-        
+        newState.isAuthenticated = isAuthenticated
         return newState
     },
     [ABORT_LOGOUT] : (state , action) => {
         const newState = { ...initialState }
         return newState
     },
+    [ALREADY_LOGGED] : (state , action) => {
+        const newState = { ...state }
+        const { userId , userName , isAuthenticated } = action.payload
+        newState.userId = userId
+        newState.userName = userName
+        newState.isAuthenticated = isAuthenticated
+        return newState
+    }
 } , initialState)
 
 
@@ -78,8 +85,11 @@ function* fetchLoginSaga (action) {
     const request = {
         body : JSON.stringify(data),
         headers : {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/json',
+            'Accept':  'application/json',
+            'Cache': 'no-cache'
         },
+        credentials : 'include',
         method : 'POST'
     }
 
@@ -102,8 +112,11 @@ function* fetchLogoutSaga(action) {
     const request = {
         body : JSON.stringify({}),
         headers : {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/json',
+            'Accept':  'application/json',
+            'Cache': 'no-cache'
         },
+        credentials: 'include',
         method : 'POST'
     }
 
@@ -121,8 +134,30 @@ function* fetchLogoutSaga(action) {
     }
 } 
 
+function* checkLoggedSaga() {
+    const request = {
+        body : JSON.stringify({}),
+        headers : {
+            'Content-Type' : 'application/json',
+            'Accept':  'application/json',
+            'Cache': 'no-cache'
+        },
+        credentials: 'include',
+        method : 'POST'
+    }
+
+    const response = yield call(fetch , `${Config.SERVER}/auth/islogged` , request )
+    if(response.ok) {
+        yield put({ type : ALREADY_LOGGED , payload : yield call([response , 'json'])})
+    }
+    else {
+        console.log('isnotlogged')
+    }
+}
+
 export function* authSaga() {
     yield takeLatest(FETCH_LOGIN , fetchLoginSaga)
     yield takeLatest(FETCH_LOGOUT , fetchLogoutSaga)
+    yield takeLatest(CHECK_LOGGED , checkLoggedSaga)
 }
 
