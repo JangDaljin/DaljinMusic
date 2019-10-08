@@ -27,6 +27,7 @@ export const checkLogged = createAction(CHECK_LOGGED)
 export const ALREADY_LOGGED = 'auth/ALREADY_LOGGED'
 export const alreadyLogged = createAction(ALREADY_LOGGED)
 
+
 const initialState = {
     userId : '',
     userName : '',
@@ -67,7 +68,10 @@ export const authReducer = handleActions({
         newState.userName = userName
         newState.isAuthenticated = isAuthenticated
         return newState
-    }
+    },
+
+    
+
 } , initialState)
 
 
@@ -154,6 +158,7 @@ function* checkLoggedSaga() {
         console.log('isnotlogged')
     }
 }
+
 
 export function* authSaga() {
     yield takeLatest(FETCH_LOGIN , fetchLoginSaga)

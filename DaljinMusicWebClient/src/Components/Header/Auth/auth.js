@@ -37,13 +37,20 @@ class Auth extends Component {
                     </div>
                 </div>
                 :
-                <Link to="/auth" className={cn('auth-loginout-button-wrap')}>
+                <div className={cn('auth-before-login')}>
+                    <Link to="/auth" className={cn('auth-loginout-button-wrap')}>
+                            <div className={cn('auth-loginout-button')}>
+                                <i className="far fa-address-card fa-2x"></i>
+                                <p className={cn('loginout-text')}>로그인</p>
+                            </div>
+                    </Link>
+                    <Link to="/signup" className={cn('auth-loginout-button-wrap')}>
                         <div className={cn('auth-loginout-button')}>
                             <i className="far fa-address-card fa-2x"></i>
-                            <p className={cn('loginout-text')}>로그인</p>
+                            <p className={cn('loginout-text')}>회원가입</p>
                         </div>
-                </Link>
-
+                    </Link>
+                </div>
             }
             </div>
         )
