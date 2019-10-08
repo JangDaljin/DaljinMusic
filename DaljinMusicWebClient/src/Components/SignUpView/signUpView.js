@@ -29,6 +29,10 @@ class SignUpView extends Component {
             window.alert(this.props.toastMessage)
             this.props.SignUpActions.toastClear()
         }
+
+        if(prevProps.idCheck === false &&  this.props.idCheck === true) {
+            this.setState({verifiedId : this.state.userId})
+        }
     }
 
     verifyId = (e) => {
@@ -38,7 +42,7 @@ class SignUpView extends Component {
     }
 
     verifyPassword = (e) => {
-        const regex = /^[A-Za-z0-9]{6,12}$/
+        const regex = /^[A-Za-z0-9!@#$%^&*()_+=-]{6,12}$/
         if(regex.test(this.state.userPw)) {
             this.setState({verifyPassword : true })
         }
@@ -78,7 +82,7 @@ class SignUpView extends Component {
         e.preventDefault()
         const {verifyPassword , verifyPasswordCheck , verifyNickName} = this.state
         if(this.props.idCheck && verifyPassword && verifyPasswordCheck && verifyNickName) {
-            this.props.SignUpActions.fetchSignUp(this.state.userId , this.state.userPw , this.state.userName)
+            this.props.SignUpActions.fetchSignUp(this.state.verifiedId , this.state.userPw , this.state.userName)
         }
     }
 
@@ -99,7 +103,7 @@ class SignUpView extends Component {
                     <input type='password' placeholder="비밀번호" onBlur={this.verifyPassword} onChange={(e) => {this.setState({ userPw : e.target.value })}} />
                 </div>
                 <div className={cn('verify' , {'hidden' : this.state.verifyPassword })}>
-                    <p><i className="fas fa-times"></i> 최소 특수문자 1개 필요</p>
+                    <p><i className="fas fa-times"></i> 6자리 ~ 12자리, 특수문자 1개 이상필요</p>
                 </div>
 
 
