@@ -32,7 +32,7 @@ class Auth extends Component {
                         </div>
                     </div>
                     <div className={cn('auth-loginout-button')} onClick={() => {this.props.AuthActions.fetchLogout()}}>
-                        <i className="far fa-address-card fa-2x"></i>
+                        <i className="fas fa-sign-out-alt fa-2x"></i>
                         <p className={cn('loginout-text')}>로그아웃</p>
                     </div>
                 </div>
@@ -40,14 +40,13 @@ class Auth extends Component {
                 <div className={cn('auth-before-login')}>
                     <Link to="/auth" className={cn('auth-loginout-button-wrap')}>
                             <div className={cn('auth-loginout-button')}>
-                                <i className="far fa-address-card fa-2x"></i>
-                                <p className={cn('loginout-text')}>로그인</p>
+                                <p className={cn('loginout-text')}><i className="fas fa-sign-in-alt fa-2x"></i><span> 로그인</span></p>  
                             </div>
                     </Link>
                     <Link to="/signup" className={cn('auth-loginout-button-wrap')}>
                         <div className={cn('auth-loginout-button')}>
-                            <i className="far fa-address-card fa-2x"></i>
-                            <p className={cn('loginout-text')}>회원가입</p>
+                            
+                            <p className={cn('loginout-text')}><i className="far fa-address-card fa-2x"></i><span> 회원가입</span></p>
                         </div>
                     </Link>
                 </div>

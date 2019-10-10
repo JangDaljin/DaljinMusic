@@ -1,11 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-
-
-router.post('/' , (res , req) => {
-
-})
+const UserModel = require('../Database/mongoDB').userModel
 
 router.post('/idcheck' , (req , res) => {
     const {userId} = req.body;
@@ -24,6 +20,16 @@ router.post('/idcheck' , (req , res) => {
     res.json(response);
 })
 
+router.post('/' , (req , res) => {
+    const { userId , userPw , userName } = req.body;
+
+    const response = {
+        
+    };
+
+
+    res.json(response)
+})
 
 
 module.exports = router;

@@ -42,7 +42,7 @@ class SignUpView extends Component {
     }
 
     verifyPassword = (e) => {
-        const regex = /^[A-Za-z0-9!@#$%^&*()_+=-]{6,12}$/
+        const regex = /(?=.*\d{1,50})(?=.*[~`!@#$%^&*()\-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/;
         if(regex.test(this.state.userPw)) {
             this.setState({verifyPassword : true })
         }
@@ -63,7 +63,7 @@ class SignUpView extends Component {
     }
 
     verifyNickName = (e) => {
-        const regex = /.{2,8}$/
+        const regex = /^(?=.*\w{0,8})(?=.*[가-힣]{0,8}).{2,8}$/;
         if(regex.test(this.state.userName)) {
             this.setState({verifyNickName : true})
         }
@@ -82,7 +82,11 @@ class SignUpView extends Component {
         e.preventDefault()
         const {verifyPassword , verifyPasswordCheck , verifyNickName} = this.state
         if(this.props.idCheck && verifyPassword && verifyPasswordCheck && verifyNickName) {
+            console.log('sign up check complete')
             this.props.SignUpActions.fetchSignUp(this.state.verifiedId , this.state.userPw , this.state.userName)
+        }
+        else {
+            console.log('sign up check unlcomplete')
         }
     }
 
@@ -103,7 +107,7 @@ class SignUpView extends Component {
                     <input type='password' placeholder="비밀번호" onBlur={this.verifyPassword} onChange={(e) => {this.setState({ userPw : e.target.value })}} />
                 </div>
                 <div className={cn('verify' , {'hidden' : this.state.verifyPassword })}>
-                    <p><i className="fas fa-times"></i> 6자리 ~ 12자리, 특수문자 1개 이상필요</p>
+                    <p><i className="fas fa-times"></i> 영문,숫자,특수문자 포함 8자리 이상</p>
                 </div>
 
 
@@ -119,7 +123,7 @@ class SignUpView extends Component {
                     <input type='text' placeholder="닉네임" onBlur={this.verifyNickName} onChange={(e) => {this.setState({ userName : e.target.value })}}/>
                 </div>
                 <div className={cn('verify' , { 'hidden' : this.state.verifyNickName })}>
-                    <p><i className="fas fa-times"></i> 특수문자가 포함되어있습니다.</p>
+                    <p><i className="fas fa-times"></i> 2자리~8자리 한글,영어,숫자 조합</p>
                 </div>
                 <div className={cn('wrap' , 'buttons')}>
                     <input type='button' value='가입하기' onClick={this.doSingUp} />

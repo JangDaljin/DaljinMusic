@@ -3,13 +3,13 @@ import { call , put , takeLatest} from 'redux-saga/effects'
 import Config from '../config'
 
 export const FETCH_SIGNUP = 'signup/FETCH_SIGNUP'
-export const fetchSighUp = createAction(FETCH_SIGNUP)
+export const fetchSignUp = createAction(FETCH_SIGNUP)
 
 export const ACCEPT_SIGNUP = 'signup/ACCEPT_SIGNUP'
-export const acceptSighUp = createAction(ACCEPT_SIGNUP)
+export const acceptSignUp = createAction(ACCEPT_SIGNUP)
 
 export const ABORT_SIGNUP = 'signup/ABORT_SIGNUP'
-export const abortSighUp = createAction(ABORT_SIGNUP)
+export const abortSignUp = createAction(ABORT_SIGNUP)
 
 export const DUPL_ID_CHECK = 'signup/DUPL_ID_CHECK'
 export const duplIdCheck = createAction(DUPL_ID_CHECK)
