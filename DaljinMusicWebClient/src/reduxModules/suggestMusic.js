@@ -18,23 +18,24 @@ export const suggestMusicState = {
 export const suggestMusicReducer = handleActions({
     [ACCEPT_SUGGESTMUSIC] : (state , action) => {
         const newState = { ...state }
-
+        newState.items = action.payload
         return newState
     },
     [ABORT_SUGGESTMUSIC] : (state , action) => {
+        console.log('abort')
         const newState = { ...state }
         return newState
     }
-})
+}, suggestMusicState)
 
 function* fetchSaga(action) {
 
     
     try {
-        const response = yield call(fetch , `${Config.SERVER}/suggestmusic` , request)
-
+        const response = yield call(fetch , `${Config.SERVER}/suggestmusic/${action.payload}`)
+        console.log(`${action.payload}`)
         if(response.ok) {
-            yield put({type : ABORT_SUGGESTMUSIC , payload : yield call([response , 'json'])})
+            yield put({type : ACCEPT_SUGGESTMUSIC , payload : yield call([response , 'json'])})
         }
         else {
             throw new Error('aborted')

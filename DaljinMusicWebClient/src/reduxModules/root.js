@@ -3,11 +3,13 @@ import { fork} from 'redux-saga/effects'
 import { authReducer as auth , authSaga} from './auth'
 import { signUpReducer as signUp , signUpSaga } from './signUp'
 import { todaysMusicReducer as todaysMusic , todaysMusicSaga } from './todaysMusic'
+import { suggestMusicReducer as suggestMusic , suggestMusicSaga } from './suggestMusic'
 
 export const rootReducer = combineReducers({
     auth,
     signUp,
     todaysMusic,
+    suggestMusic
 })
 
 
@@ -15,4 +17,5 @@ export function *rootSaga() {
     yield fork(authSaga)
     yield fork(signUpSaga)
     yield fork(todaysMusicSaga)
+    yield fork(suggestMusicSaga)
 }
