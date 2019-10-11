@@ -40,7 +40,7 @@ export default class MyMusicViewBody extends Component {
         }
 
         const list = [];
-        for(let i = 0 ; i < 100; i++) {
+        for(let i = 0 ; i < 68; i++) {
             list.push(
                 {
                     singer : `SINGER 1-${i+1}`,

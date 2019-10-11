@@ -8,6 +8,10 @@ const express = require('express')
 //내부모듈
 const AuthRouter = require('./routes/auth')
 const SignUpRouter = require('./routes/signUp')
+const TodaysMusicRouter = require('./routes/todaysMusic')
+const SuggestMusicRouter = require('./routes/suggestMusic')
+
+//DB
 const MongoDB = require('./Database/mongoDB')
 
 const {
@@ -43,6 +47,8 @@ app.use(session(
 //라우팅
 app.use('/auth' , AuthRouter)
 app.use('/signup' , SignUpRouter)
+app.use('/todaysmusic' , TodaysMusicRouter)
+app.use('/suggestmusic' , SuggestMusicRouter)
 
 
 

@@ -1,30 +1,21 @@
 import React , { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as suggestMusicActions from '../../../ReduxModules/suggestMusic'
 
 import classNames from 'classnames/bind'
 import styles from './suggestMusic.css'
 const cn = classNames.bind(styles)
 
-export default class SuggestMusicList extends Component {
+class SuggestMusicList extends Component {
+
+
+    constructor(props) {
+        super(props)
+        props.SuggestMusicActions.fetch()
+    }
 
     render () {
-
-        const data = [
-            { 
-                singer : "SINGER A" ,
-                song : "SONG A" ,
-                album : "ALBUM A"
-            },
-            { 
-                singer : "SINGER B" ,
-                song : "SONG B" ,
-                album : "ALBUM B"
-            },
-            { 
-                singer : "SINGER C" ,
-                song : "SONG B" ,
-                album : "ALBUM B"
-            }
-        ]
         return (
             <div className={cn('suggest-music')}>
                 <div className="suggest-title">
@@ -32,7 +23,7 @@ export default class SuggestMusicList extends Component {
                 </div>
                 <ul className={cn('suggest-music-list')}>
                     {
-                        data.map((value , index) => (
+                        this.props.items.map((value , index) => (
                             <li key={index} className={cn('suggest-music-list-item')}>
                                 <div className={cn('suggest-music-list-album-img')} style={{backgroundImage: `url('twice.jpg')`}}></div>
                                 <div className={cn('suggest-music-list-info')}>
@@ -49,3 +40,13 @@ export default class SuggestMusicList extends Component {
     }
 
 }
+
+export default connect(
+    (state) => ({
+        items : state.suggestMusic.items,
+        userId : state.auth.userId
+    }),
+    (dispatch) => ({
+        SuggestMusicActions : bindActionCreators(suggestMusicActions , dispatch)
+    })
+)(SuggestMusicList)

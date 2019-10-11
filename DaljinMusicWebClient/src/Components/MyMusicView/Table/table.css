@@ -25,8 +25,8 @@
 
 .mymusic-table-scrollable {
     overflow-x: hidden;
-    overflow-y: scroll;
-    width: calc(100% + 18px);
+    overflow-y: hidden;
+    width: 100%;
     max-height: calc(100vh - 130px);
 }
 
@@ -83,4 +83,53 @@
 .table-vertical-line {
     border-right: 2px solid #CCC;
 }
+
+
+.page-button {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.mymusic-pages {
+    width: 100%;
+}
+
+.mymusic-pages > div {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.mymusic-pages-left {
+    width: 15%;
+}
+
+.mymusic-pages-center {
+    width: 70%;
+    
+    font-size: 1.2rem !important;
+}
+
+.mymusic-pages-center > div {
+    vertical-align: top;
+    display: inline-block;
+    width: calc(100% / 7);
+    cursor: pointer;
+}
+
+
+.mymusic-pages-right {
+    width: 15%;
+    
+}
+
+.mymusic-page-choiced{
+    font-weight: bold !important;
+    color: #069 !important;
+}
+
+
+
+
 
