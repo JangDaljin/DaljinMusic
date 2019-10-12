@@ -1,42 +1,66 @@
 import { createAction , handleActions } from 'redux-actions'
+import { call , put , takeLatest , select } from 'redux-saga/effects'
+import Config from '../config'
 
-export const FETCH_GET_MORE = 'top100/GET_MORE'
-export const ACCEPT_GET_MORE = 'top100/ACCEPT_GET_MORE'
-export const ABORT_GET_MORE = 'top100/ABORT_GET_MORE'
+export const FETCH_TOP100 = 'top100/FETCH'
+export const fetchTop100 = createAction(FETCH_TOP100) // 1: from , 2: to
 
-export const fetchGetMore = createAction(ACCEPT_GET_MORE)
+export const ACCEPT_TOP100 = 'top100/ACCEPT'
+export const acceptTop100 = createAction(ACCEPT_TOP100)
+
+export const ABORT_TOP100 = 'top100/ABORT'
+export const abortTop100 = createAction(ABORT_TOP100)
+
+export const ALREADY_TOP100 = 'top100/ALREADY'
+export const alreadyTop100 = createAction(ALREADY_TOP100)
 
 
-const initialState = {
-    list : []
+const top100InitalState = {
+    items : []
+}
+
+export const top100Reducer = handleActions({
+    [ACCEPT_TOP100] : (state , action) => {
+        const newState = { ...state }
+        const items = action.payload
+        for (let i = 0; i < items.length; i++) {
+            newState.items.push(items[i])
+        }
+        return newState
+    },
+    [ABORT_TOP100] : (state , action) => {
+        const newState = { ...top100InitalState }
+        return newState
+    },
+
+} , top100InitalState)
+
+
+function * fetchSaga(action) {
+    const { from , to } = action.payload
+
+    const state = yield select((state)=>(state.top100))
+    console.log(`from : ${from} , to : ${to}`)
+    console.dir(state);
+    if(state.items.length < to && state.items.length+1 >= from) {
+        try {
+            const response = yield call(fetch , `${Config.SERVER}/top100?from=${(state.items.length > from)? state.items.length + 1 : from}&to=${to}`)
+            if(response.ok) {
+                yield put({type : ACCEPT_TOP100 , payload : yield call([response , 'json'])})
+            }
+            else {
+                throw new Error('aborted')
+            }
+        }
+        catch(error) {
+            yield put({type:ABORT_TOP100})
+        }
+    }
+}
+
+export function* top100Saga() {
+    yield takeLatest(FETCH_TOP100 , fetchSaga)
 }
 
 
-/*
-    payload : [
-        {
-            singer : ''
-            song : ''
-            album : ''
-            time : ''
-            category : ''
-        },
-        ...
-    ]
-*/
-export default handleActions({
-    [ACCEPT_GET_MORE] : (state , action) => {
-        const newState = { ...state }
-        
-        
-        return newState
-    },
 
-    [ABORT_GET_MORE] : (state , action) => {
-        const newState = { ...state }
-        
-        return newState
-    },
-
-
-} , initialState)

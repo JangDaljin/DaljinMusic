@@ -1,77 +1,34 @@
 import React , { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as Top100Actions from '../../../ReduxModules/top100'
 
 import classNames from 'classnames/bind'
 import styles from './TopTenMusic.css'
 const cn = classNames.bind(styles)
 
-export default class TopTenMusic extends Component {
+class TopTenMusic extends Component {
+
+    constructor (props) {
+        super(props)
+        props.top100Actions.fetchTop100({ from : 1 , to :  10})
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        console.dir(this.props.top10);
+    }
+
     render () {
-
-        const data = [
-            { 
-                singer : "SINGER A" ,
-                song : "SONG A" ,
-                album : "ALBUM A"
-            },
-            { 
-                singer : "SINGER B" ,
-                song : "SONG B" ,
-                album : "ALBUM B"
-            },
-            { 
-                singer : "SINGER C" ,
-                song : "SONG C" ,
-                album : "ALBUM C"
-            },
-            { 
-                singer : "SINGER D" ,
-                song : "SONG D" ,
-                album : "ALBUM D"
-            },
-            { 
-                singer : "SINGER E" ,
-                song : "SONG E" ,
-                album : "ALBUM E"
-            },
-            { 
-                singer : "SINGER F" ,
-                song : "SONG F" ,
-                album : "ALBUM F"
-            },
-            { 
-                singer : "SINGER G" ,
-                song : "SONG G" ,
-                album : "ALBUM G"
-            },
-            { 
-                singer : "SINGER H" ,
-                song : "SONG H" ,
-                album : "ALBUM H"
-            },
-            { 
-                singer : "SINGER I" ,
-                song : "SONG I" ,
-                album : "ALBUM I"
-            },
-            { 
-                singer : "SINGER J" ,
-                song : "SONG J" ,
-                album : "ALBUM J"
-            }
-        ]
-
         return (
-        
             <div className={cn('toptenmusic')}>
 
                 <div className={cn('toptenmusic-title')}>
                     <p><i className="fas fa-fire" style={{color:'#F42'}}></i>&nbsp;실시간 차트&nbsp;<i className="fas fa-fire" style={{color:'#F42'}}></i></p>
                 </div>
 
-
                 <div className={cn('toptenmusic-list')}>
                         {
-                            data.map(
+                            this.props.top10.map(
                                 (value , index) => (
                                     <div className={cn('toptenmusic-list-item')} key={index}>
                                         <div className={cn('toptenmusic-list-rank' , `rank${index+1}`)}>
@@ -92,10 +49,18 @@ export default class TopTenMusic extends Component {
                             )
                         }
                 </div>
-
             </div>
 
         
         )
     }
 }
+
+export default connect(
+    (state) => ({
+        top10 : state.top100.items.slice(0 , 10)
+    }),
+    (dispatch) => ({
+        top100Actions : bindActionCreators(Top100Actions , dispatch)
+    })
+)(TopTenMusic)
