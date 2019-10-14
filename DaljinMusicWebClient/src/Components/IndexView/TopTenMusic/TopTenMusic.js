@@ -14,10 +14,6 @@ class TopTenMusic extends Component {
         props.top100Actions.fetchTop100({ from : 1 , to :  10})
     }
 
-    componentDidUpdate(prevProps , prevState) {
-        console.dir(this.props.top10);
-    }
-
     render () {
         return (
             <div className={cn('toptenmusic')}>

@@ -1,73 +1,46 @@
 import React , { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as top100Actions from '../../ReduxModules/top100'
 
 import classNames from 'classnames/bind'
 import styles from './top100View.css'
 const cn = classNames.bind(styles)
 
-export default class Top100ViewBody extends Component {
-
-    constructor (props) {
-        super(props)
-        this.getMoreItem = this.getMoreItem.bind(this);
-
-
-        this.state = {
-            itemCount : 0,
-            items : []
-        }
-    }
-
+class Top100ViewBody extends Component {
 
     componentDidMount () {
-        console.log('DidMount');
-        this.getMoreItem(0 , 10);
+        
+        this.getMoreItem(1 , 10);
         window.addEventListener('scroll' , () => {
             let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
             let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
             let clientHeight = document.documentElement.clientHeight;
-            if(scrollTop+clientHeight === scrollHeight) {
-                if(this.state.itemCount < 100) {
-                    this.getMoreItem(this.state.itemCount , this.state.itemCount+10)
-                }
+            if(parseInt(scrollTop+clientHeight) === parseInt(scrollHeight)) {
+                this.getMoreItem(this.props.items.length+1 , this.props.items.length+10)
             }
         } , true)
     }
 
-
-    getMoreItem(prevCount , nowCount) {
-        const newState = { ...this.state }
-        newState.itemCount = this.state.itemCount + nowCount-prevCount
-
-        for(let i = prevCount ; i < nowCount; i ++) {
-            newState.items.push(
-                {
-                    singer : `SINGER ${prevCount + i}`,
-                    song : `SONG ${prevCount + i}`,
-                    album : `ALBUM ${prevCount + i}`
-                }
-            )
-        }
-
-        this.setState(newState);
+    getMoreItem = (from , to) => {
+        this.props.Top100Actions.fetchTop100({'from' : from  , 'to' : to})
     }
 
 
 
     render () {
-
-
+        console.dir(this.props.items);
         return (
             <div className={cn('top100')}>
                 <div className={cn('top100-left')}>
                     {
-
-                        this.state.items.map((value , index) => (
+                        this.props.items.map((value , index) => (
                             <div key={index} className={cn('top100-list-item')}>
                                 <div className={cn('top100-list-item-ranking')}>
-                                    <p>{index+1}</p>
+                                    <p>{value.rank}</p>
                                 </div>
                                 <div className={cn('top100-list-item-img')}>
-                                    <div className={cn('top100-list-item-album-img')} style={{backgroundImage:`url('twice.jpg')`}}>
+                                    <div className={cn('top100-list-item-album-img')} style={{backgroundImage:`url('${value.albumImgUri}')`}}>
 
                                     </div>
                                 </div>
@@ -105,3 +78,12 @@ export default class Top100ViewBody extends Component {
         )
     }
 }
+
+export default connect(
+    (state) => ({
+        items : state.top100.items.slice(0 , state.top100.items.length)
+    }),
+    (dispatch) => ({
+        Top100Actions : bindActionCreators(top100Actions , dispatch)
+    })
+)(Top100ViewBody)

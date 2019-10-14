@@ -23,9 +23,13 @@ export const top100Reducer = handleActions({
     [ACCEPT_TOP100] : (state , action) => {
         const newState = { ...state }
         const items = action.payload
+
+        console.dir(newState);
+        console.dir(items);
         for (let i = 0; i < items.length; i++) {
             newState.items.push(items[i])
         }
+        console.dir(newState);
         return newState
     },
     [ABORT_TOP100] : (state , action) => {
@@ -40,8 +44,7 @@ function * fetchSaga(action) {
     const { from , to } = action.payload
 
     const state = yield select((state)=>(state.top100))
-    console.log(`from : ${from} , to : ${to}`)
-    console.dir(state);
+
     if(state.items.length < to && state.items.length+1 >= from) {
         try {
             const response = yield call(fetch , `${Config.SERVER}/top100?from=${(state.items.length > from)? state.items.length + 1 : from}&to=${to}`)

@@ -11,9 +11,6 @@ const cn = classNames.bind(styles)
 
 class IndexBody extends Component {
 
-
-
-
     render () {
         return (
             <div className={cn('indexbody')}>

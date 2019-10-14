@@ -16,7 +16,7 @@ router.get('/' , (req , res) => {
             singer : "SINGER B" ,
             song : "SONG B" ,
             album : "ALBUM B",
-            albumImgUri : '/twice.jpg',
+            albumImgUri : '/twice1.jpg',
             isNew : true,
         },
         { 

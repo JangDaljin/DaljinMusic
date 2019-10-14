@@ -10,19 +10,19 @@ router.get('/:id' , (req , res) => {
             singer : "SINGER A" ,
             song : "SONG A" ,
             album : "ALBUM A",
-            albumImgUri : '/twice.jpg'
+            albumImgUri : '/twice2.jpg'
         },
         { 
             singer : "SINGER B" ,
             song : "SONG B" ,
             album : "ALBUM B",
-            albumImgUri : '/twice.jpg'
+            albumImgUri : '/twice1.jpg'
         },
         { 
             singer : "SINGER C" ,
             song : "SONG B" ,
             album : "ALBUM B",
-            albumImgUri : '/twice.jpg'
+            albumImgUri : '/twice1.jpg'
         }
     ]
 
@@ -35,19 +35,19 @@ router.get('/' , (req , res) => {
             singer : "SINGER A" ,
             song : "SONG A" ,
             album : "ALBUM A",
-            albumImgUri : '/twice.jpg'
+            albumImgUri : '/twice2.jpg'
         },
         { 
             singer : "SINGER B" ,
             song : "SONG B" ,
             album : "ALBUM B",
-            albumImgUri : '/twice.jpg'
+            albumImgUri : '/twice1.jpg'
         },
         { 
             singer : "SINGER C" ,
             song : "SONG B" ,
             album : "ALBUM B",
-            albumImgUri : '/twice.jpg'
+            albumImgUri : '/twice2.jpg'
         }
     ]
 

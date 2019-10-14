@@ -8,7 +8,7 @@ router.get('/' , (req , res) => {
         song : 'LIKE IT',
         singer : 'TWICE',
         album : '미니 1집',
-        albumImgUri : '/twice.jpg'
+        albumImgUri : '/twice1.jpg'
     }
 
     res.json(response)

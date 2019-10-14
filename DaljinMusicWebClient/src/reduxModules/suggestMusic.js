@@ -33,7 +33,6 @@ function* fetchSaga(action) {
     
     try {
         const response = yield call(fetch , `${Config.SERVER}/suggestmusic/${action.payload}`)
-        console.log(`${action.payload}`)
         if(response.ok) {
             yield put({type : ACCEPT_SUGGESTMUSIC , payload : yield call([response , 'json'])})
         }

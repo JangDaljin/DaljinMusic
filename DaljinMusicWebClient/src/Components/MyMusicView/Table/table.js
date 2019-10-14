@@ -1,31 +1,43 @@
 import React , { Component } from 'react'
-
 import classNames from 'classnames/bind'
 import styles from './table.css'
 const cn = classNames.bind(styles)
 
 
-const itemPerPage = 10;
-const pagePerBar = 7;
+const itemPerPage = 5;
+const pagePerBar = 5;
 
 export default class MyMusicTable extends Component {
     
     constructor(props) {
         super(props)
 
-        const initPage = [];
-        const _totalPage = Math.ceil(this.props.musicList.items.length / itemPerPage)
-
-        for(let i = 1; i <= _totalPage; i++) {
-            initPage.push(i)
-        }
-
         this.state = {
-            totalPage : _totalPage,
+            totalPage : 0,
             curPage : 1,
             curShowPages : 0,
-            pages : initPage
+            pages : []
         }
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+
+
+        if(prevProps !== this.props) {
+            const initPage = [];
+            const _totalPage = Math.ceil(this.props.musicList.items.length / itemPerPage)
+            for(let i = 1; i <= _totalPage; i++) {
+                initPage.push(i)
+            }
+
+            this.setState({
+                totalPage : _totalPage,
+                pages : initPage,
+                curPage : 1,
+                curShowPages : 0
+            })
+        }
+        
     }
 
     render () {
@@ -59,14 +71,14 @@ export default class MyMusicTable extends Component {
                         <div className={cn('page-button')} onClick={
                                 () => { 
                                     if(this.state.curShowPages > 0) {
-                                        this.setState({curShowPages : (this.state.curShowPages - 1 ) * pagePerBar })}
+                                        this.setState({curShowPages : this.state.curShowPages - 1  })}
                                     }
                                 }><i className="fas fa-less-than"></i></div>
                     </div>
                     
                     <div className={cn('mymusic-pages-center')}>
                         {
-                            this.state.pages.slice(this.state.curShowPages * pagePerBar , this.state.curShowPages + 1 * pagePerBar)
+                            this.state.pages.slice(this.state.curShowPages * pagePerBar , (this.state.curShowPages + 1) * pagePerBar)
                             .map((value , index) => (
                                 <div key={index} className={cn({'mymusic-page-choiced' : (value === this.state.curPage)? true : false})}
                                 onClick={() => { this.setState({ curPage : value }) }}
@@ -90,3 +102,5 @@ export default class MyMusicTable extends Component {
         )
     }
 }
+
+
