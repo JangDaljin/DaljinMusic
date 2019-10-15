@@ -7,6 +7,7 @@ import * as myMusicAction from '../../ReduxModules/myMusic'
 import MyMusicViewTable from './Table/table'
 import MyMusicViewListNames from './ListNames/listNames'
 import MyMusicViewButtons from './Buttons/buttons'
+import MyMusicViewList from './MyMusicViewList/myMusicViewList'
 
 import classNames from 'classnames/bind'
 import styles from './myMusicView.css'
@@ -28,6 +29,7 @@ class MyMusicViewBody extends Component {
                 </div>
 
                 <div className={cn('mymusic-center')}>
+                    <MyMusicViewList musicList={ this.props.myMusicList[this.props.curSelectList] } />
                     <MyMusicViewTable musicList={ this.props.myMusicList[this.props.curSelectList] } />
                 </div>
 

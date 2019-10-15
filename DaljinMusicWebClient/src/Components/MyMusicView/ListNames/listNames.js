@@ -17,10 +17,10 @@ class ListName extends Component {
                 {
                     this.props.listNames.map(
                         (value , index) => (
-                            <div key={index} className={cn('mymusic-list-item-wrap')} onClick={() => {
+                            <div key={index} className={cn('mymusicnames-list-item-wrap')} onClick={() => {
                                 this.props.MyMusicAction.selectList({selectedList : index})
                             }}>
-                                <div className={cn('mymusic-list-item')}>
+                                <div className={cn('mymusicnames-list-item')}>
                                     <p>{value}</p>
                                 </div>
                             </div>

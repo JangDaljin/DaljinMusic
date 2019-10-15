@@ -19,7 +19,7 @@ router.post('/' , (req , res) => {
                 album : `ALBUM ${i+1}-${j}`,
                 time : `TIME ${i+1}-${j}`,
                 album : `ALBUM ${i+1}-${j}`,
-                albumImgUri : `twice${(j%2)+1}`,
+                albumImgUri : `twice${(j%2)+1}.jpg`,
             })
         }
     }

@@ -1,0 +1,59 @@
+.mymusic-list-wrap {
+    width: 100%;
+}
+
+.mymusic-list-item {
+    height: 100px;
+    border: 2px solid #303030;
+    margin-bottom: 3px;
+}
+
+.mymusic-list-item > div {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+}
+
+.mymusic-list-album-img-wrap {
+    position: relative;
+    width: 100px;
+}
+
+.mymusic-list-album-img-wrap::after {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.mymusic-list-album-img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.mymusic-list-info {
+    width: calc(100% - 300px);
+}
+
+.mymusic-list-info > div {
+    position: relative;
+    height: calc(100% / 3);
+    vertical-align: middle;
+    font-size: 1.1rem;
+    padding-left: 10px;
+}
+
+.mymusic-list-info > div > p {
+    position: absolute;
+    top: 50%;
+    transform: translate(0% , -50%);
+}
+
+.mymusic-list-buttons {
+    width: 200px;
+    border: 1px solid black;
+}

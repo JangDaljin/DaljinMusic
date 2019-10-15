@@ -1,16 +1,16 @@
-.mymusic-list-item-wrap {
+.mymusicnames-list-item-wrap {
     width: 100%;
     padding-right: 50px;
 }
 
-.mymusic-list-item-wrap:hover {
+.mymusicnames-list-item-wrap:hover {
     padding-right: 0px;
     padding-left: 50px;
     transition: padding 0.5s 0s;
 }
 
 
-.mymusic-list-item {
+.mymusicnames-list-item {
     position: relative;
     height: 60px;
     padding-left: 10px;
@@ -21,12 +21,12 @@
     cursor: pointer;
 }
 
-.mymusic-list-item:hover {
+.mymusicnames-list-item:hover {
     background-color: #EEE;
 }
 
 
-.mymusic-list-item > p {
+.mymusicnames-list-item > p {
     position: absolute;
     top: 50%;
     transform: translate(0 , -50%);
