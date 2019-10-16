@@ -1,11 +1,30 @@
 .mymusic-list-wrap {
+    position: relative;
     width: 100%;
 }
 
 .mymusic-list-item {
+    position: relative;
+    left: 50%;
+    transform: translate(-50% , 0);
+    width: 90%;
     height: 100px;
-    border: 2px solid #303030;
+    border: 2px solid #CCC;
     margin-bottom: 3px;
+    cursor: pointer;
+}
+
+.mymusic-list-item:hover {
+    border: 3px solid #0697;
+}
+
+.mymusic-checked {
+    box-shadow: 0px 0px 5px 5px #999;
+    
+    margin-top : 15px;
+    margin-bottom: 15px;
+
+    transition: box-shadow .3s 0s;
 }
 
 .mymusic-list-item > div {
@@ -43,7 +62,7 @@
     position: relative;
     height: calc(100% / 3);
     vertical-align: middle;
-    font-size: 1.1rem;
+    font-size: 1rem;
     padding-left: 10px;
 }
 
@@ -55,5 +74,50 @@
 
 .mymusic-list-buttons {
     width: 200px;
-    border: 1px solid black;
+    border: 0px solid black;
+}
+
+
+.page-button {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.mymusic-pages {
+    width: 100%;
+}
+
+.mymusic-pages > div {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.mymusic-pages-left {
+    width: 15%;
+}
+
+.mymusic-pages-center {
+    width: 70%;
+    
+    font-size: 1.2rem !important;
+}
+
+.mymusic-pages-center > div {
+    vertical-align: top;
+    display: inline-block;
+    width: calc(100% / 7);
+    cursor: pointer;
+}
+
+
+.mymusic-pages-right {
+    width: 15%;
+    
+}
+
+.mymusic-page-choiced{
+    font-weight: bold !important;
+    color: #069 !important;
 }

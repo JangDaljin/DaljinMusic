@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './myMusicViewList.css'
 const cn = classNames.bind(styles)
 
-const itemPerPage = 5;
+const itemPerPage = 6;
 const pagePerBar = 5;
 
 export default class MyMusicViewList extends Component {
@@ -21,16 +21,13 @@ export default class MyMusicViewList extends Component {
 
     componentDidUpdate(prevProps , prevState) {
 
-
-        if(prevProps !== this.props) {
-            console.dir(this.props.musicList.items)
-
+        if(prevProps.musicList.listName !== this.props.musicList.listName) {
             const initPage = [];
             const _totalPage = Math.ceil(this.props.musicList.items.length / itemPerPage)
             for(let i = 1; i <= _totalPage; i++) {
                 initPage.push(i)
             }
-
+            
             this.setState({
                 totalPage : _totalPage,
                 pages : initPage,
@@ -46,9 +43,9 @@ export default class MyMusicViewList extends Component {
             <div className={cn('mymusic-list')}>
                 <div className={cn('mymusic-list-wrap')}>
                 {
-                    this.props.musicList.items.map(
+                    this.props.musicList.items.slice((this.state.curPage-1) * itemPerPage , this.state.curPage * itemPerPage).map(
                         (value , index) => (
-                            <div key={index} className={cn('mymusic-list-item')}>
+                            <div key={index} className={cn('mymusic-list-item' , {'mymusic-checked' : value.checked})} onClick={ ()=> { this.props.onCheck(value) } }>
                                 <div className={cn('mymusic-list-album-img-wrap')}>
                                     <div className={cn('mymusic-list-album-img')} style={{backgroundImage : `url('${value.albumImgUri}')`}}>
                                     </div>
@@ -72,18 +69,6 @@ export default class MyMusicViewList extends Component {
                     )
                 }
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
                 <div className={cn('mymusic-pages')}>
                     

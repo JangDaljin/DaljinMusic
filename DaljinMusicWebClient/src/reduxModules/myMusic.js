@@ -14,6 +14,9 @@ export const abortMyMusic = createAction(ABORT_GET_MYMUSIC)
 export const SELECT_LIST = 'mymusic/SELECTLIST'
 export const selectList = createAction(SELECT_LIST)
 
+export const TOGGLE_CHECKED = 'mymusic/TOGGLECHECKED'
+export const toggleChecked = createAction(TOGGLE_CHECKED)
+
 const NOTHING = '-'
 
 const myMusicInitialState = {
@@ -28,7 +31,7 @@ const myMusicInitialState = {
         listName : '',
         items : [
             {
-                number : '',
+                id : '',
                 album : '',
                 albumImgUri : '',
                 song : '',
@@ -49,6 +52,7 @@ export const myMusicReducer = handleActions({
             newState.myMusicList.splice(0 , newState.myMusicList.length)
             newState.nothing = false;
             for(let i = 0; i < List.length ; i++) {
+                List[i].checked = false // CHECK 확인 추가
                 newState.myMusicList.push(List[i])
             }
         }
@@ -61,6 +65,16 @@ export const myMusicReducer = handleActions({
     [SELECT_LIST] : (state , action) => {
         const newState = { ...state }
         newState.curSelectList = action.payload.selectedList
+        return newState
+    },
+    [TOGGLE_CHECKED] : (state , action) => {
+        const newState = { ...state }
+        const item = action.payload
+
+        const foundItem = newState.myMusicList[newState.curSelectList].items.find((value) => ( value.id === item.id ))
+        if(foundItem !== undefined) {
+            foundItem.checked = !foundItem.checked
+        }
         return newState
     }
 } , myMusicInitialState)

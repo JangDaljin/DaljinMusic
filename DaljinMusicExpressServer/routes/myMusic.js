@@ -13,7 +13,7 @@ router.post('/' , (req , res) => {
         })
         for(let j = 1; j <= 108; j++) {
             response[i].items.push({
-                numsber : `${i+1}-${j}`,
+                id : `${i+1}-${j}`,
                 song : `SONG ${i+1}-${j}`,
                 singer : `SINGER ${i+1}-${j}`,
                 album : `ALBUM ${i+1}-${j}`,
