@@ -83,7 +83,7 @@ class SignUpView extends Component {
         const {verifyPassword , verifyPasswordCheck , verifyNickName} = this.state
         if(this.props.idCheck && verifyPassword && verifyPasswordCheck && verifyNickName) {
             console.log('sign up check complete')
-            this.props.SignUpActions.fetchSignUp(this.state.verifiedId , this.state.userPw , this.state.userName)
+            this.props.SignUpActions.fetchSignUp({userId : this.state.verifiedId , userPw : this.state.userPw , userName : this.state.userName})
         }
         else {
             console.log('sign up check unlcomplete')

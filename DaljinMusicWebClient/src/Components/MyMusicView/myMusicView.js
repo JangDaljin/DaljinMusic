@@ -49,11 +49,11 @@ class MyMusicViewBody extends Component {
                 </div>
 
                 <div className={cn('mymusic-right')}>
-                    <MyMusicViewButtons onToggleModal={this.doToggleModal} onChangeModal={this.doChangeModal} />
+                    <MyMusicViewButtons onChangeModal={this.doChangeModal} />
                 </div>
 
                 <div className={cn('mymusic-modal' , {'mymusic-modal-hidden' : !this.state.modalShow})}>
-                    <Modal mode={this.state.mode} />
+                    <Modal mode={this.state.mode} onToggleModal={this.doToggleModal}/>
                 </div>
             </div>
         )

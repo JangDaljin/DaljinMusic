@@ -17,16 +17,14 @@ export const selectList = createAction(SELECT_LIST)
 export const TOGGLE_CHECKED = 'mymusic/TOGGLECHECKED'
 export const toggleChecked = createAction(TOGGLE_CHECKED)
 
-const NOTHING = '-'
-
 const myMusicInitialState = {
     myMusicList : [{
-        listName: NOTHING,
+        listName: '',
         items : []
     }],
-    nothing : true,
     curSelectList : 0
     /* 
+    //리스트 구조
     {
         listName : '',
         items : [
@@ -37,6 +35,7 @@ const myMusicInitialState = {
                 song : '',
                 singer : '',
                 time : '',
+                chcked : '' // 클라이언트 전용
             }
         ]
     }
@@ -48,13 +47,13 @@ export const myMusicReducer = handleActions({
         const newState = { ...state }
         const List = action.payload
 
-        if(newState.nothing === true && List.length > 0) {
-            newState.myMusicList.splice(0 , newState.myMusicList.length)
-            newState.nothing = false;
-            for(let i = 0; i < List.length ; i++) {
-                List[i].checked = false // CHECK 확인 추가
-                newState.myMusicList.push(List[i])
-            }
+        newState.myMusicList = [];
+
+        for(let i = 0 ; i < List.length ; i++) {
+            newState.myMusicList.push(List[i])
+            for(let j = 0 ;  j < List[i].items.length ; j++) {
+                newState.myMusicList[i].checked = false
+            }    
         }
         return newState
     },

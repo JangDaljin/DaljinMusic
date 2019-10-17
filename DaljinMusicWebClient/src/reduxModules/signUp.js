@@ -72,6 +72,9 @@ export const signUpReducer = handleActions({
 function* fetchSignUpSaga (action) {
     //const { userId , userPw , userName } = action.payload
 
+    console.dir(action.payload)
+    console.dir(JSON.stringify(action.payload))
+
     const request = {
         body : JSON.stringify(action.payload),
         headers : {

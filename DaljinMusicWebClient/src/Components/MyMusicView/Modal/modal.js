@@ -9,8 +9,7 @@ export const MODAL_SELECTOR = {
     DELETE : 1,
     MAKELIST : 2,
     GETLIST : 4,
-    DOWNLOAD : 8,
-    UPLOAD : 16
+    UPLOAD : 8
 };
 
 const button = (value , key) => (
@@ -31,6 +30,12 @@ const inputText = (placeholder , key) => (
     </div>
 )
 
+const inputFilePath = (key) => (
+    <div className={cn('mymusic-modal-inputfilepath')} key={key}>
+        <input type='file' multiple/>
+    </div>
+)
+
 
 
 
@@ -46,7 +51,6 @@ export default class Modal extends Component {
                 title = '삭제'
                 content.push(text('정말 삭제하시겠습니까?' , content.length))
                 buttons.push(button('네' , buttons.length))
-                buttons.push(button('아니오' , buttons.length))
                 break;
             
             case MODAL_SELECTOR.MAKELIST : 
@@ -57,14 +61,15 @@ export default class Modal extends Component {
             
             case MODAL_SELECTOR.GETLIST : 
                 title = '가져오기'
+                content.push(inputText('아이디' , content.length))
+                content.push(inputText('리스트이름' , content.length))
+                buttons.push(button('가져오기' , buttons.length))
                 break;
-            
-            case MODAL_SELECTOR.DOWNLOAD : 
-                title = '다운로드'
-                break;
-            
+
             case MODAL_SELECTOR.UPLOAD : 
                 title = '업로드'
+                content.push(inputFilePath(content.length))
+                buttons.push(button('완료' , buttons.length))
                 break;
             
             default :
@@ -76,7 +81,7 @@ export default class Modal extends Component {
                 <div className={cn('modal')}>
                     <div className={cn('modal-title')}>
                         <div className={cn('modal-title-text')}>{title}</div>
-                        <div className={cn('modal-title-buttons')}>
+                        <div className={cn('modal-title-buttons')} onClick={() => { this.props.onToggleModal() }}>
                             <div>
                                 <p>X</p>
                             </div>

@@ -3,8 +3,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50% ,-50%);
-    border: 2px solid #FEFEFE;
-    background-color: #EFEFEF;
+    border: 2px solid #FFF;
+    background-color: #FFF;
     width: 400px;
     border-radius: .5rem;
     box-shadow: 0px 0px 5px 5px #303030;
@@ -19,7 +19,7 @@
     border-top-left-radius: 0.4rem;
     background-color: #888;
     color: #EFEFEF;
-    border-bottom: 4px solid #FEFEFE;
+    margin-bottom: 4px;
 }
 
 .modal-title > div {
@@ -51,13 +51,15 @@
 }
 
 .modal-content {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 5px;
     font-size: 1rem;
+    background-color : #FEFEFE;;
 }
 
 .modal-buttons {
     text-align: right;
+    
+    background-color : #FEFEFE;;
 }
 
 .modal-buttons > div {
@@ -75,7 +77,6 @@
     border: 2px solid #069;
 }
 
-
 .mymusic-modal-button > input[type="button"] {
     background : none;
     outline: none;
@@ -84,6 +85,20 @@
     height: 100%;
     cursor: pointer;
     font-weight: bold;
+}
+
+.mymusic-modal-inputtext{
+    width: 100%;
+    margin-bottom : 2px;
+    margin-top: 2px;
+}
+
+.mymusic-modal-inputtext > input[type="text"] {
+    width: 100%;
+    height: 30px;
+    border: 2px solid #303030;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 

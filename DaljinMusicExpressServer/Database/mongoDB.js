@@ -4,22 +4,26 @@ const uri  = process.env.DB_URI
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-function connect () {
 
-
+function tryConnect () {
     const connectOptions = {
         useNewUrlParser : true,
         useUnifiedTopology : true,
         useCreateIndex : true
     }
-
-    mongoose.connect(uri , connectOptions).then(() => {
-        console.log('connected to mongodb')
-    }).catch((e) => {
-        console.error(e);
+    mongoose.connect(uri , connectOptions , (err) => {
+        if(err) {
+           console.dir(err) 
+        }
+        else {
+            console.dir('DB CONNECT COMPLETE')
+        }
     })
+}
 
-
+function connect () {
+    tryConnect()
+    mongoose.connection.on('disconnected' , tryConnect)
 }
 
 const Singer = new Schema({
@@ -56,8 +60,8 @@ const User = new Schema({
     userid : { type : String, required : true , unique : true , trim : true },
     userpw : { type : String, required : true , trim : true },
     sort : { type : String, required : true },
-    signuptime : { type : Date, required : true },
-    updatetime : Date,
+    signuptime : { type : String, required : true },
+    updatetime : String,
     mymusiclist : [MusicList],
     playlist : [Music],
     recentplaylist : [Music]
