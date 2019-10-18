@@ -1,6 +1,7 @@
 import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import * as signUpActions from '../../ReduxModules/signUp'
+import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 
 import classNames from 'classnames/bind'
@@ -28,6 +29,10 @@ class SignUpView extends Component {
         if(this.props.toastMessage !== '') {
             window.alert(this.props.toastMessage)
             this.props.SignUpActions.toastClear()
+        }
+
+        if(this.props.linkTo !== prevProps.linkTo) {
+            this.props.history.push(this.props.linkTo)
         }
 
         if(prevProps.idCheck === false &&  this.props.idCheck === true) {
@@ -137,9 +142,10 @@ class SignUpView extends Component {
 export default connect(
     (state) => ({
         idCheck : state.signUp.idCheck,
-        toastMessage : state.signUp.toastMessage
+        toastMessage : state.signUp.toastMessage,
+        linkTo : state.signUp.linkTo
     }),
     (dispatch) => ({
         SignUpActions : bindActionCreators(signUpActions , dispatch)
     })
-)(SignUpView)
+)(withRouter(SignUpView))

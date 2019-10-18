@@ -14,7 +14,7 @@ export const MODAL_SELECTOR = {
 
 const button = (value , key) => (
     <div className={cn('mymusic-modal-button')} key={key}>
-        <input type='button' value={value} />
+        <p>{value}</p>
     </div>
 )
 
@@ -30,18 +30,40 @@ const inputText = (placeholder , key) => (
     </div>
 )
 
-const inputFilePath = (key) => (
-    <div className={cn('mymusic-modal-inputfilepath')} key={key}>
-        <input type='file' multiple/>
+const inputFileFinder = (onFileChange , key) => (
+    <div className={cn('mymusic-modal-inputfile' , 'mymusic-modal-button')} key={key}>
+        <input type='file' id='fileupload' className={cn('mymusic-upload-button')} onChange={onFileChange} multiple/>
+        <label htmlFor='fileupload' className={cn('mymusic-upload-label')}><p>찾아보기</p></label>
+    </div>
+)
+
+const uploadList = (uploadItems , key) => (
+    <div className={cn('mymsic-modal-uploadlist')}>
+        {uploadItems}
+    </div>
+)
+
+const uploadListItem = (item) => (
+    <div className={cn('mymusic-modal-uploadlist-item')}>
+        <div>
+            
+        </div>
     </div>
 )
 
 
 
-
-
 export default class Modal extends Component {
 
+    state = {
+        uploadItems : []
+    }
+
+    onFileChange = (e) => {
+        console.dir(e.target.files);
+
+    }
+    
     render () {
         let title = null;
         let content = [];
@@ -68,7 +90,7 @@ export default class Modal extends Component {
 
             case MODAL_SELECTOR.UPLOAD : 
                 title = '업로드'
-                content.push(inputFilePath(content.length))
+                buttons.push(inputFileFinder(this.onFileChange , content.length))
                 buttons.push(button('완료' , buttons.length))
                 break;
             

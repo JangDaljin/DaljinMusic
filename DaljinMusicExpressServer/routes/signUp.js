@@ -20,22 +20,24 @@ router.post('/idcheck' , (req , res) => {
     
     const response = {
         isOk : false,
-        toastMessage : '사용불가'
+        message : '사용불가'
     }
 
-    if(userId !== 'daljin') {
-        response.isOk = true
-        response.toastMessage = '사용가능'
-    }
-    
-    console.log(userId);
-    res.json(response);
+
+    UserModel.findOne({userid : userId} , (err , user) => {
+        if(user === null) {
+            response.isOk = true,
+            response.message = '사용가능' 
+        }
+        res.json(response);
+    })
 })
 
 router.post('/' , (req , res) => {
     const { userId , userPw , userName } = req.body;
     const response = {
-        message : '회원가입에 실패하였습니다.'
+        message : '회원가입에 실패하였습니다.',
+        isOk : false
     };
 
     if(userId !== '' && userId !== 'undefined' &&
@@ -56,21 +58,10 @@ router.post('/' , (req , res) => {
                 }
                 else {
                     response.message = '회원가입에 성공하였습니다.'
+                    response.isOk = true
                 }
-                console.dir(user)
                 res.json(response)
             })
-            /*
-            userid : { type : String, required : true , unique : true , trim : true },
-    userpw : { type : String, required : true , trim : true },
-    sort : { type : String, required : true },
-    signuptime : { type : Date, required : true },
-    updatetime : Date,
-    mymusiclist : [MusicList],
-    playlist : [Music],
-    recentplaylist : [Music]
-    
-}*/
         }
 })
 

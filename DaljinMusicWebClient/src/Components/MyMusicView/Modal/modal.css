@@ -58,8 +58,9 @@
 
 .modal-buttons {
     text-align: right;
-    
     background-color : #FEFEFE;;
+    height: 30px;
+    
 }
 
 .modal-buttons > div {
@@ -77,14 +78,19 @@
     border: 2px solid #069;
 }
 
-.mymusic-modal-button > input[type="button"] {
-    background : none;
-    outline: none;
-    border: none;
-    width: 100%;
+.mymusic-modal-button {
     height: 100%;
     cursor: pointer;
+    font-size: 0.8rem;
     font-weight: bold;
+    text-align: center;
+}
+
+.mymusic-modal-button > p {
+    width: 100%;
+    position: relative;
+    top: 50%;
+    transform: translate(0% ,-50%);
 }
 
 .mymusic-modal-inputtext{
@@ -99,6 +105,24 @@
     border: 2px solid #303030;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.mymusic-upload-button {
+    display: none;
+}
+
+.mymusic-upload-label {
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+.mymusic-upload-label > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0% ,-50%);
 }
 
 

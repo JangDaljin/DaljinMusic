@@ -28,17 +28,21 @@ export const toastClear = createAction(TOAST_CLEAR)
 
 const signUpState = {
     idCheck : false,
-    toastMessage : ''
+    toastMessage : '',
+    linkTo : ''
 }
 
 export const signUpReducer = handleActions({
     [ACCEPT_ID_CHECK] : (state , action) => {
         const newState = { ...state }
-        const { isOk , toastMessage } = action.payload
-        
+        const { isOk , message } = action.payload
         newState.idCheck = isOk
-        newState.toastMessage = toastMessage;
+        newState.toastMessage = message
+        return newState;
+    },
 
+    [ABORT_ID_CHECK] : (state , action) => {
+        const newState = { ...signUpState }
         return newState;
     },
 
@@ -54,15 +58,16 @@ export const signUpReducer = handleActions({
         return newState
     },
 
-    [ABORT_ID_CHECK] : (state , action) => {
-        const newState = { ...signUpState }
-        return newState;
-    },
-
     [ACCEPT_SIGNUP] : (state , action) => {
         const newState = { ...state }
+        const { message , isOk } = action.payload
+        newState.toastMessage = message
+        if(isOk) {
+            newState.linkTo = '/'
+        }
         return newState
     },
+
     [ABORT_SIGNUP] : (state , action) => {
         const newState = { ...state }
         return newState
@@ -71,9 +76,6 @@ export const signUpReducer = handleActions({
 
 function* fetchSignUpSaga (action) {
     //const { userId , userPw , userName } = action.payload
-
-    console.dir(action.payload)
-    console.dir(JSON.stringify(action.payload))
 
     const request = {
         body : JSON.stringify(action.payload),
