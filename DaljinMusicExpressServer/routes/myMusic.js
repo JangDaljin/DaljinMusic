@@ -27,6 +27,17 @@ router.post('/' , (req , res) => {
     res.json(response)
 })
 
+router.post('/upload' , (req, res) => {
+    const userId = req.session.userId
+    console.dir(userId)
+
+    const response = {
+        uploadProgess : 10
+    }
+
+    res.json(response)
+})
+
 
 
 module.exports = router

@@ -1,7 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
 import { put , call , takeLatest } from 'redux-saga/effects'
 import Config from '../config'
-
+import { post } from './Request/post'
 export const FETCH_GET_MYMUSIC = 'mymusic/GETFETCH'
 export const fetchMyMusic = createAction(FETCH_GET_MYMUSIC)
 
@@ -17,12 +17,22 @@ export const selectList = createAction(SELECT_LIST)
 export const TOGGLE_CHECKED = 'mymusic/TOGGLECHECKED'
 export const toggleChecked = createAction(TOGGLE_CHECKED)
 
+export const MODAL_FETCH_UPLOAD_FILE = 'mymusic/MODALFETCHUPLOADFILE'
+export const modalFetchUploadFile = createAction(MODAL_FETCH_UPLOAD_FILE)
+
+export const MODAL_ACCEPT_UPLOAD_FILE = 'mymusic/MODALACCEPTUPLOADFILE'
+export const modalAcceptUploadFile = createAction(MODAL_ACCEPT_UPLOAD_FILE)
+
+export const MODAL_ABORT_UPLOAD_FILE = 'mymusic/MODALABORTUPLOADFILE'
+export const modalAbortUploadFile = createAction(MODAL_ABORT_UPLOAD_FILE)
+
 const myMusicInitialState = {
     myMusicList : [{
         listName: '',
         items : []
     }],
-    curSelectList : 0
+    curSelectList : 0,
+    uploadProgress : 0,
     /* 
     //리스트 구조
     {
@@ -75,6 +85,16 @@ export const myMusicReducer = handleActions({
             foundItem.checked = !foundItem.checked
         }
         return newState
+    },
+    [MODAL_ACCEPT_UPLOAD_FILE] : (state , action) => {
+        const newState = { ...state }
+        console.log("ACCEPT UPLOAD")
+        return newState
+    },
+    [MODAL_ABORT_UPLOAD_FILE] : (state , action) => {
+        const newState = { ...myMusicInitialState }
+        console.log("ABORT UPLOAD")
+        return newState
     }
 } , myMusicInitialState)
 
@@ -104,6 +124,15 @@ function* fetchGetSaga(action) {
     }
 }
 
+function* fetchUploadSaga (action) {
+    const formData = new FormData()
+    for(const file of action.payload) {
+        formData.append('files[]' , file , file.name)
+    }
+    yield post(`${Config.SERVER}/mymusic/upload` , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
+}
+
 export function* myMusicSaga() {
     yield takeLatest(FETCH_GET_MYMUSIC , fetchGetSaga)
+    yield takeLatest(MODAL_FETCH_UPLOAD_FILE , fetchUploadSaga)
 }

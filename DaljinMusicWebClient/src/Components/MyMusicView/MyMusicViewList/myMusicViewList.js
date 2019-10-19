@@ -15,13 +15,14 @@ export default class MyMusicViewList extends Component {
             totalPage : 0,
             curPage : 1,
             curShowPages : 0,
-            pages : []
+            pages : [],
+            currentListName : ''
         }
     }
 
     componentDidUpdate(prevProps , prevState) {
-
-        if(prevProps.musicList.listName !== this.props.musicList.listName) {
+        console.log(`DID UPDATE`)
+        if(this.props.musicList.listName !== this.state.currentListName) {
             const initPage = [];
             const _totalPage = Math.ceil(this.props.musicList.items.length / itemPerPage)
             for(let i = 1; i <= _totalPage; i++) {
@@ -32,7 +33,8 @@ export default class MyMusicViewList extends Component {
                 totalPage : _totalPage,
                 pages : initPage,
                 curPage : 1,
-                curShowPages : 0
+                curShowPages : 0,
+                currentListName : this.props.musicList.listName
             })
         }
         

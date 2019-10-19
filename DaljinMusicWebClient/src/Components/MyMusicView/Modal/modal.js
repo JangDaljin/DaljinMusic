@@ -1,5 +1,7 @@
 import React , { Component } from 'react'
-
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as myMusicActions from '../../../ReduxModules/myMusic'
 
 import classNames from 'classnames/bind'
 import styles from './modal.css'
@@ -13,55 +15,80 @@ export const MODAL_SELECTOR = {
 };
 
 const button = (value , key) => (
-    <div className={cn('mymusic-modal-button')} key={key}>
+    <div className={cn('mymusic-modal-button')} key={`button${key}`}>
         <p>{value}</p>
     </div>
 )
 
 const text = (value , key) => (
-    <div className={cn('mymusic-modal-text')} key={key}>
+    <div className={cn('mymusic-modal-text')} key={`text${key}`}>
         <p>{value}</p>
     </div>
 )
 
 const inputText = (placeholder , key) => (
-    <div className={cn('mymusic-modal-inputtext')} key={key}>
+    <div className={cn('mymusic-modal-inputtext')} key={`inputtext${key}`}>
         <input type='text' placeholder={placeholder} />
     </div>
 )
 
 const inputFileFinder = (onFileChange , key) => (
-    <div className={cn('mymusic-modal-inputfile' , 'mymusic-modal-button')} key={key}>
+    <div className={cn('mymusic-modal-inputfile' , 'mymusic-modal-button')} key={`inputFileFinder${key}`}>
         <input type='file' id='fileupload' className={cn('mymusic-upload-button')} onChange={onFileChange} multiple/>
         <label htmlFor='fileupload' className={cn('mymusic-upload-label')}><p>찾아보기</p></label>
     </div>
 )
 
-const uploadList = (uploadItems , key) => (
-    <div className={cn('mymsic-modal-uploadlist')}>
+const uploadList = (uploadItems = [] , key) => (
+    <div className={cn('mymusic-modal-uploadlist')} key={`uploadList${key}`}>
         {uploadItems}
     </div>
 )
 
-const uploadListItem = (item) => (
-    <div className={cn('mymusic-modal-uploadlist-item')}>
-        <div>
-            
+const uploadListItem = (item, key) => (
+    <div className={cn('mymusic-modal-uploadlist-item')} key={`uploadListItem${key}`}>
+        <div className={cn('mymusic-modal-uploadlist-item-first')}>
+            <p>{item.name}</p>
+        </div>
+        <div className={cn('mymusic-modal-uploadlist-item-second')}>
+            <p>{fileSizeChanger(item.size)}</p>
+        </div>
+        <div className={cn('mymusic-modal-uploadlist-item-third')}>
+            <p>X</p>
         </div>
     </div>
 )
 
+const fileSizeChanger = (size , offset = 0) => {
+    if(size > 1024) {
+        return fileSizeChanger(size / 1024 , offset + 1)
+    }
+    else {
+        return `${size.toFixed(2)}${
+                        offset === 0 ? 'Byte' : 
+                        offset === 1 ? 'KB' :
+                        offset === 2 ? 'MB' :
+                        offset === 3 ? 'GB' :
+                        'TB'}`
+    }
+}
 
+class Modal extends Component {
+    constructor(props) {
+        super(props)
 
-export default class Modal extends Component {
-
-    state = {
-        uploadItems : []
+        this.state = {
+            uploadItems : [],
+            fileList : null
+        }
     }
 
     onFileChange = (e) => {
-        console.dir(e.target.files);
+        this.setState({fileList : e.target.files , uploadItems : Array.from(e.target.files)})
+    }
 
+    onFileUpload = () => {
+        this.props.MyMusicActions.modalFetchUploadFile(this.state.fileList)
     }
     
     render () {
@@ -90,6 +117,8 @@ export default class Modal extends Component {
 
             case MODAL_SELECTOR.UPLOAD : 
                 title = '업로드'
+
+                content.push(uploadList(this.state.uploadItems.map((value , index ) => (uploadListItem(value , index))) , content.length))
                 buttons.push(inputFileFinder(this.onFileChange , content.length))
                 buttons.push(button('완료' , buttons.length))
                 break;
@@ -119,3 +148,12 @@ export default class Modal extends Component {
         )
     }
 }
+
+export default connect(
+    (state) => ({
+        uploadProgress : state.mymusic.uploadProgress
+    }),
+    (dispatch) => ({
+        MyMusicActions : bindActionCreators(myMusicActions , dispatch)
+    })
+)(Modal)

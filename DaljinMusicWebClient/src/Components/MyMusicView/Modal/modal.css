@@ -107,6 +107,58 @@
     padding-right: 5px;
 }
 
+.mymusic-modal-uploadlist {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.mymusic-modal-uploadlist-item {
+    border: 2px solid #808080;
+    margin-top : 3px;
+    margin-bottom: 3px;
+    position: relative;
+}
+
+.mymusic-modal-uploadlist-item > div {
+    vertical-align: top;
+    display: inline-block;
+    font-size: 0.8rem;
+}
+
+.mymusic-modal-uploadlist-item-first {
+    width: 72%;
+    overflow: hidden;
+}
+
+.mymusic-modal-uploadlist-item-first > p {
+    padding-left: 5px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.mymusic-modal-uploadlist-item-first > p:hover {
+    display: inline-block;
+    white-space: normal;
+}
+
+.mymusic-modal-uploadlist-item-second {
+    width: 20%;
+    text-align: right;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.mymusic-modal-uploadlist-item-third {
+    width: 8%;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    color: red;
+}
+
+
+
+
 .mymusic-upload-button {
     display: none;
 }
