@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
+const UserModel = require('../Database/mongoDB').userModel
 
 const response = {
     userId : '',
@@ -9,10 +9,13 @@ const response = {
 }
 
 router.post('/login' , (req , res) => {
-    const userId = req.body.userId || ''
-    const userPw = req.body.userPw || ''
-
+    const { userId , userPw } = req.body
     const newResponse = { ...response }
+
+    UserModel.findOne({
+        userid : userId,
+        userpw : userPw
+    })
 
     if(userId === 'daljin' && userPw === 'daljin') {
         req.session.userId = 'ID TEST'
@@ -23,6 +26,7 @@ router.post('/login' , (req , res) => {
         newResponse.userName = 'NAME TEST'
         newResponse.isAuthenticated = true
     }
+
     res.json(newResponse)
 })
 

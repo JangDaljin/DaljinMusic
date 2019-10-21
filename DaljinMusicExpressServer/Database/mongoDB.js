@@ -4,6 +4,8 @@ const uri  = process.env.DB_URI
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
+const crypto = require('crypto')
+
 
 function tryConnect () {
     const connectOptions = {
@@ -59,12 +61,34 @@ const MusicList = new Schema({
 const User = new Schema({
     userid : { type : String, required : true , unique : true , trim : true },
     userpw : { type : String, required : true , trim : true },
-    sort : { type : String, required : true },
+    salt : { type : String, required : true },
     signuptime : { type : String, required : true },
     updatetime : String,
     mymusiclist : [MusicList],
     playlist : [Music],
     recentplaylist : [Music]
+})
+
+User.virtual('password')
+.set((plainPw) => {
+    this._plainPw = plainPw
+    this.salt = this.makeSalt()
+    this.userpw = this.encryptPassword(plainPw)
+})
+.get(() => {
+    return this._plainPw
+})
+
+User.method('makeSalt' , () => {
+    return Math.round(new Date().valueOf() + Math.random()) + ''
+})
+
+User.method('encryptPassword' , (password) => {
+    return crypto.createHmac('sha512' , this.salt).update(password).digest('hex')
+})
+
+User.method('authenticate' , (plainPw) => {
+    return this.encryptPassword(plainPw) === this.userpw
 })
 
 

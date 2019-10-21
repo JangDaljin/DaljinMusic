@@ -1,7 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
-import { put , call , takeLatest } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga/effects'
 import Config from '../config'
-import { post } from './Request/post'
+import { post } from './Request/request'
 export const FETCH_GET_MYMUSIC = 'mymusic/GETFETCH'
 export const fetchMyMusic = createAction(FETCH_GET_MYMUSIC)
 
@@ -100,36 +100,17 @@ export const myMusicReducer = handleActions({
 
 
 function* fetchGetSaga(action) {
-    const request = {
-        body : JSON.stringify(action.payload),
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        method : 'POST'
-    }
-
-    try 
-    {
-        const response = yield call(fetch , `${Config.SERVER}/mymusic` , request)
-        
-        if(response.ok) {
-            yield put({type: ACCEPT_GET_MYMUSIC , payload : yield call([response , 'json'])})
-        }
-        else {
-            throw new Error('aborted')
-        }
-    }
-    catch(error) {
-        yield put({type : ABORT_GET_MYMUSIC})
-    }
+    yield post(`${Config.SERVER}/mymusic` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSIC , ABORT_GET_MYMUSIC)
 }
 
 function* fetchUploadSaga (action) {
     const formData = new FormData()
+    console.dir(action.payload)
     for(const file of action.payload) {
-        formData.append('files[]' , file , file.name)
+        formData.append('filelist' , file , file.name)
     }
-    yield post(`${Config.SERVER}/mymusic/upload` , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
+
+    yield post(`${Config.SERVER}/mymusic/upload` , {} , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
 }
 
 export function* myMusicSaga() {

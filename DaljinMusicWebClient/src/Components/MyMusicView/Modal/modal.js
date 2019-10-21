@@ -14,8 +14,8 @@ export const MODAL_SELECTOR = {
     UPLOAD : 8
 };
 
-const button = (value , key) => (
-    <div className={cn('mymusic-modal-button')} key={`button${key}`}>
+const button = (value , key , _onClick = () => {}) => (
+    <div className={cn('mymusic-modal-button')} key={`button${key}`} onClick={_onClick}>
         <p>{value}</p>
     </div>
 )
@@ -120,7 +120,7 @@ class Modal extends Component {
 
                 content.push(uploadList(this.state.uploadItems.map((value , index ) => (uploadListItem(value , index))) , content.length))
                 buttons.push(inputFileFinder(this.onFileChange , content.length))
-                buttons.push(button('완료' , buttons.length))
+                buttons.push(button('완료' , buttons.length , this.onFileUpload))
                 break;
             
             default :
@@ -151,7 +151,7 @@ class Modal extends Component {
 
 export default connect(
     (state) => ({
-        uploadProgress : state.mymusic.uploadProgress
+        uploadProgress : state.myMusic.uploadProgress
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicActions , dispatch)

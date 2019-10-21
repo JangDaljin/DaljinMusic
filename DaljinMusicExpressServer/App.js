@@ -2,8 +2,8 @@
 const express = require('express')
 , session = require('express-session')
 , http = require('http')
-, bodyparser = require('body-parser')
 , cors = require('cors')
+, bodyParser = require('body-parser')
 
 //내부모듈
 const AuthRouter = require('./routes/auth')
@@ -29,9 +29,10 @@ var app = express()
 app.use(cors({credentials:true , origin:'http://localhost:3000'}))
 
 //바디파서 사용(POST 사용)
-app.use(bodyparser.urlencoded({extended:true}))
-app.use(bodyparser.json())
-
+app.use(bodyParser.urlencoded({
+    extended:true
+}))
+app.use(bodyParser.json())
 //공개 경로 설정
 //app.use('/' , express.static('../public'))
 
@@ -46,6 +47,8 @@ app.use(session(
         }
     }
 ))
+
+
 
 //라우팅
 app.use('/auth' , AuthRouter)

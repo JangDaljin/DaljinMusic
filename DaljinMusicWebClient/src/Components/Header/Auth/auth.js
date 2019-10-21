@@ -32,8 +32,8 @@ class Auth extends Component {
                         </div>
                     </div>
                     <div className={cn('auth-loginout-button')} onClick={() => {this.props.AuthActions.fetchLogout()}}>
-                        <i className="fas fa-sign-out-alt fa-2x"></i>
-                        <p className={cn('loginout-text')}>로그아웃</p>
+                        
+                        <p className={cn('loginout-text')}><i className="fas fa-sign-out-alt fa-2x"></i><span> 로그아웃</span></p>
                     </div>
                 </div>
                 :

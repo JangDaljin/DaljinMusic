@@ -1,6 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
-import { call , put , takeLatest} from 'redux-saga/effects'
+import { takeLatest} from 'redux-saga/effects'
 import Config from '../config'
+import { post } from './Request/request'
 
 export const FETCH_LOGIN = 'auth/FETCH_LOGIN'
 export const fetchLogin = createAction(FETCH_LOGIN)
@@ -69,94 +70,20 @@ export const authReducer = handleActions({
         newState.isAuthenticated = isAuthenticated
         return newState
     },
-
-    
-
 } , initialState)
-
-
 
 
 function* fetchLoginSaga (action) {
     //const state = yield select() //'redux-saga/effects'
-
-
-    const data = {
-        userId : action.payload.id,
-        userPw : action.payload.pw
-    }
-
-    const request = {
-        body : JSON.stringify(data),
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':  'application/json',
-            'Cache': 'no-cache'
-        },
-        credentials : 'include',
-        method : 'POST'
-    }
-
-    try {
-        const response = yield call(fetch , `${Config.SERVER}/auth/login` , request )
-        if(response.ok) {
-            yield put({ type : ACCEPT_LOGIN , payload : yield call([response , 'json'])})
-        }
-        else {
-            throw new Error('aborted');
-        }
-    }
-    catch(error) {
-        yield put({type : ABORT_LOGIN})
-    }
+    yield post(`${Config.SERVER}/auth/login` , { 'Content-Type' : 'application/json', 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_LOGIN , ABORT_LOGIN )
 }
 
 function* fetchLogoutSaga(action) {
-
-    const request = {
-        body : JSON.stringify({}),
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':  'application/json',
-            'Cache': 'no-cache'
-        },
-        credentials: 'include',
-        method : 'POST'
-    }
-
-    try {
-        const response = yield call(fetch , `${Config.SERVER}/auth/logout` , request )
-        if(response.ok) {
-            yield put({ type : ACCEPT_LOGOUT , payload : yield call([response , 'json'])})
-        }
-        else {
-            throw new Error('aborted');
-        }
-    }
-    catch(error) {
-        yield put({type : ABORT_LOGOUT})
-    }
+    yield post(`${Config.SERVER}/auth/logout` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_LOGOUT , ABORT_LOGOUT )
 } 
 
 function* checkLoggedSaga() {
-    const request = {
-        body : JSON.stringify({}),
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':  'application/json',
-            'Cache': 'no-cache'
-        },
-        credentials: 'include',
-        method : 'POST'
-    }
-
-    const response = yield call(fetch , `${Config.SERVER}/auth/islogged` , request )
-    if(response.ok) {
-        yield put({ type : ALREADY_LOGGED , payload : yield call([response , 'json'])})
-    }
-    else {
-        console.log('isnotlogged')
-    }
+    yield post(`${Config.SERVER}/auth/islogged` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ALREADY_LOGGED , '')
 }
 
 

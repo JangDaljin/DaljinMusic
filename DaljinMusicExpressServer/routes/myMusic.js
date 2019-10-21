@@ -3,7 +3,6 @@ const router = express.Router()
 
 router.post('/' , (req , res) => {
     const userId = req.body || ''
-    console.log(`myMusic[ userId : ${userId} ]`)
     const response = []
 
     for(let i = 0 ; i < 3; i++) {
@@ -27,9 +26,24 @@ router.post('/' , (req , res) => {
     res.json(response)
 })
 
-router.post('/upload' , (req, res) => {
+const multer = require('multer')
+const uploadStorage = multer.diskStorage({
+    destination : (req , file , cb) => {
+        console.log('here1')
+        cb(null , `musics/`)
+    },
+    filename : (req , file , cb) => {
+        
+        console.log('here2')
+        cb(null , file.originalname)
+    }
+})
+const upload = multer({storage : uploadStorage , limits : { fileSize : 1024 * 1024 * 1024 * 1024}})
+
+router.post('/upload' , upload.array('filelist'), (req, res) => {
     const userId = req.session.userId
-    console.dir(userId)
+
+    console.log(req.files)
 
     const response = {
         uploadProgess : 10

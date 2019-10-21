@@ -23,7 +23,6 @@ router.post('/idcheck' , (req , res) => {
         message : '사용불가'
     }
 
-
     UserModel.findOne({userid : userId} , (err , user) => {
         if(user === null) {
             response.isOk = true,
@@ -45,12 +44,15 @@ router.post('/' , (req , res) => {
         userName !== '' && userName !== 'undefined')
         {
             const nowTime = getyyyyMMddhhmmss()
-            console.log(nowTime)
+
+
+            UserModel.findOne({'userid' : userId})
+
             const newUser = new UserModel({
                 'userid' : userId,
-                'userpw' : userPw,
-                'sort' : 'test',
-                'signuptime' : nowTime
+                'password' : userPw, //mongoose virtual
+                'username' : userName,
+                'signuptime' : nowTime,
             })
             newUser.save((err , user) => {
                 if(err) {

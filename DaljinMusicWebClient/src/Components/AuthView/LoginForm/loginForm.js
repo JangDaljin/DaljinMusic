@@ -14,22 +14,20 @@ class LoginForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            id : '',
-            pw : ''
+            userId : '',
+            userPw : ''
         }
     }
 
     componentDidUpdate (prevProps , prevState) {
         
         if(this.props.isAuthenticated === true) {
-            console.log('ComDidUp');
             this.props.history.push('/home')
         }
     }
 
     componentDidMount () {
         if(this.props.isAuthenticated === true) {
-            console.log('ComDidMount');
             this.props.history.push('/home')
         }
     }
@@ -39,17 +37,17 @@ class LoginForm extends Component {
             <div className={cn('loginform')}>
                 <div className={cn('loginform-left')}>
                     <div className={cn('loginform-id')}>
-                        <input className={cn('loginform-id-input')} type='text' placeholder="아이디" onChange={(e)=> {this.setState({id : e.target.value})}}/>
+                        <input className={cn('loginform-id-input')} type='text' placeholder="아이디" onChange={(e)=> {this.setState({userId : e.target.value})}}/>
                     </div>
 
                     <div className={cn('loginform-pw')}>
-                        <input className={cn('loginform-pw-input')} type='password' placeholder="비밀번호" onChange={(e)=> {this.setState({pw : e.target.value})}} />
+                        <input className={cn('loginform-pw-input')} type='password' placeholder="비밀번호" onChange={(e)=> {this.setState({userPw : e.target.value})}} />
                     </div>
                 </div>
 
                 <div className={cn('loginform-right')}> 
 
-                    <div className={cn('loginform-loginbutton')} onClick={()=> {this.props.AuthActions.fetchLogin({id: this.state.id , pw:this.state.pw})}}>
+                    <div className={cn('loginform-loginbutton')} onClick={()=> {this.props.AuthActions.fetchLogin({userId: this.state.userId , userPw:this.state.userPw})}}>
                         <i className="fas fa-sign-in-alt fa-3x"></i>
                     </div>
                 </div>

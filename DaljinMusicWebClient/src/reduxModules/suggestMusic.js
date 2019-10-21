@@ -1,5 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
-import { call , put , takeLatest } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga/effects'
+import { get } from './Request/request'
 import Config from '../config'
 
 export const FETCH_SUGGESTMUSIC = 'suggestmusic/FETCH'
@@ -29,21 +30,7 @@ export const suggestMusicReducer = handleActions({
 }, suggestMusicState)
 
 function* fetchSaga(action) {
-
-    
-    try {
-        const response = yield call(fetch , `${Config.SERVER}/suggestmusic/${action.payload}`)
-        if(response.ok) {
-            yield put({type : ACCEPT_SUGGESTMUSIC , payload : yield call([response , 'json'])})
-        }
-        else {
-            throw new Error('aborted')
-        }
-    }
-    catch(error) {
-        yield put({type : ABORT_SUGGESTMUSIC})
-    }
-
+    yield get(`${Config.SERVER}/suggestmusic/${action.payload}` , ACCEPT_SUGGESTMUSIC , ABORT_SUGGESTMUSIC)
 }
 
 export function* suggestMusicSaga() {

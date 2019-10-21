@@ -1,5 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
-import { call , put , takeLatest} from 'redux-saga/effects'
+import { takeLatest} from 'redux-saga/effects'
+import { post } from './Request/request'
 import Config from '../config'
 
 export const FETCH_SIGNUP = 'signup/FETCH_SIGNUP'
@@ -76,57 +77,11 @@ export const signUpReducer = handleActions({
 
 function* fetchSignUpSaga (action) {
     //const { userId , userPw , userName } = action.payload
-
-    const request = {
-        body : JSON.stringify(action.payload),
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':  'application/json',
-            'Cache': 'no-cache'
-        },
-        credentials: 'include',
-        method : 'POST'
-    }
-
-    try {
-        const response = yield call(fetch , `${Config.SERVER}/signup` , request )
-        if(response.ok) {
-            yield put({ type : ACCEPT_SIGNUP , payload : yield call([response , 'json'])})
-        }
-        else {
-            throw new Error('aborted');
-        }
-    }
-    catch(error) {
-        yield put({type : ABORT_SIGNUP})
-    }
+    yield post(`${Config.SERVER}/signup` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } ,  JSON.stringify(action.payload) , ACCEPT_SIGNUP , ABORT_SIGNUP)
 }
 
 function* duplIdCheckSaga (action) {
-
-    const request = {
-        body : JSON.stringify(action.payload),
-        headers : {
-            'Content-Type' : 'application/json',
-            'Accept':  'application/json',
-            'Cache': 'no-cache'
-        },
-        credentials: 'include',
-        method : 'POST'
-    }
-
-    try {
-        const response = yield call(fetch , `${Config.SERVER}/signup/idcheck` , request )
-        if(response.ok) {
-            yield put({ type : ACCEPT_ID_CHECK , payload : yield call([response , 'json'])})
-        }
-        else {
-            throw new Error('aborted');
-        }
-    }
-    catch(error) {
-        yield put({type : ABORT_ID_CHECK})
-    }
+    yield post(`${Config.SERVER}/signup/idcheck` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } ,  JSON.stringify(action.payload) , ACCEPT_ID_CHECK , ABORT_ID_CHECK)
 }
 
 
