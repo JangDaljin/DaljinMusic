@@ -1,10 +1,32 @@
 const express = require('express')
 const router = express.Router()
+const doAsync = require('./async')
+const MusicModel = require('../Database/mongoDB').musicModel
+const UserModel = require('../Database/mongoDB').userModel
+const musicListModel = require('../Database/mongoDB').musicListModel
 
-router.post('/' , (req , res) => {
-    const userId = req.body || ''
-    const response = []
+router.post('/' , doAsync(async (req , res , next) => {
+    const { userId } = req.body
+    const response = {
+        message : '',
+        myMusicLists : []
+    }
 
+    if( userId === req.session.userId) {
+        try {
+            const user = await UserModel.findOne({ userid : userId})
+            if(user !== null) {
+                response.list = await user.populate('mymusiclist').toJSON()
+                response.message = '검색 완료'
+            }
+        }
+        catch (err) {
+            response.message = '검색 실패'
+        }
+    }
+    res.json(response)
+
+    /*
     for(let i = 0 ; i < 3; i++) {
         response.push({
             listName : `TEST${i+1}`,
@@ -22,9 +44,9 @@ router.post('/' , (req , res) => {
             })
         }
     }
-
     res.json(response)
-})
+    */
+}))
 
 const multer = require('multer')
 const uploadStorage = multer.diskStorage({
@@ -51,6 +73,33 @@ router.post('/upload' , upload.array('filelist'), (req, res) => {
 
     res.json(response)
 })
+
+router.post('/makemusiclist' , doAsync(async(req , res , next) => {
+    const { userId , listName } = req.body
+    console.dir(`USERID : ${userId} , LISTNAME : ${listName}`)
+    const response = {
+        message : ''
+    }
+
+    if(userId === req.session.userId) {
+        try {
+            const user = await UserModel.findOne({userid : userId })
+            if(user !== null) {
+                user.mymusiclist.push({ listname : listName , list : []})
+            }
+            await user.save()
+            response.message = '생성 완료'
+        }
+        catch (err) {
+            response.message = '생성 오류'
+        }
+    }
+    else {
+        response.message = '검증 오류'
+    }
+
+    res.json(response)
+}))
 
 
 

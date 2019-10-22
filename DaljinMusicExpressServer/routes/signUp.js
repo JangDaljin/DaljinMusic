@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const doAsync = require('./async')
 
 const UserModel = require('../Database/mongoDB').userModel
 
@@ -32,40 +33,36 @@ router.post('/idcheck' , (req , res) => {
     })
 })
 
-router.post('/' , (req , res) => {
+router.post('/' , doAsync(async (req , res , next) => {
     const { userId , userPw , userName } = req.body;
     const response = {
         message : '회원가입에 실패하였습니다.',
         isOk : false
     };
 
-    if(userId !== '' && userId !== 'undefined' &&
-        userPw !== '' && userId !== 'undefined' &&
-        userName !== '' && userName !== 'undefined')
-        {
-            const nowTime = getyyyyMMddhhmmss()
-
-
-            UserModel.findOne({'userid' : userId})
-
-            const newUser = new UserModel({
-                'userid' : userId,
-                'password' : userPw, //mongoose virtual
-                'username' : userName,
-                'signuptime' : nowTime,
-            })
-            newUser.save((err , user) => {
-                if(err) {
-                    console.error(err)
-                }
-                else {
-                    response.message = '회원가입에 성공하였습니다.'
-                    response.isOk = true
-                }
-                res.json(response)
-            })
+    if(userId !== '' && userId !== 'undefined' && userPw !== '' && userId !== 'undefined' && userName !== '' && userName !== 'undefined') {
+        try {
+            const user = await UserModel.findOne({'userid' : userId})
+            if(user === null) {
+                const nowTime = getyyyyMMddhhmmss()
+                const newUser = new UserModel({
+                    'userid' : userId,
+                    'password' : userPw, //mongoose virtual
+                    'username' : userName,
+                    'signuptime' : nowTime,
+                })
+                await newUser.save()
+                response.message = '회원가입에 성공하였습니다.'
+                response.isOk = true
+            }
         }
-})
+        catch(err) {
+            response.message = '회원가입에 실패하였습니다.'
+        }
+    }
+    
+    res.json(response)
+}))
 
 
 module.exports = router;

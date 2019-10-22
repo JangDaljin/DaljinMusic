@@ -26,10 +26,19 @@ export const modalAcceptUploadFile = createAction(MODAL_ACCEPT_UPLOAD_FILE)
 export const MODAL_ABORT_UPLOAD_FILE = 'mymusic/MODALABORTUPLOADFILE'
 export const modalAbortUploadFile = createAction(MODAL_ABORT_UPLOAD_FILE)
 
+export const MODAL_FETCH_MAKE_MUSIC_LIST = 'mymusic/MODALFETCHMAKEMUSICLIST'
+export const modalFetchMakeMusicList = createAction(MODAL_FETCH_MAKE_MUSIC_LIST)
+
+export const MODAL_ACCEPT_MAKE_MUSIC_LIST = 'mymusic/MODALACCEPTMAKEMUSICLIST'
+export const modalAcceptMakeMusicList = createAction(MODAL_ACCEPT_MAKE_MUSIC_LIST)
+
+export const MODAL_ABORT_MAKE_MUSIC_LIST = 'mymusic/MODALABORTMAKEMUSICLIST'
+export const modalAbortMakeMusicList = createAction(MODAL_ABORT_MAKE_MUSIC_LIST)
+
 const myMusicInitialState = {
-    myMusicList : [{
+    myMusicLists : [{
         listName: '',
-        items : []
+        list : []
     }],
     curSelectList : 0,
     uploadProgress : 0,
@@ -55,16 +64,24 @@ const myMusicInitialState = {
 export const myMusicReducer = handleActions({
     [ACCEPT_GET_MYMUSIC] : (state , action) => {
         const newState = { ...state }
-        const List = action.payload
+        const { myMusicLists} = action.payload
+        newState.myMusicLists = [];
 
-        newState.myMusicList = [];
-
-        for(let i = 0 ; i < List.length ; i++) {
-            newState.myMusicList.push(List[i])
-            for(let j = 0 ;  j < List[i].items.length ; j++) {
-                newState.myMusicList[i].checked = false
+        for(let i = 0 ; i < myMusicLists.length ; i++) {
+            newState.myMusicLists.push(myMusicLists[i])
+            for(let j = 0 ;  j < myMusicLists[i].list.length ; j++) {
+                newState.myMusicLists[i].list[j].checked = false
             }    
         }
+
+        if(newState.myMusicLists.length === 0) {
+            newState.myMusicLists.push({
+                listName : '데이터 없음',
+                list : []
+            })
+        }
+        
+        //window.alert(message)
         return newState
     },
     [ABORT_GET_MYMUSIC] : (state , action) => {
@@ -109,11 +126,15 @@ function* fetchUploadSaga (action) {
     for(const file of action.payload) {
         formData.append('filelist' , file , file.name)
     }
-
     yield post(`${Config.SERVER}/mymusic/upload` , {} , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
+}
+
+function* fetchMakeMusicListSaga(action) {
+    yield post(`${Config.SERVER}/mymusic/makemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSIC , ABORT_GET_MYMUSIC)
 }
 
 export function* myMusicSaga() {
     yield takeLatest(FETCH_GET_MYMUSIC , fetchGetSaga)
     yield takeLatest(MODAL_FETCH_UPLOAD_FILE , fetchUploadSaga)
+    yield takeLatest(MODAL_FETCH_MAKE_MUSIC_LIST , fetchMakeMusicListSaga)
 }

@@ -21,10 +21,9 @@ export default class MyMusicViewList extends Component {
     }
 
     componentDidUpdate(prevProps , prevState) {
-        console.log(`DID UPDATE`)
         if(this.props.musicList.listName !== this.state.currentListName) {
             const initPage = [];
-            const _totalPage = Math.ceil(this.props.musicList.items.length / itemPerPage)
+            const _totalPage = Math.ceil(this.props.musicList.list.length / itemPerPage)
             for(let i = 1; i <= _totalPage; i++) {
                 initPage.push(i)
             }
@@ -45,7 +44,7 @@ export default class MyMusicViewList extends Component {
             <div className={cn('mymusic-list')}>
                 <div className={cn('mymusic-list-wrap')}>
                 {
-                    this.props.musicList.items.slice((this.state.curPage-1) * itemPerPage , this.state.curPage * itemPerPage).map(
+                    this.props.musicList.list.slice((this.state.curPage-1) * itemPerPage , this.state.curPage * itemPerPage).map(
                         (value , index) => (
                             <div key={index} className={cn('mymusic-list-item' , {'mymusic-checked' : value.checked})} onClick={ ()=> { this.props.onCheck(value) } }>
                                 <div className={cn('mymusic-list-album-img-wrap')}>

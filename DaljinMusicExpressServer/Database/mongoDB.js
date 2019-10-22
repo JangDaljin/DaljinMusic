@@ -13,6 +13,7 @@ function tryConnect () {
         useUnifiedTopology : true,
         useCreateIndex : true
     }
+    mongoose.Promise = global.Promise
     mongoose.connect(uri , connectOptions , (err) => {
         if(err) {
            console.dir(err) 
@@ -53,44 +54,42 @@ const Music = new Schema({
     dayplaycount : { type : Number, default : 0 },
 })
 
-const MusicList = new Schema({
-    title : String,
-    list : [Music]
-})
+
 
 const User = new Schema({
     userid : { type : String, required : true , unique : true , trim : true },
     userpw : { type : String, required : true , trim : true },
+    username : { type : String , required : true , default : 'unknown'},
     salt : { type : String, required : true },
     signuptime : { type : String, required : true },
     updatetime : String,
-    mymusiclist : [MusicList],
-    playlist : [Music],
-    recentplaylist : [Music]
+    mymusiclist : [{
+                        listname : { type : String, required : true } ,
+                        list : [ { type : Schema.Types.ObjectId , ref : 'music'} ] 
+                    }],
+    playlist : [{ type : Schema.Types.ObjectId , ref : 'music' }],
+    recentplaylist : [{ type : Schema.Types.ObjectId , ref : 'music' }],
 })
 
-User.virtual('password')
-.set((plainPw) => {
-    this._plainPw = plainPw
-    this.salt = this.makeSalt()
-    this.userpw = this.encryptPassword(plainPw)
-})
-.get(() => {
-    return this._plainPw
+User.method('makeSalt' , function() {
+    return Math.round(new Date().valueOf() * Math.random()) + ''
 })
 
-User.method('makeSalt' , () => {
-    return Math.round(new Date().valueOf() + Math.random()) + ''
-})
-
-User.method('encryptPassword' , (password) => {
+User.method('encryptPassword', function (password) {
     return crypto.createHmac('sha512' , this.salt).update(password).digest('hex')
 })
 
-User.method('authenticate' , (plainPw) => {
+User.method('authenticate' , function(plainPw) {
     return this.encryptPassword(plainPw) === this.userpw
 })
 
+User.virtual('password').set(function(plainPw) {
+    this._plainPw = plainPw
+    this.salt = this.makeSalt()
+    this.userpw = this.encryptPassword(plainPw)
+}).get(function() {
+    return this._plainPw
+})
 
 
 
@@ -102,5 +101,4 @@ module.exports.singerModel = mongoose.model('singer' , Singer)
 module.exports.categoryModel = mongoose.model('category' , Category)
 module.exports.albumModel = mongoose.model('album' , Album)
 module.exports.musicModel = mongoose.model('music' , Music)
-module.exports.musicListModel = mongoose.model('musiclist' , MusicList)
 module.exports.userModel = mongoose.model('user' , User)

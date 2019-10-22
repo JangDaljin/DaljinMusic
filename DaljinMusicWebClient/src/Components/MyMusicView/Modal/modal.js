@@ -26,9 +26,9 @@ const text = (value , key) => (
     </div>
 )
 
-const inputText = (placeholder , key) => (
+const inputText = (placeholder , key , _onChange = () => {}) => (
     <div className={cn('mymusic-modal-inputtext')} key={`inputtext${key}`}>
-        <input type='text' placeholder={placeholder} />
+        <input type='text' placeholder={placeholder} onChange={_onChange} />
     </div>
 )
 
@@ -79,8 +79,13 @@ class Modal extends Component {
 
         this.state = {
             uploadItems : [],
-            fileList : null
+            fileList : null,
+            makeListName : '',
         }
+    }
+
+    onMakeMusicList = (e) => {
+        this.props.MyMusicActions.modalFetchMakeMusicList({ userId : this.props.userId , listName : this.state.makeListName })
     }
 
     onFileChange = (e) => {
@@ -104,8 +109,8 @@ class Modal extends Component {
             
             case MODAL_SELECTOR.MAKELIST : 
                 title = '새 리스트 만들기'
-                content.push(inputText('리스트 이름'))
-                buttons.push(button('만들기' , buttons.length))
+                content.push(inputText('리스트 이름' , content.length , (e) => { this.setState({makeListName : e.target.value})}))
+                buttons.push(button('만들기' , buttons.length , this.onMakeMusicList))
                 break;
             
             case MODAL_SELECTOR.GETLIST : 
@@ -151,7 +156,8 @@ class Modal extends Component {
 
 export default connect(
     (state) => ({
-        uploadProgress : state.myMusic.uploadProgress
+        uploadProgress : state.myMusic.uploadProgress,
+        userId : state.auth.userId
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicActions , dispatch)

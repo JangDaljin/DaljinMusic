@@ -39,10 +39,14 @@ export const authReducer = handleActions({
     [ACCEPT_LOGIN] : (state , action) => {
         const newState = { ...state }
 
-        const { userId , userName , isAuthenticated } = action.payload
+        const { userId , userName , isAuthenticated , message } = action.payload
         newState.userId = userId
         newState.userName = userName
         newState.isAuthenticated = isAuthenticated
+
+        if(message !== '' && message !== 'undefined') {
+            window.alert(message)
+        }
         
         return newState
     },

@@ -1,51 +1,62 @@
 const express = require('express')
 const router = express.Router()
+const doAsync = require('./async')
 const UserModel = require('../Database/mongoDB').userModel
 
-const response = {
+const initResponse = {
     userId : '',
     userName : '',
-    authenticate : false,
+    isAuthenticated : false,
+    message : ''
 }
 
-router.post('/login' , (req , res) => {
+router.post('/login' , doAsync(async (req , res , next) => {
     const { userId , userPw } = req.body
-    const newResponse = { ...response }
+    const response = { ...initResponse }
 
-    UserModel.findOne({
-        userid : userId,
-        userpw : userPw
-    })
+    try {
+        const user = await UserModel.findOne({userid : userId})
+        if(user !== null) {
+            if(user.authenticate(userPw)) {
+                req.session.userId = user.userid
+                req.session.userName = user.username
+                req.session.isAuthenticated = true
 
-    if(userId === 'daljin' && userPw === 'daljin') {
-        req.session.userId = 'ID TEST'
-        req.session.userName = 'NAME TEST'
-        req.session.isAuthenticated = true;
-
-        newResponse.userId = 'ID TEST'
-        newResponse.userName = 'NAME TEST'
-        newResponse.isAuthenticated = true
+                response.userId = user.userid
+                response.userName = user.username
+                response.isAuthenticated = true
+                response.message = ''
+            }
+            //비밀번호 오류
+            else {
+                response.message = '아이디 또는 비밀번호가 잘못되었습니다.'
+            }
+        }
+        else {
+            //아이디 오류
+            response.message = '아이디 또는 비밀번호가 잘못되었습니다.'
+        }
     }
-
-    res.json(newResponse)
-})
+    catch(err) {
+        response.message = '오류 발생'
+    }
+    res.json(response)
+}))
 
 router.post('/logout' , (req , res) => {
-    const newRes = { ...response }
+    const response = { ...initResponse }
     req.session.destroy((err) => {})
-    res.json(newRes);
+    res.json(response);
 })
 
 router.post('/islogged' , (req , res) => {
-    
+    const response = { ...initResponse }
 
-    const newRes = { ...response }
-
-    newRes.userId = req.session.userId || ''
-    newRes.userName = req.session.userName || ''
-    newRes.isAuthenticated = req.session.userName || false
+    response.userId = req.session.userId || ''
+    response.userName = req.session.userName || ''
+    response.isAuthenticated = req.session.userName || false
     
-    res.json(newRes)
+    res.json(response)
 })
 
 module.exports = router

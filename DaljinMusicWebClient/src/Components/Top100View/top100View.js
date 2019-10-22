@@ -29,7 +29,6 @@ class Top100ViewBody extends Component {
 
 
     render () {
-        console.dir(this.props.items);
         return (
             <div className={cn('top100')}>
                 <div className={cn('top100-left')}>

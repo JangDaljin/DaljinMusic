@@ -16,12 +16,14 @@ class SignUpView extends Component {
             verifyPassword : false,
             verifyPasswordCheck : false,
             verifyNickName : false,
-            
+
             verifiedId : '',
             userId : '',
             userPw : '',
             userPwCheck : '',
             userName : '',
+
+            buttonActive : false
         }
     }
 
@@ -36,7 +38,7 @@ class SignUpView extends Component {
         }
 
         if(prevProps.idCheck === false &&  this.props.idCheck === true) {
-            this.setState({verifiedId : this.state.userId})
+            this.setState({verifiedId : this.state.userId , buttonActive : this.state.verifyNickName && this.state.verifyPassword && this.state.verifyPasswordCheck})
         }
     }
 
@@ -47,39 +49,55 @@ class SignUpView extends Component {
     }
 
     verifyPassword = (e) => {
-        const regex = /(?=.*\d{1,50})(?=.*[~`!@#$%^&*()\-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/;
+        const regex = /(?=.*\d{1,50})(?=.*[~`!@#$%^&*()\-+=]{1,50})(?=.*[a-zA-Z]{1,50}).{8,50}$/;
         if(regex.test(this.state.userPw)) {
-            this.setState({verifyPassword : true })
+            this.setState({verifyPassword : true , buttonActive : this.state.verifyNickName && this.state.verifyPasswordCheck && this.props.idCheck})
         }
         else {
-            this.setState({verifyPassword : false })
+            this.setState({verifyPassword : false , buttonActive : false})
         }
-
-        this.verifyPasswordCheck()
     }
 
     verifyPasswordCheck = (e) => {
         if(this.state.userPw === this.state.userPwCheck && this.state.userPw !== '' && this.state.userPwCheck !== '') {
-            this.setState({verifyPasswordCheck : true})
+            this.setState({verifyPasswordCheck : true , buttonActive : this.state.verifyNickName && this.state.verifyPassword && this.props.idCheck})
         }
         else {
-            this.setState({verifyPasswordCheck : false})
+            this.setState({verifyPasswordCheck : false , buttonActive : false })
         }
     }
 
     verifyNickName = (e) => {
         const regex = /^(?=.*\w{0,8})(?=.*[가-힣]{0,8}).{2,8}$/;
         if(regex.test(this.state.userName)) {
-            this.setState({verifyNickName : true})
+            this.setState({verifyNickName : true , buttonActive : this.state.verifyPassword && this.state.verifyPasswordCheck && this.props.idCheck})
         }
         else {
-            this.setState({verifyNickName : false})
+            this.setState({verifyNickName : false , buttonActive : false})
         }
+    }
+
+    isVertifyComplete = () => {
+        const {verifyPassword , verifyPasswordCheck , verifyNickName} = this.state
+        if(this.props.idCheck && verifyPassword && verifyPasswordCheck && verifyNickName) {
+            this.setState({buttonActive : true})
+        }
+        else {
+            this.setState({buttonActive : false})
+        }
+        
     }
 
     doIdCheck = (e) => {
         e.preventDefault();
-        this.props.SignUpActions.duplIdCheck({ userId : this.state.userId})
+        const regex = /^\w{6,20}$/;
+        if(regex.test(this.state.userId)) {
+
+            this.props.SignUpActions.duplIdCheck({ userId : this.state.userId})
+        }
+        else {
+            window.alert('영어 및 숫자 6자리 이상')
+        }
     }
 
 
@@ -128,10 +146,10 @@ class SignUpView extends Component {
                     <input type='text' placeholder="닉네임" onBlur={this.verifyNickName} onChange={(e) => {this.setState({ userName : e.target.value })}}/>
                 </div>
                 <div className={cn('verify' , { 'hidden' : this.state.verifyNickName })}>
-                    <p><i className="fas fa-times"></i> 2자리~8자리 한글,영어,숫자 조합</p>
+                    <p><i className="fas fa-times"></i> 한글,영어,숫자 2자리~8자리 </p>
                 </div>
                 <div className={cn('wrap' , 'buttons')}>
-                    <input type='button' value='가입하기' onClick={this.doSingUp} />
+                    <input className={cn({'active-color' : this.state.buttonActive})} type='button' value='가입하기' onClick={(e) => { this.state.buttonActive? this.doSingUp(e) : console.log('검증 미완료') }} />
                 </div>
             </div>
         )

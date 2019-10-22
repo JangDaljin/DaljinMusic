@@ -1,5 +1,6 @@
 import React , { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import * as myMusicAction from '../../ReduxModules/myMusic'
 
@@ -16,10 +17,19 @@ class MyMusicViewBody extends Component {
 
     constructor(props) {
         super(props)
-        props.MyMusicActions.fetchMyMusic({userId : this.props.userId})
         this.state = {
             modalShow : false,
             mode : 0
+        }
+    }
+
+    componentDidMount() {
+        if(this.props.userId === '' || this.props.userId === 'undefined') {
+            window.alert('로그인을 먼저 해주세요')
+            this.props.history.push('/auth')
+        }
+        else {
+            this.props.MyMusicActions.fetchMyMusic({userId : this.props.userId})
         }
     }
 
@@ -41,11 +51,11 @@ class MyMusicViewBody extends Component {
             <div className={cn('mymusic')}>
 
                 <div className={cn('mymusic-left')}>
-                    <MyMusicViewListNames listNames={this.props.myMusicList.map((value) => (value.listName))} />
+                    <MyMusicViewListNames listNames={this.props.myMusicLists.map((value) => (value.listName))} />
                 </div>
 
                 <div className={cn('mymusic-center')}>
-                    <MyMusicViewList musicList={ this.props.myMusicList[this.props.curSelectList] } onCheck={this.doCheck} />
+                    <MyMusicViewList musicList={ this.props.myMusicLists[this.props.curSelectList] } onCheck={this.doCheck} />
                 </div>
 
                 <div className={cn('mymusic-right')}>
@@ -62,11 +72,11 @@ class MyMusicViewBody extends Component {
 
 export default connect(
     (state) => ({
-        myMusicList : state.myMusic.myMusicList.slice(0 , state.myMusic.myMusicList.length),
+        myMusicLists : state.myMusic.myMusicLists.slice(0 , state.myMusic.myMusicLists.length),
         curSelectList : state.myMusic.curSelectList,
-        id : state.auth.userId
+        userId : state.auth.userId
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicAction , dispatch)
     })
-)(MyMusicViewBody)
+)(withRouter(MyMusicViewBody))
