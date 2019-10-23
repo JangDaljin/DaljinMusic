@@ -13,6 +13,7 @@ const SuggestMusicRouter = require('./routes/suggestMusic')
 const HotnNewMusicRouter = require('./routes/hotnNewMusic')
 const Top100Router = require('./routes/top100')
 const MyMusicRouter = require('./routes/myMusic')
+const TestRouter = require('./routes/test')
 
 //DB
 const MongoDB = require('./Database/mongoDB')
@@ -58,6 +59,7 @@ app.use('/suggestmusic' , SuggestMusicRouter)
 app.use('/hotnnewmusic' , HotnNewMusicRouter)
 app.use('/top100' , Top100Router)
 app.use('/mymusic' , MyMusicRouter)
+app.use('/test' , TestRouter)
 
 
 

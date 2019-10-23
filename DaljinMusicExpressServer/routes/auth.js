@@ -15,15 +15,15 @@ router.post('/login' , doAsync(async (req , res , next) => {
     const response = { ...initResponse }
 
     try {
-        const user = await UserModel.findOne({userid : userId})
+        const user = await UserModel.findOne({'userId' : userId})
         if(user !== null) {
             if(user.authenticate(userPw)) {
-                req.session.userId = user.userid
-                req.session.userName = user.username
+                req.session.userId = user.userId
+                req.session.userName = user.userName
                 req.session.isAuthenticated = true
 
-                response.userId = user.userid
-                response.userName = user.username
+                response.userId = user.userId
+                response.userName = user.userName
                 response.isAuthenticated = true
                 response.message = ''
             }

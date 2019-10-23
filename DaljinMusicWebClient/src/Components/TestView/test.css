@@ -1,0 +1,6 @@
+.test-div-root > input[type="button"] {
+    display: block;
+    width: 140px;
+    height: 50px;
+    margin: 10px;
+}

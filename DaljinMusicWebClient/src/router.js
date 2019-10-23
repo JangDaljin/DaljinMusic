@@ -12,6 +12,7 @@ import SearchView from './Components/SearchView/searchView'
 import ErrorView from './Components/ErrorView/errorView'
 import Header from './Components/Header/header'
 import SignUpView from './Components/SignUpView/signUpView'
+import TestView from './Components/TestView/test'
 
 class Router extends Component {
 
@@ -27,6 +28,7 @@ class Router extends Component {
                     <Route path="/search" component={SearchView} />
                     <Route path="/auth"  component={AuthView} />
                     <Route path="/signup" component={SignUpView} />
+                    <Route path="/test" component={TestView} />
                     <Route component={ErrorView} />
                 </Switch>
             </BrowserRouter>

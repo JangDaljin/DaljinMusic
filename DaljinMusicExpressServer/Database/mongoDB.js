@@ -39,7 +39,7 @@ const Category = new Schema({
 
 const Album = new Schema({
     name : { type : String, required : true },
-    imagepath : String
+    imagePath : String
 })
 
 const Music = new Schema({
@@ -47,28 +47,28 @@ const Music = new Schema({
     singer : { type : Schema.Types.ObjectId, ref : 'singer' },
     album : { type : Schema.Types.ObjectId, ref : 'album' },
     category : { type : Schema.Types.ObjectId, ref : 'category' },
-    playtime : { type : String, required : true } ,
-    uploaddate : { type : Date, required : true } ,
-    totalplaycount : { type : Number, default : 0 },
-    weekplaycount : { type : Number, default : 0 },
-    dayplaycount : { type : Number, default : 0 },
+    playTime : { type : String, required : true } ,
+    uploadDate : { type : Date, required : true } ,
+    totalPlayCount : { type : Number, default : 0 },
+    weekPlayCount : { type : Number, default : 0 },
+    dayPlayCount : { type : Number, default : 0 },
 })
 
 
 
 const User = new Schema({
-    userid : { type : String, required : true , unique : true , trim : true },
-    userpw : { type : String, required : true , trim : true },
-    username : { type : String , required : true , default : 'unknown'},
+    userId : { type : String, required : true , unique : true , trim : true },
+    userPw : { type : String, required : true , trim : true },
+    userName : { type : String , required : true , default : 'unknown'},
     salt : { type : String, required : true },
-    signuptime : { type : String, required : true },
-    updatetime : String,
-    mymusiclist : [{
-                        listname : { type : String, required : true } ,
-                        list : [ { type : Schema.Types.ObjectId , ref : 'music'} ] 
-                    }],
-    playlist : [{ type : Schema.Types.ObjectId , ref : 'music' }],
-    recentplaylist : [{ type : Schema.Types.ObjectId , ref : 'music' }],
+    signUpTime : { type : String, required : true },
+    updateTime : String,
+    myMusicLists : [{
+        listName : { type : String, require : true },
+        list : [ {type : Schema.Types.ObjectId , ref : 'music'}]
+    }],
+    playList : [{ type : Schema.Types.ObjectId , ref : 'music' }],
+    recentPlayList : [{ type : Schema.Types.ObjectId , ref : 'music' }],
 })
 
 User.method('makeSalt' , function() {
@@ -80,15 +80,32 @@ User.method('encryptPassword', function (password) {
 })
 
 User.method('authenticate' , function(plainPw) {
-    return this.encryptPassword(plainPw) === this.userpw
+    return this.encryptPassword(plainPw) === this.userPw
 })
 
 User.virtual('password').set(function(plainPw) {
     this._plainPw = plainPw
     this.salt = this.makeSalt()
-    this.userpw = this.encryptPassword(plainPw)
+    this.userPw = this.encryptPassword(plainPw)
 }).get(function() {
     return this._plainPw
+})
+
+
+
+
+//테스트용
+const Test = new Schema({
+    identity : { type : String , unique : true },
+    refdata : [{type : Schema.Types.ObjectId , ref : 'reftest'}]
+})
+
+//테스트용
+const RefTest = new Schema({
+    identity : { type : String , unique : true },
+    item1 : String,
+    item2 : String,
+    item3 : String,
 })
 
 
@@ -102,3 +119,5 @@ module.exports.categoryModel = mongoose.model('category' , Category)
 module.exports.albumModel = mongoose.model('album' , Album)
 module.exports.musicModel = mongoose.model('music' , Music)
 module.exports.userModel = mongoose.model('user' , User)
+module.exports.testModel = mongoose.model('test' , Test)
+module.exports.refTestModel = mongoose.model('reftest' , RefTest)

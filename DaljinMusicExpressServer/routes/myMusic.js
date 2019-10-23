@@ -14,9 +14,9 @@ router.post('/' , doAsync(async (req , res , next) => {
 
     if( userId === req.session.userId) {
         try {
-            const user = await UserModel.findOne({ userid : userId})
+            const user = await UserModel.findOne({ 'userId' : userId}).lean().populate('mymusiclist.list' , 'list listname')
             if(user !== null) {
-                response.list = await user.populate('mymusiclist').toJSON()
+                response.myMusicLists = user.myMusicLists
                 response.message = '검색 완료'
             }
         }
@@ -83,9 +83,9 @@ router.post('/makemusiclist' , doAsync(async(req , res , next) => {
 
     if(userId === req.session.userId) {
         try {
-            const user = await UserModel.findOne({userid : userId })
+            const user = await UserModel.findOne({'userId' : userId })
             if(user !== null) {
-                user.mymusiclist.push({ listname : listName , list : []})
+                user.myMusicLists.push({ 'listName' : listName , 'list' : []})
             }
             await user.save()
             response.message = '생성 완료'

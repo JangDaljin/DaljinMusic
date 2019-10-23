@@ -67,6 +67,7 @@ export const myMusicReducer = handleActions({
         const { myMusicLists} = action.payload
         newState.myMusicLists = [];
 
+        console.dir(myMusicLists)
         for(let i = 0 ; i < myMusicLists.length ; i++) {
             newState.myMusicLists.push(myMusicLists[i])
             for(let j = 0 ;  j < myMusicLists[i].list.length ; j++) {
@@ -112,6 +113,18 @@ export const myMusicReducer = handleActions({
         const newState = { ...myMusicInitialState }
         console.log("ABORT UPLOAD")
         return newState
+    },
+    [MODAL_ACCEPT_MAKE_MUSIC_LIST] : (state , action) => {
+        const newState = { ...state }
+        const { message } = action.payload
+        if(message !== '' || message !== 'undefined') {
+            window.alert(message)
+        }
+        return newState
+    },
+    [MODAL_ABORT_MAKE_MUSIC_LIST] : (state , action) => {
+        const newState = { ...myMusicInitialState }
+        return newState
     }
 } , myMusicInitialState)
 
@@ -130,7 +143,7 @@ function* fetchUploadSaga (action) {
 }
 
 function* fetchMakeMusicListSaga(action) {
-    yield post(`${Config.SERVER}/mymusic/makemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSIC , ABORT_GET_MYMUSIC)
+    yield post(`${Config.SERVER}/mymusic/makemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_MAKE_MUSIC_LIST , MODAL_ABORT_MAKE_MUSIC_LIST)
 }
 
 export function* myMusicSaga() {

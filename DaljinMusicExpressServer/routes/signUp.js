@@ -16,7 +16,7 @@ const getyyyyMMddhhmmss = (date = new Date()) => {
     return `${yyyy}-${(MM > 9)? MM : '0'+MM}-${(dd > 9)? dd : '0'+dd} ${(hh > 9)? hh : '0'+hh}:${(mm > 9)? mm : '0'+mm}:${(ss > 9)? ss : '0'+ss}`
 }
 
-router.post('/idcheck' , (req , res) => {
+router.post('/idcheck' , doAsync(async (req , res , next) => {
     const {userId} = req.body;
     
     const response = {
@@ -24,14 +24,19 @@ router.post('/idcheck' , (req , res) => {
         message : '사용불가'
     }
 
-    UserModel.findOne({userid : userId} , (err , user) => {
+    try {
+        const user = await UserModel.findOne({'userId' : userId})
         if(user === null) {
             response.isOk = true,
             response.message = '사용가능' 
         }
-        res.json(response);
-    })
-})
+    }
+    catch (err) {
+        console.dir(err)
+    }
+        
+    res.json(response);
+}))
 
 router.post('/' , doAsync(async (req , res , next) => {
     const { userId , userPw , userName } = req.body;
@@ -46,10 +51,10 @@ router.post('/' , doAsync(async (req , res , next) => {
             if(user === null) {
                 const nowTime = getyyyyMMddhhmmss()
                 const newUser = new UserModel({
-                    'userid' : userId,
+                    'userId' : userId,
                     'password' : userPw, //mongoose virtual
-                    'username' : userName,
-                    'signuptime' : nowTime,
+                    'userName' : userName,
+                    'signUpTime' : nowTime,
                 })
                 await newUser.save()
                 response.message = '회원가입에 성공하였습니다.'
