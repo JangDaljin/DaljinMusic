@@ -6,6 +6,7 @@ const UserModel = require('../Database/mongoDB').userModel
 const musicListModel = require('../Database/mongoDB').musicListModel
 
 router.post('/' , doAsync(async (req , res , next) => {
+    console.log(`MYMUSC /`)
     const { userId } = req.body
     const response = {
         message : '',
@@ -24,6 +25,7 @@ router.post('/' , doAsync(async (req , res , next) => {
             response.message = '검색 실패'
         }
     }
+    console.dir(response)
     res.json(response)
 
     /*
@@ -98,6 +100,43 @@ router.post('/makemusiclist' , doAsync(async(req , res , next) => {
         response.message = '검증 오류'
     }
 
+    res.json(response)
+}))
+
+router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
+    const { userId , listId } = req.body;
+    const response = {
+        message : ''
+    }
+
+    console.log(`userId : ${userId} , listId : ${listId}`)
+
+    if (userId === req.session.userId) {
+        try {
+            const user = await UserModel.findOne({ 'userId' : userId})
+            if(user !== null) {
+                console.log(user.myMusicLists)
+                const index = user.myMusicLists.findIndex((value) => ( value._id == listId ) )
+                user.myMusicLists.splice(index , 1)
+                console.log(user.myMusicLists)
+                await user.save()
+                response.message = '삭제 완료'
+            }
+            else {
+                response.message = '대상 조건을 찾을 수 없습니다.'
+            }
+        }
+        catch(err) {
+            console.dir(err)
+            response.message = '데이터베이스 오류'
+        }
+    }
+    else {
+        response.message = '검증 실패'
+    }
+
+
+    console.log(response)
     res.json(response)
 }))
 

@@ -19,8 +19,10 @@ class MyMusicViewBody extends Component {
         super(props)
         this.state = {
             modalShow : false,
-            mode : 0
+            mode : 0,
+            modeParam : null
         }
+
     }
 
     componentDidMount() {
@@ -37,9 +39,10 @@ class MyMusicViewBody extends Component {
         this.setState({ modalShow : !this.state.modalShow})
     }
 
-    doChangeModal = (_mode) => {
+    doChangeModal = (_mode , _modeParam = null) => {
+        console.dir(_modeParam)
         this.doToggleModal()
-        this.setState({ mode : _mode})
+        this.setState({ mode : _mode , modeParam : _modeParam})
     }
 
     doCheck = (item) => {
@@ -51,11 +54,18 @@ class MyMusicViewBody extends Component {
             <div className={cn('mymusic')}>
 
                 <div className={cn('mymusic-left')}>
-                    <MyMusicViewListNames listNames={this.props.myMusicLists.map((value) => (value.listName))} />
+                    <MyMusicViewListNames list={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onChangeModal={this.doChangeModal} />
                 </div>
 
                 <div className={cn('mymusic-center')}>
-                    <MyMusicViewList musicList={ this.props.myMusicLists[this.props.curSelectList] } onCheck={this.doCheck} />
+                    {
+                        this.props.myMusicLists.length > 0 ?
+                        <MyMusicViewList musicListName={ this.props.myMusicLists[this.props.curSelectList].listName }
+                                         musicList={ this.props.myMusicLists[this.props.curSelectList].list } onCheck={this.doCheck} />
+                                         :
+                        <MyMusicViewList musicListName={ '' }
+                                         musicList={ [] } onCheck={this.doCheck} />
+                    }
                 </div>
 
                 <div className={cn('mymusic-right')}>
@@ -63,8 +73,9 @@ class MyMusicViewBody extends Component {
                 </div>
 
                 <div className={cn('mymusic-modal' , {'mymusic-modal-hidden' : !this.state.modalShow})}>
-                    <Modal mode={this.state.mode} onToggleModal={this.doToggleModal}/>
+                    <Modal mode={this.state.mode} modeParam={this.state.modeParam} onToggleModal={this.doToggleModal} />
                 </div>
+
             </div>
         )
     }
@@ -72,7 +83,7 @@ class MyMusicViewBody extends Component {
 
 export default connect(
     (state) => ({
-        myMusicLists : state.myMusic.myMusicLists.slice(0 , state.myMusic.myMusicLists.length),
+        myMusicLists : state.myMusic.myMusicLists.slice(0, state.myMusic.myMusicLists.length),
         curSelectList : state.myMusic.curSelectList,
         userId : state.auth.userId
     }),

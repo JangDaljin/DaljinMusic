@@ -11,11 +11,12 @@ export const MODAL_SELECTOR = {
     DELETE : 1,
     MAKELIST : 2,
     GETLIST : 4,
-    UPLOAD : 8
+    UPLOAD : 8,
+    LIST_DELETE : 16,
 };
 
 const button = (value , key , _onClick = () => {}) => (
-    <div className={cn('mymusic-modal-button')} key={`button${key}`} onClick={_onClick}>
+    <div className={cn('mymusic-modal-button')} key={`button${key}`} onClick={(e) => { _onClick(e); }}>
         <p>{value}</p>
     </div>
 )
@@ -83,18 +84,6 @@ class Modal extends Component {
             makeListName : '',
         }
     }
-
-    onMakeMusicList = (e) => {
-        this.props.MyMusicActions.modalFetchMakeMusicList({ userId : this.props.userId , listName : this.state.makeListName })
-    }
-
-    onFileChange = (e) => {
-        this.setState({fileList : e.target.files , uploadItems : Array.from(e.target.files)})
-    }
-
-    onFileUpload = () => {
-        this.props.MyMusicActions.modalFetchUploadFile(this.state.fileList)
-    }
     
     render () {
         let title = null;
@@ -110,7 +99,7 @@ class Modal extends Component {
             case MODAL_SELECTOR.MAKELIST : 
                 title = '새 리스트 만들기'
                 content.push(inputText('리스트 이름' , content.length , (e) => { this.setState({makeListName : e.target.value})}))
-                buttons.push(button('만들기' , buttons.length , this.onMakeMusicList))
+                buttons.push(button('만들기' , buttons.length , () => { this.props.MyMusicActions.modalFetchMakeMusicList({ userId : this.props.userId , listName : this.state.makeListName }); this.props.onToggleModal(); } ))
                 break;
             
             case MODAL_SELECTOR.GETLIST : 
@@ -124,10 +113,15 @@ class Modal extends Component {
                 title = '업로드'
 
                 content.push(uploadList(this.state.uploadItems.map((value , index ) => (uploadListItem(value , index))) , content.length))
-                buttons.push(inputFileFinder(this.onFileChange , content.length))
-                buttons.push(button('완료' , buttons.length , this.onFileUpload))
+                buttons.push(inputFileFinder((e) => { this.setState({fileList : e.target.files , uploadItems : Array.from(e.target.files) }) } , content.length))
+                buttons.push(button('완료' , buttons.length , () => { this.props.MyMusicActions.modalFetchUploadFile(this.state.fileList) }))
                 break;
-            
+
+            case MODAL_SELECTOR.LIST_DELETE :
+                title = '리스트 삭제'
+                content.push(text('정말로 삭제하시겠습니까?' , content.length))
+                buttons.push(button('네' , buttons.length , () => {this.props.MyMusicActions.modalFetchDeleteMusicList({ 'userId' : this.props.userId , 'listId' : this.props.modeParam }); this.props.onToggleModal(); }))
+                break;
             default :
 
                 break;

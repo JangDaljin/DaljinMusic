@@ -35,12 +35,18 @@ export const modalAcceptMakeMusicList = createAction(MODAL_ACCEPT_MAKE_MUSIC_LIS
 export const MODAL_ABORT_MAKE_MUSIC_LIST = 'mymusic/MODALABORTMAKEMUSICLIST'
 export const modalAbortMakeMusicList = createAction(MODAL_ABORT_MAKE_MUSIC_LIST)
 
+export const MODAL_FETCH_DELETE_MUSIC_LIST = 'mymusic/MODALFETCHDELETEMUSICLIST'
+export const modalFetchDeleteMusicList = createAction(MODAL_FETCH_DELETE_MUSIC_LIST)
+
+export const MODAL_ACCEPT_DELETE_MUSIC_LIST = 'mymusic/MODALACCEPTDELETEMUSICLIST'
+export const modalAcceptDeleteMusicList = createAction(MODAL_ACCEPT_DELETE_MUSIC_LIST)
+
+export const MODAL_ABORT_DELETE_MUSIC_LIST = 'mymusic/MODALABORTDELETEMUSICLIST'
+export const modalAbortDeleteMusicList = createAction(MODAL_ABORT_DELETE_MUSIC_LIST)
+
 const myMusicInitialState = {
-    myMusicLists : [{
-        listName: '',
-        list : []
-    }],
-    curSelectList : 0,
+    myMusicLists : [],
+    curSelectList : 0,  
     uploadProgress : 0,
     /* 
     //리스트 구조
@@ -64,25 +70,18 @@ const myMusicInitialState = {
 export const myMusicReducer = handleActions({
     [ACCEPT_GET_MYMUSIC] : (state , action) => {
         const newState = { ...state }
+        newState.myMusicLists.splice(0 , newState.myMusicLists.length)
         const { myMusicLists} = action.payload
-        newState.myMusicLists = [];
-
-        console.dir(myMusicLists)
-        for(let i = 0 ; i < myMusicLists.length ; i++) {
-            newState.myMusicLists.push(myMusicLists[i])
-            for(let j = 0 ;  j < myMusicLists[i].list.length ; j++) {
-                newState.myMusicLists[i].list[j].checked = false
-            }    
+        for(const myMusicList of myMusicLists) {
+            newState.myMusicLists.push(
+                { 
+                    listName : myMusicList.listName,
+                    _id : myMusicList._id,
+                    list : myMusicList.list.map((value , index) => ({ ...value , checked : false})),
+                    selected : false,
+                }
+            )
         }
-
-        if(newState.myMusicLists.length === 0) {
-            newState.myMusicLists.push({
-                listName : '데이터 없음',
-                list : []
-            })
-        }
-        
-        //window.alert(message)
         return newState
     },
     [ABORT_GET_MYMUSIC] : (state , action) => {
@@ -92,6 +91,8 @@ export const myMusicReducer = handleActions({
     [SELECT_LIST] : (state , action) => {
         const newState = { ...state }
         newState.curSelectList = action.payload.selectedList
+        newState.myMusicLists.forEach((value , index , array) => { array[index].selected = false })
+        newState.myMusicLists[newState.curSelectList].selected = true
         return newState
     },
     [TOGGLE_CHECKED] : (state , action) => {
@@ -125,12 +126,20 @@ export const myMusicReducer = handleActions({
     [MODAL_ABORT_MAKE_MUSIC_LIST] : (state , action) => {
         const newState = { ...myMusicInitialState }
         return newState
-    }
+    },
+    [MODAL_ACCEPT_DELETE_MUSIC_LIST] : (state , action) => {
+        const newState = { ...state }
+        return newState
+    },
+    [MODAL_ABORT_DELETE_MUSIC_LIST] : (state , action) => {
+        const newState = { ...myMusicInitialState}
+        return newState
+    },
 } , myMusicInitialState)
 
 
 function* fetchGetSaga(action) {
-    yield post(`${Config.SERVER}/mymusic` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSIC , ABORT_GET_MYMUSIC)
+    yield post(`${Config.SERVER}/mymusic` , { 'Content-Type' : 'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSIC , ABORT_GET_MYMUSIC)
 }
 
 function* fetchUploadSaga (action) {
@@ -146,8 +155,13 @@ function* fetchMakeMusicListSaga(action) {
     yield post(`${Config.SERVER}/mymusic/makemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_MAKE_MUSIC_LIST , MODAL_ABORT_MAKE_MUSIC_LIST)
 }
 
+function* fetchDeleteMusicListSaga(action) {
+    yield post(`${Config.SERVER}/mymusic/deletemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_DELETE_MUSIC_LIST , MODAL_ABORT_DELETE_MUSIC_LIST)
+}
+
 export function* myMusicSaga() {
     yield takeLatest(FETCH_GET_MYMUSIC , fetchGetSaga)
     yield takeLatest(MODAL_FETCH_UPLOAD_FILE , fetchUploadSaga)
     yield takeLatest(MODAL_FETCH_MAKE_MUSIC_LIST , fetchMakeMusicListSaga)
+    yield takeLatest(MODAL_FETCH_DELETE_MUSIC_LIST , fetchDeleteMusicListSaga)
 }

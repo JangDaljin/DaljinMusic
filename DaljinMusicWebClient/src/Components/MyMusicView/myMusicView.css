@@ -17,9 +17,8 @@
 
 .mymusic-center {
     width: 800px;
-    border-top: 2px solid #CCC;
-    border-bottom: 2px solid #CCC;
     overflow : hidden;
+    min-height: 300px;
 }
 
 .mymusic-right {

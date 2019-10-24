@@ -19,10 +19,6 @@ export default class MyMusicViewButtons extends Component {
                     <p><i className={cn('fas fa-eraser')}>&nbsp;</i>삭제</p>
                 </div>
 
-                <div className={cn('mymusic-buttons')} onClick={() => { this.props.onChangeModal(MODAL_SELECTOR.MAKELIST) }}>
-                    <p><i className={cn('fas fa-list')}></i>&nbsp;새 리스트 만들기</p>
-                </div> 
-
                 <div className={cn('mymusic-buttons')} onClick={() => { this.props.onChangeModal(MODAL_SELECTOR.GETLIST) }}>
                     <p><i className={cn('fas fa-stream')}></i>&nbsp;가져오기</p>
                 </div> 
