@@ -50,32 +50,40 @@ router.post('/' , doAsync(async (req , res , next) => {
     */
 }))
 
+
+//파일 업로드
 const multer = require('multer')
 const uploadStorage = multer.diskStorage({
     destination : (req , file , cb) => {
-        console.log('here1')
         cb(null , `musics/`)
     },
     filename : (req , file , cb) => {
-        
-        console.log('here2')
         cb(null , file.originalname)
     }
 })
 const upload = multer({storage : uploadStorage , limits : { fileSize : 1024 * 1024 * 1024 * 1024}})
-
-router.post('/upload' , upload.array('filelist'), (req, res) => {
-    const userId = req.session.userId
-
-    console.log(req.files)
-
+router.post('/upload' , upload.array('fileList'), doAsync( async (req, res , next) => {
+    const { userId , listId }  = req.body
     const response = {
-        uploadProgess : 10
+        message : ''
+    }
+    if(userId == req.session.userId) {
+
+    }
+    else {
+        response.message = '검증 오류'
     }
 
-    res.json(response)
-})
 
+    res.json(response)
+}))
+
+
+
+
+
+
+//음악 리스트 만들기
 router.post('/makemusiclist' , doAsync(async(req , res , next) => {
     const { userId , listName } = req.body
     console.dir(`USERID : ${userId} , LISTNAME : ${listName}`)
@@ -103,6 +111,7 @@ router.post('/makemusiclist' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
+//음악 리스트 삭제
 router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
     const { userId , listId } = req.body;
     const response = {
@@ -115,10 +124,8 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
         try {
             const user = await UserModel.findOne({ 'userId' : userId})
             if(user !== null) {
-                console.log(user.myMusicLists)
                 const index = user.myMusicLists.findIndex((value) => ( value._id == listId ) )
                 user.myMusicLists.splice(index , 1)
-                console.log(user.myMusicLists)
                 await user.save()
                 response.message = '삭제 완료'
             }

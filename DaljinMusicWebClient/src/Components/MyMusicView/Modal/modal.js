@@ -46,7 +46,7 @@ const uploadList = (uploadItems = [] , key) => (
     </div>
 )
 
-const uploadListItem = (item, key) => (
+const uploadListItem = (item, key , onClickDelete) => (
     <div className={cn('mymusic-modal-uploadlist-item')} key={`uploadListItem${key}`}>
         <div className={cn('mymusic-modal-uploadlist-item-first')}>
             <p>{item.name}</p>
@@ -55,10 +55,32 @@ const uploadListItem = (item, key) => (
             <p>{fileSizeChanger(item.size)}</p>
         </div>
         <div className={cn('mymusic-modal-uploadlist-item-third')}>
-            <p>X</p>
+            <p onClick={onClickDelete}>X</p>
         </div>
     </div>
 )
+
+const listSelector = (lists = [] , key , onSelect = () => {}) => {
+    let defaultValue = 'DEFAULT'
+    for(const list of lists) {
+        if(list.selected === true) {
+            defaultValue = list._id
+            break;
+        }
+    }
+    return (
+    <div className={cn('mymusic-modal-selector')} key={key}>
+        <select value={defaultValue} onChange={onSelect}>
+            <option value="DEFAULT" disabled>리스트선택</option>
+            {
+                lists.map( (value , index) => (
+                    <option key={`${key}_${index}`} value={value._id}>{value.listName}</option>
+                ))
+            }
+        </select>
+    </div>
+    )
+}
 
 const fileSizeChanger = (size , offset = 0) => {
     if(size > 1024) {
@@ -79,9 +101,9 @@ class Modal extends Component {
         super(props)
 
         this.state = {
-            uploadItems : [],
-            fileList : null,
+            fileList : [],
             makeListName : '',
+            selectedListId : -1,
         }
     }
     
@@ -111,10 +133,40 @@ class Modal extends Component {
 
             case MODAL_SELECTOR.UPLOAD : 
                 title = '업로드'
+                content.push(listSelector(this.props.listNames , content.length , (e) => { this.setState({selectedListId : e.target.value}) }))
+                content.push(
+                    uploadList(
+                        this.state.fileList.map(
+                            (value , index ) => (
+                                uploadListItem(value , index , 
+                                    () => {
+                                        const newState = { ...this.state };
+                                        newState.fileList.splice(index , 1);
+                                        this.setState(newState)
+                                    }
+                                )
+                            )
+                        ), content.length
+                    )
+                )
 
-                content.push(uploadList(this.state.uploadItems.map((value , index ) => (uploadListItem(value , index))) , content.length))
-                buttons.push(inputFileFinder((e) => { this.setState({fileList : e.target.files , uploadItems : Array.from(e.target.files) }) } , content.length))
-                buttons.push(button('완료' , buttons.length , () => { this.props.MyMusicActions.modalFetchUploadFile(this.state.fileList) }))
+                buttons.push(
+                    inputFileFinder(
+                        (e) => {
+                            const newFileList = [];
+                            Array.prototype.push.apply(newFileList , e.target.files);
+                            this.setState({fileList : newFileList})
+                        }, 
+                        content.length)
+                    )
+                buttons.push(
+                    button('완료',
+                        buttons.length,
+                        () => { 
+                            this.props.MyMusicActions.modalFetchUploadFile({ 'userId' : this.props.userId , 'fileList' : this.state.fileList , 'listId' : this.state.selectedListId })
+                        }
+                    )
+                )
                 break;
 
             case MODAL_SELECTOR.LIST_DELETE :

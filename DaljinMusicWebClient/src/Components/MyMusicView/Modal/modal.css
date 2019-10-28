@@ -108,7 +108,7 @@
 }
 
 .mymusic-modal-uploadlist {
-    max-height: 300px;
+    max-height: 200px;
     overflow-y: scroll;
 }
 
@@ -179,3 +179,12 @@
 
 
 
+.mymusic-modal-selector {
+    width: 100%;
+}
+
+.mymusic-modal-selector > select {
+    width: 100%;
+    height: 30px;
+    font-weight: bold;
+}

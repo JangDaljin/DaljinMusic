@@ -46,7 +46,7 @@ export const modalAbortDeleteMusicList = createAction(MODAL_ABORT_DELETE_MUSIC_L
 
 const myMusicInitialState = {
     myMusicLists : [],
-    curSelectList : 0,  
+    curSelectList : -1,  
     uploadProgress : 0,
     /* 
     //리스트 구조
@@ -143,10 +143,12 @@ function* fetchGetSaga(action) {
 }
 
 function* fetchUploadSaga (action) {
+    const { userId , fileList , listId } = action.payload
     const formData = new FormData()
-    console.dir(action.payload)
-    for(const file of action.payload) {
-        formData.append('filelist' , file , file.name)
+    formData.append('userId' , userId)
+    formData.append('listId' , listId)
+    for(const file of fileList) {
+        formData.append('fileList' , file , file.name)
     }
     yield post(`${Config.SERVER}/mymusic/upload` , {} , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
 }

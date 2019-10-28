@@ -59,12 +59,9 @@ class MyMusicViewBody extends Component {
 
                 <div className={cn('mymusic-center')}>
                     {
-                        this.props.myMusicLists.length > 0 ?
+                        this.props.myMusicLists.length > 0 && this.props.curSelectList !== -1 &&
                         <MyMusicViewList musicListName={ this.props.myMusicLists[this.props.curSelectList].listName }
                                          musicList={ this.props.myMusicLists[this.props.curSelectList].list } onCheck={this.doCheck} />
-                                         :
-                        <MyMusicViewList musicListName={ '' }
-                                         musicList={ [] } onCheck={this.doCheck} />
                     }
                 </div>
 
@@ -73,7 +70,7 @@ class MyMusicViewBody extends Component {
                 </div>
 
                 <div className={cn('mymusic-modal' , {'mymusic-modal-hidden' : !this.state.modalShow})}>
-                    <Modal mode={this.state.mode} modeParam={this.state.modeParam} onToggleModal={this.doToggleModal} />
+                    <Modal mode={this.state.mode} modeParam={this.state.modeParam} listNames={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onToggleModal={this.doToggleModal} />
                 </div>
 
             </div>
