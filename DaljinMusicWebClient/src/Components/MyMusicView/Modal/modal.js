@@ -35,7 +35,7 @@ const inputText = (placeholder , key , _onChange = () => {}) => (
 
 const inputFileFinder = (onFileChange , key) => (
     <div className={cn('mymusic-modal-inputfile' , 'mymusic-modal-button')} key={`inputFileFinder${key}`}>
-        <input type='file' id='fileupload' className={cn('mymusic-upload-button')} onChange={onFileChange} multiple/>
+        <input type='file' id='fileupload' className={cn('mymusic-upload-button')} onChange={onFileChange} accept='audio/*' multiple/>
         <label htmlFor='fileupload' className={cn('mymusic-upload-label')}><p>찾아보기</p></label>
     </div>
 )
@@ -104,6 +104,16 @@ class Modal extends Component {
             fileList : [],
             makeListName : '',
             selectedListId : -1,
+        }
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            this.setState({
+                fileList : [],
+                makeListName : '',
+                selectedListId : -1,
+            })
         }
     }
     

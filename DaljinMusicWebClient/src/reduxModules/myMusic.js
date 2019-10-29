@@ -117,10 +117,9 @@ export const myMusicReducer = handleActions({
     },
     [MODAL_ACCEPT_MAKE_MUSIC_LIST] : (state , action) => {
         const newState = { ...state }
-        const { message } = action.payload
-        if(message !== '' || message !== 'undefined') {
-            window.alert(message)
-        }
+        const { myMusicLists , message } = action.payload
+        newState.myMusicLists = myMusicLists
+        window.alert(message)
         return newState
     },
     [MODAL_ABORT_MAKE_MUSIC_LIST] : (state , action) => {
@@ -129,6 +128,9 @@ export const myMusicReducer = handleActions({
     },
     [MODAL_ACCEPT_DELETE_MUSIC_LIST] : (state , action) => {
         const newState = { ...state }
+        const { myMusicLists , message } = action.payload
+        newState.myMusicLists = myMusicLists
+        window.alert(message);
         return newState
     },
     [MODAL_ABORT_DELETE_MUSIC_LIST] : (state , action) => {

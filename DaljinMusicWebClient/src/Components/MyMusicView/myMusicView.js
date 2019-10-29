@@ -25,13 +25,27 @@ class MyMusicViewBody extends Component {
 
     }
 
-    componentDidMount() {
-        if(this.props.userId === '' || this.props.userId === 'undefined') {
-            window.alert('로그인을 먼저 해주세요')
-            this.props.history.push('/auth')
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps.idCheckTrying !== this.props.idCheckTrying) {
+            this.initState();
         }
-        else {
-            this.props.MyMusicActions.fetchMyMusic({userId : this.props.userId})
+    }
+
+    componentDidMount() {
+        this.initState();
+    }
+
+    initState = () => {
+        //세션확인이 완료되면
+        if(!this.props.idCheckTrying) {
+            //로그인 되어있으면 음악리스트 요청
+            if(this.props.isAuthenticated) {
+                this.props.MyMusicActions.fetchMyMusic({userId : this.props.userId})
+            }
+            //로그인 안되어있으면 로그인 창으로 이동
+            else {
+                this.props.history.push('/auth')
+            }
         }
     }
 
@@ -40,7 +54,6 @@ class MyMusicViewBody extends Component {
     }
 
     doChangeModal = (_mode , _modeParam = null) => {
-        console.dir(_modeParam)
         this.doToggleModal()
         this.setState({ mode : _mode , modeParam : _modeParam})
     }
@@ -52,27 +65,29 @@ class MyMusicViewBody extends Component {
     render () {
         return (
             <div className={cn('mymusic')}>
+                    {this.props.isAuthenticated &&
+                        <React.Fragment>
+                            <div className={cn('mymusic-left')}>
+                                <MyMusicViewListNames list={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onChangeModal={this.doChangeModal} />
+                            </div>
 
-                <div className={cn('mymusic-left')}>
-                    <MyMusicViewListNames list={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onChangeModal={this.doChangeModal} />
-                </div>
+                            <div className={cn('mymusic-center')}>
+                                {
+                                    this.props.myMusicLists.length > 0 && this.props.curSelectList !== -1 &&
+                                    <MyMusicViewList musicListName={ this.props.myMusicLists[this.props.curSelectList].listName }
+                                                    musicList={ this.props.myMusicLists[this.props.curSelectList].list } onCheck={this.doCheck} />
+                                }
+                            </div>
 
-                <div className={cn('mymusic-center')}>
-                    {
-                        this.props.myMusicLists.length > 0 && this.props.curSelectList !== -1 &&
-                        <MyMusicViewList musicListName={ this.props.myMusicLists[this.props.curSelectList].listName }
-                                         musicList={ this.props.myMusicLists[this.props.curSelectList].list } onCheck={this.doCheck} />
+                            <div className={cn('mymusic-right')}>
+                                <MyMusicViewButtons onChangeModal={this.doChangeModal} />
+                            </div>
+
+                            <div className={cn('mymusic-modal' , {'mymusic-modal-hidden' : !this.state.modalShow})}>
+                                <Modal mode={this.state.mode} modeParam={this.state.modeParam} listNames={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onToggleModal={this.doToggleModal} />
+                            </div>
+                        </React.Fragment>
                     }
-                </div>
-
-                <div className={cn('mymusic-right')}>
-                    <MyMusicViewButtons onChangeModal={this.doChangeModal} />
-                </div>
-
-                <div className={cn('mymusic-modal' , {'mymusic-modal-hidden' : !this.state.modalShow})}>
-                    <Modal mode={this.state.mode} modeParam={this.state.modeParam} listNames={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onToggleModal={this.doToggleModal} />
-                </div>
-
             </div>
         )
     }
@@ -82,7 +97,9 @@ export default connect(
     (state) => ({
         myMusicLists : state.myMusic.myMusicLists.slice(0, state.myMusic.myMusicLists.length),
         curSelectList : state.myMusic.curSelectList,
-        userId : state.auth.userId
+        userId : state.auth.userId,
+        isAuthenticated : state.auth.isAuthenticated,
+        idCheckTrying : state.auth.idCheckTrying,
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicAction , dispatch)

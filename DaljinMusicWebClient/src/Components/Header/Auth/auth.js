@@ -15,7 +15,7 @@ class Auth extends Component {
 
 
     componentDidMount() {
-        this.props.AuthActions.checkLogged();
+        this.props.AuthActions.fetchIsLogged();
     }
 
     render () {

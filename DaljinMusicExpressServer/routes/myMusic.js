@@ -6,7 +6,6 @@ const UserModel = require('../Database/mongoDB').userModel
 const musicListModel = require('../Database/mongoDB').musicListModel
 
 router.post('/' , doAsync(async (req , res , next) => {
-    console.log(`MYMUSC /`)
     const { userId } = req.body
     const response = {
         message : '',
@@ -25,29 +24,7 @@ router.post('/' , doAsync(async (req , res , next) => {
             response.message = '검색 실패'
         }
     }
-    console.dir(response)
     res.json(response)
-
-    /*
-    for(let i = 0 ; i < 3; i++) {
-        response.push({
-            listName : `TEST${i+1}`,
-            items : []
-        })
-        for(let j = 1; j <= 108; j++) {
-            response[i].items.push({
-                id : `${i+1}-${j}`,
-                song : `SONG ${i+1}-${j}`,
-                singer : `SINGER ${i+1}-${j}`,
-                album : `ALBUM ${i+1}-${j}`,
-                time : `TIME ${i+1}-${j}`,
-                album : `ALBUM ${i+1}-${j}`,
-                albumImgUri : `twice${(j%2)+1}.jpg`,
-            })
-        }
-    }
-    res.json(response)
-    */
 }))
 
 
@@ -88,16 +65,19 @@ router.post('/makemusiclist' , doAsync(async(req , res , next) => {
     const { userId , listName } = req.body
     console.dir(`USERID : ${userId} , LISTNAME : ${listName}`)
     const response = {
+        myMusicLists : [],
         message : ''
     }
 
     if(userId === req.session.userId) {
         try {
+            
             const user = await UserModel.findOne({'userId' : userId })
             if(user !== null) {
                 user.myMusicLists.push({ 'listName' : listName , 'list' : []})
             }
             await user.save()
+            response.myMusicLists = user.myMusicLists
             response.message = '생성 완료'
         }
         catch (err) {
@@ -115,6 +95,7 @@ router.post('/makemusiclist' , doAsync(async(req , res , next) => {
 router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
     const { userId , listId } = req.body;
     const response = {
+        myMusicLists : [],
         message : ''
     }
 
@@ -127,6 +108,8 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
                 const index = user.myMusicLists.findIndex((value) => ( value._id == listId ) )
                 user.myMusicLists.splice(index , 1)
                 await user.save()
+
+                response.myMusicLists = user.myMusicLists
                 response.message = '삭제 완료'
             }
             else {
