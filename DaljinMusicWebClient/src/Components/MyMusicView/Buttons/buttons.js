@@ -27,9 +27,6 @@ export default class MyMusicViewButtons extends Component {
                     <p><i className={cn('fas fa-cloud-download-alt')}></i>&nbsp;다운로드</p>
                 </div>
 
-                <div className={cn('mymusic-buttons')} onClick={() => { this.props.onChangeModal(MODAL_SELECTOR.UPLOAD) }}>
-                    <p><i className={cn('fas fa-cloud-upload-alt')}></i>&nbsp;업로드</p>
-                </div>
             </div>
         )
     }

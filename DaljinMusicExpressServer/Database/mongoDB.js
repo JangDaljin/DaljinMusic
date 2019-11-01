@@ -46,7 +46,6 @@ const Music = new Schema({
     song : { type : String, required : true } ,
     singer : { type : Schema.Types.ObjectId, ref : 'singer' },
     album : { type : Schema.Types.ObjectId, ref : 'album' },
-    category : { type : Schema.Types.ObjectId, ref : 'category' },
     playTime : { type : String, required : true } ,
     uploadDate : { type : Date, required : true } ,
     totalPlayCount : { type : Number, default : 0 },

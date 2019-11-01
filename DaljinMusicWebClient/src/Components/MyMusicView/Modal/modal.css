@@ -116,12 +116,12 @@
     border: 2px solid #808080;
     margin-top : 3px;
     margin-bottom: 3px;
-    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .mymusic-modal-uploadlist-item > div {
-    vertical-align: top;
-    display: inline-block;
+    
     font-size: 0.8rem;
 }
 
@@ -131,21 +131,20 @@
 }
 
 .mymusic-modal-uploadlist-item-first > p {
-    padding-left: 5px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 .mymusic-modal-uploadlist-item-first > p:hover {
-    display: inline-block;
     white-space: normal;
 }
 
 .mymusic-modal-uploadlist-item-second {
     width: 20%;
-    text-align: right;
-    padding-left: 3px;
-    padding-right: 3px;
+}
+
+.mymusic-modal-uploadlist-item-second > p {
+    text-align: center;
 }
 
 .mymusic-modal-uploadlist-item-third {

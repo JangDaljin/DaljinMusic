@@ -3,7 +3,6 @@ const router = express.Router()
 const doAsync = require('./async')
 const MusicModel = require('../Database/mongoDB').musicModel
 const UserModel = require('../Database/mongoDB').userModel
-const musicListModel = require('../Database/mongoDB').musicListModel
 
 router.post('/' , doAsync(async (req , res , next) => {
     const { userId } = req.body
@@ -26,38 +25,6 @@ router.post('/' , doAsync(async (req , res , next) => {
     }
     res.json(response)
 }))
-
-
-//파일 업로드
-const multer = require('multer')
-const uploadStorage = multer.diskStorage({
-    destination : (req , file , cb) => {
-        cb(null , `musics/`)
-    },
-    filename : (req , file , cb) => {
-        cb(null , file.originalname)
-    }
-})
-const upload = multer({storage : uploadStorage , limits : { fileSize : 1024 * 1024 * 1024 * 1024}})
-router.post('/upload' , upload.array('fileList'), doAsync( async (req, res , next) => {
-    const { userId , listId }  = req.body
-    const response = {
-        message : ''
-    }
-    if(userId == req.session.userId) {
-
-    }
-    else {
-        response.message = '검증 오류'
-    }
-
-
-    res.json(response)
-}))
-
-
-
-
 
 
 //음악 리스트 만들기
