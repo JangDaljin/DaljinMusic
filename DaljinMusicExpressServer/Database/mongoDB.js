@@ -43,10 +43,11 @@ const Album = new Schema({
 })
 
 const Music = new Schema({
+    filePath : { type : String , required : true },
     song : { type : String, required : true } ,
-    singer : { type : Schema.Types.ObjectId, ref : 'singer' },
+    singer : { type : Schema.Types.ObjectId, ref : 'singer' , required : true},
     album : { type : Schema.Types.ObjectId, ref : 'album' },
-    playTime : { type : String, required : true } ,
+    playTime : { type : Number, required : true } ,
     uploadDate : { type : Date, required : true } ,
     totalPlayCount : { type : Number, default : 0 },
     weekPlayCount : { type : Number, default : 0 },

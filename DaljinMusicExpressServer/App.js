@@ -1,3 +1,6 @@
+//dotenv 사용
+require('dotenv').config()
+
 //외부모듈
 const express = require('express')
 , session = require('express-session')
@@ -14,26 +17,24 @@ const HotnNewMusicRouter = require('./routes/hotnNewMusic')
 const Top100Router = require('./routes/top100')
 const MyMusicRouter = require('./routes/myMusic')
 const TestRouter = require('./routes/test')
+const AdminRouter = require('./routes/admin')
 
 //DB
 const MongoDB = require('./Database/mongoDB')
 
-const {
-    PORT : port = 8888,
-    SESSION_KEY : sessionKey
-} = process.env
+//기본 설정사항
+const PORT = process.env.PORT
 
+//EXPRESS 사용
 var app = express()
-
 
 //크로스 브라우저 가능
 app.use(cors({credentials:true , origin:'http://localhost:3000'}))
 
 //바디파서 사용(POST 사용)
-app.use(bodyParser.urlencoded({
-    extended:true
-}))
+app.use(bodyParser.urlencoded({ extended:true }))
 app.use(bodyParser.json())
+
 //공개 경로 설정
 //app.use('/' , express.static('../public'))
 
@@ -60,10 +61,12 @@ app.use('/hotnnewmusic' , HotnNewMusicRouter)
 app.use('/top100' , Top100Router)
 app.use('/mymusic' , MyMusicRouter)
 app.use('/test' , TestRouter)
+app.use('/admin' , AdminRouter)
 
 
 
-http.createServer(app).listen(port , () => {
-    console.log(`SERVER OPEN (PORT : ${port})`)
+
+http.createServer(app).listen(PORT , () => {
+    console.log(`SERVER OPEN (PORT : ${PORT})`)
     MongoDB.connect();
 })
