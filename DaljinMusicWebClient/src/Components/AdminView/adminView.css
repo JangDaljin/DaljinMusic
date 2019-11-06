@@ -48,23 +48,30 @@
     text-align: center;
 }
 
-.adminview .upload-info > input[type="text"]{
-    font-size: 1.2rem;
-    height: 35px;
+.adminview .upload-info > .music-info {
+    display: flex;
+    flex-direction: column;
 }
 
-.adminview .upload-info > input[type="text"]:read-only{
+.adminview .upload-info > .music-info > input[type="text"]{
+    font-size: 1rem;
+    height: 30px;
+    width: 400px;
+}
+
+.adminview .upload-info > .music-info > input[type="text"]:read-only{
     background-color: #CCC;
 }
 
-.adminview .upload-info > input[type="button"] {
+.adminview .upload-info > .music-info > input[type="button"] {
     font-size: 1rem;
     height: 35px;
 }
 
+
 .adminview .album-img-wrap {
     position: relative;
-    width: 100px;
+    min-width: 100px;
     border: 1px solid black;
 }
 
@@ -83,6 +90,28 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+ .searchbox {
+    position: absolute !important;
+    border: 2px solid #303030;
+    background-color: #EEE;
+    font-weight: bold;
+}
+
+.searchbox > div {
+    display: flex;
+    align-items: center;
+    border: 1px solid #CCC;
+    cursor: pointer;
+    min-height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.searchbox > div:hover {
+    background-color: #303030;
+    color: #069;
 }
 
 

@@ -15,7 +15,7 @@ const MusicModel = require('../Database/mongoDB').musicModel
 const SingerModel = require('../Database/mongoDB').singerModel
 const AlbumModel = require('../Database/mongoDB').albumModel
 
-const { getTime , isNUW } = require('../util')
+const { getTime  , isNUW} = require('../util')
 
 
 const upload = multer({
@@ -70,23 +70,42 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
             }
 
             //가수 저장
-            const singerModel = new SingerModel({
-                name : singers[i]
-            })
-            const singerDoc = await singerModel.save()
+            let singerId = ''
+            if(singers[i]._id !== '') {
+                singerId = singers[i]._id
+            }
+            else {
+                const singerModel = new SingerModel({
+                    name : singers[i].name
+                })
+                const singerDoc = await singerModel.save()
+                singerId = singerDoc._id
+            }
+            
+            
             
             //앨범 저장
-            const albumModel = new AlbumModel({
-                name : albums[i].name,
-                imagePath : albumNewPath
-            })
-            const albumDoc = await albumModel.save()
+            let albumId = ''
+            console.dir(albums[i])
+            if(albums[i]._id !== '') {
+                albumId = albums[i]._id
+            }
+            else if(albums[i].name !== '') {
+                const albumModel = new AlbumModel({
+                    name : albums[i].name,
+                    imagePath : albumNewPath
+                })
+                const albumDoc = await albumModel.save()
+                albumId = albumDoc._id
+            }
+
+
 
             //음악 저장
             const musicModel = new MusicModel({
-                song : songs[i],
-                singer : singerDoc._id,
-                album : albumDoc._id,
+                song : songs[i].name,
+                singer : singerId,
+                album : albumId,
                 filePath : musicNewPath,
                 playTime : await getAudioDurationInSeconds(musicNewPath),
                 uploadDate : getTime(),
@@ -96,6 +115,8 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
             })
             musicModel.save()
 
+            console.log('업로드 완료')
+            response.message = '업로드 완료'
         }
         catch(err) {
             console.error(err)

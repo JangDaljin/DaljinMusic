@@ -18,6 +18,7 @@ const Top100Router = require('./routes/top100')
 const MyMusicRouter = require('./routes/myMusic')
 const TestRouter = require('./routes/test')
 const AdminRouter = require('./routes/admin')
+const SearchRouter = require('./routes/search')
 
 //DB
 const MongoDB = require('./Database/mongoDB')
@@ -62,6 +63,7 @@ app.use('/top100' , Top100Router)
 app.use('/mymusic' , MyMusicRouter)
 app.use('/test' , TestRouter)
 app.use('/admin' , AdminRouter)
+app.use('/search' , SearchRouter)
 
 
 

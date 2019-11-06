@@ -12,7 +12,6 @@ export const acceptMusicUpload = createAction(ACCEPT_MUSIC_UPLOAD)
 export const ABORT_MUSIC_UPLOAD = 'admin/ABORT_MUSIC_UPLOAD'
 export const abortMusicUpload = createAction(ABORT_MUSIC_UPLOAD)
 
-
 const initialAdminState = {
     isAdmin : false,
 }
@@ -20,6 +19,8 @@ const initialAdminState = {
 export const adminReducer = handleActions({
     [ACCEPT_MUSIC_UPLOAD] : (state , action) => {
         const newState = {...state}
+        const { message } = action.payload
+        window.alert(message)
         return newState
     },
     [ABORT_MUSIC_UPLOAD] : (state , action) => {
@@ -33,7 +34,7 @@ function* fetchMusicUploadSaga(action) {
     const formData = new FormData()
     formData.append('songs' , JSON.stringify(songs))
     formData.append('singers' , JSON.stringify(singers))
-    formData.append('albums' , JSON.stringify(albums.map((value) => ({'name' : value.name , 'isThere' : value.isThere , 'index' : value.index}))))
+    formData.append('albums' , JSON.stringify(albums.map((value) => ({'name' : value.name , '_id' : value._id , 'isThere' : value.isThere , 'index' : value.index}))))
     for(const album of albums) {
         if(album.isThere) {
             formData.append('albumImgFiles' , album.file)
@@ -46,7 +47,6 @@ function* fetchMusicUploadSaga(action) {
 
     yield post(`${Config.SERVER}/admin/musicupload` , {} , formData , ACCEPT_MUSIC_UPLOAD , ABORT_MUSIC_UPLOAD)
 }
-
 
 export function* adminSaga() {
     yield takeLatest(FETCH_MUSIC_UPLOAD , fetchMusicUploadSaga)
