@@ -97,6 +97,37 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
+router.post('/musicaddinlist' , doAsync(async (req , res , next) => {
+    
+    const response = {
+        message : ''
+    }
+
+    const { userId , listId , addList } = req.body;
+
+    if(userId == req.session.id) {
+        try {
+            const user = await UserModel.findOne({'userId' : userId})
+            const list = user.myMusicLists.find(obj => obj._id == listId)
+            for(const item of addList) {
+                list.push(item)
+            }
+            await user.save()
+        }
+        catch(err) {
+            console.err(err)
+            console.log('음악 추가 실패')
+            response.message = '음악 추가 실패'
+        }
+    }
+    else {
+        console.log('아이디 검증 실패')
+        response.message = '아이디 검증 실패'
+    }
+
+    res.json(response)
+}))
+
 
 
 module.exports = router
