@@ -40,7 +40,7 @@ class MyMusicViewBody extends Component {
         if(!this.props.idCheckTrying) {
             //로그인 되어있으면 음악리스트 요청
             if(this.props.isAuthenticated) {
-                this.props.MyMusicActions.fetchMyMusic({userId : this.props.userId})
+                this.props.MyMusicActions.fetchGetMyMusicLists({userId : this.props.userId})
             }
             //로그인 안되어있으면 로그인 창으로 이동
             else {
@@ -95,7 +95,7 @@ class MyMusicViewBody extends Component {
 
 export default connect(
     (state) => ({
-        myMusicLists : state.myMusic.myMusicLists.slice(0, state.myMusic.myMusicLists.length),
+        myMusicLists : state.myMusic.myMusicLists.toJS(),
         curSelectList : state.myMusic.curSelectList,
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,

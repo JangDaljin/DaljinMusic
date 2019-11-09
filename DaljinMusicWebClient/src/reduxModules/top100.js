@@ -1,6 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest , select } from 'redux-saga/effects'
 import { get } from './Request/request'
+import { List } from 'immutable'
 import Config from '../config'
 
 export const FETCH_TOP100 = 'top100/FETCH'
@@ -17,17 +18,14 @@ export const alreadyTop100 = createAction(ALREADY_TOP100)
 
 
 const top100InitalState = {
-    items : []
+    items : List([])
 }
 
 export const top100Reducer = handleActions({
     [ACCEPT_TOP100] : (state , action) => {
         const newState = { ...state }
-        const items = action.payload
-
-        for (let i = 0; i < items.length; i++) {
-            newState.items.push(items[i])
-        }
+        const { list } = action.payload
+        newState.items = newState.items.concat(list)
         return newState
     },
     [ABORT_TOP100] : (state , action) => {
@@ -41,9 +39,8 @@ export const top100Reducer = handleActions({
 function * fetchSaga(action) {
     const { from , to } = action.payload
     const state = yield select((state)=>(state.top100))
-
-    if(state.items.length < to && state.items.length+1 >= from) {
-        yield get(`${Config.SERVER}/top100?from=${(state.items.length > from)? state.items.length + 1 : from}&to=${to}` , ACCEPT_TOP100 , ABORT_TOP100)
+    if(state.items.size < to && state.items.size+1 >= from) {
+        yield get(`${Config.SERVER}/top100?from=${(state.items.size > from)? state.items.size + 1 : from}&to=${to}` , ACCEPT_TOP100 , ABORT_TOP100)
     }
 }
 

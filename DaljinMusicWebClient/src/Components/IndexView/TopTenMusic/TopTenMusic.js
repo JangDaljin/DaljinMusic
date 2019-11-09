@@ -54,7 +54,7 @@ class TopTenMusic extends Component {
 
 export default connect(
     (state) => ({
-        top10 : state.top100.items.slice(0 , 10)
+        top10 : state.top100.items.slice(0,10)
     }),
     (dispatch) => ({
         top100Actions : bindActionCreators(Top100Actions , dispatch)

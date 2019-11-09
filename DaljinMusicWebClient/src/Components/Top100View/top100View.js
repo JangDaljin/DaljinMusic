@@ -2,12 +2,22 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as top100Actions from '../../ReduxModules/top100'
+import * as myMusicActions from '../../ReduxModules/myMusic'
+import Modal from './Modal/modal'
+
 
 import classNames from 'classnames/bind'
 import styles from './top100View.css'
 const cn = classNames.bind(styles)
 
 class Top100ViewBody extends Component {
+
+
+    state = {
+        showModal : false,
+        selectedMusicId : '',
+    }
+
 
     componentDidMount () {
         
@@ -30,6 +40,7 @@ class Top100ViewBody extends Component {
 
     render () {
         return (
+            <React.Fragment>
             <div className={cn('top100')}>
                 <div className={cn('top100-left')}>
                     {
@@ -58,7 +69,12 @@ class Top100ViewBody extends Component {
                                 
                                 <div className={cn('top100-list-item-buttons')}>
                                         <div className={cn('top100-list-item-play' , 'top100-list-button')}><i className={cn('fas fa-play' ,'fa-2x')}></i></div>
-                                        <div className={cn('top100-list-item-add' , 'top100-list-button')}><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
+                                        <div className={cn('top100-list-item-add' , 'top100-list-button')} 
+                                        onClick={
+                                            (e) => {
+                                                this.setState({ showModal : true , selectedMusicId : ''})
+                                            }
+                                        }><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
                                         <div className={cn('top100-list-item-list' , 'top100-list-button')}><i className={cn('fas fa-list' , 'fa-2x')}></i></div>
                                 </div>
 
@@ -68,21 +84,23 @@ class Top100ViewBody extends Component {
                     }
                 </div>
 
-                <div className={cn('top100-right')}>
-                    
-
-                </div>
 
             </div>
+            {this.state.showModal &&
+                <Modal selectedMusicId={this.state.selectedMusicId} close={() => { this.setState({ showModal : false }) } }/>
+            }
+            
+            </React.Fragment>
         )
     }
 }
 
 export default connect(
     (state) => ({
-        items : state.top100.items.slice(0 , state.top100.items.length)
+        items : state.top100.items.toJS()
     }),
     (dispatch) => ({
-        Top100Actions : bindActionCreators(top100Actions , dispatch)
+        Top100Actions : bindActionCreators(top100Actions , dispatch),
+        MyMusicActions : bindActionCreators(myMusicActions , dispatch)
     })
 )(Top100ViewBody)

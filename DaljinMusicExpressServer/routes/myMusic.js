@@ -1,27 +1,34 @@
 const express = require('express')
 const router = express.Router()
 const doAsync = require('./async')
-const MusicModel = require('../Database/mongoDB').musicModel
 const UserModel = require('../Database/mongoDB').userModel
 
-router.post('/' , doAsync(async (req , res , next) => {
+router.post('/getmusiclists' , doAsync(async (req , res , next) => {
     const { userId } = req.body
     const response = {
         message : '',
         myMusicLists : []
     }
 
+    console.log(`userId : ${userId}`)
+
     if( userId === req.session.userId) {
         try {
-            const user = await UserModel.findOne({ 'userId' : userId}).lean().populate('mymusiclist.list' , 'list listname')
+            const user = await UserModel.findOne({ 'userId' : userId}).populate('mymusiclist.list' , 'list listname').lean()
             if(user !== null) {
                 response.myMusicLists = user.myMusicLists
                 response.message = '검색 완료'
             }
         }
         catch (err) {
+            console.err(err)
+            console.log('검색 실패')
             response.message = '검색 실패'
         }
+    }
+    else {
+        console.log('검증 실패')
+        response.message = '검증 실패'
     }
     res.json(response)
 }))
@@ -97,7 +104,7 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
-router.post('/musicaddinlist' , doAsync(async (req , res , next) => {
+router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
     
     const response = {
         message : ''
@@ -108,7 +115,8 @@ router.post('/musicaddinlist' , doAsync(async (req , res , next) => {
     if(userId == req.session.id) {
         try {
             const user = await UserModel.findOne({'userId' : userId})
-            const list = user.myMusicLists.find(obj => obj._id == listId)
+            const musicList = user.myMusicLists.find(obj => obj._id == listId)
+            const list = musicList.list
             for(const item of addList) {
                 list.push(item)
             }
@@ -118,6 +126,36 @@ router.post('/musicaddinlist' , doAsync(async (req , res , next) => {
             console.err(err)
             console.log('음악 추가 실패')
             response.message = '음악 추가 실패'
+        }
+    }
+    else {
+        console.log('아이디 검증 실패')
+        response.message = '아이디 검증 실패'
+    }
+
+    res.json(response)
+}))
+
+router.post('/removemusicinlist' , doAsync(async (req , res , next) => {
+    const response = {
+        message : ''
+    }
+
+    const { userId , listId , removeList } = req.body;
+
+    if(userId = req.session.id) {
+        try {
+            const user = await UserModel.findOne({'userId' : userId})
+            const musicList = user.myMusicLists.find(obj => obj._id == listId)
+            const list = musicList.list
+            for(const item of removeList) {
+                list.splice(list.findIndex((obj) => obj._id == item))
+            }
+        }
+        catch(err) {
+            console.err(err);
+            console.log('삭제 실패')
+            response.message = '삭제 실패'
         }
     }
     else {

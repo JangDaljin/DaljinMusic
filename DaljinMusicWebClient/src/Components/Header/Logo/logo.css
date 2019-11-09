@@ -1,15 +1,11 @@
 .header-logo {
-    position: relative;
-    top: 50%;
-    transform: translate(0% , -50%);
-    display: inline-block;
+    display: flex;
+    align-items: center;
     height: 100%;
     cursor: pointer;
 }
 
 .header-logo-img {
     height: 75%;
-    position: relative;
-    top: 50%;
-    transform: translate(0% , -50%);
+    display: flex;
 }

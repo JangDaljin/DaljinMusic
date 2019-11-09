@@ -6,7 +6,8 @@
 
 
 .header-root {
-    position: relative;
+    display: flex;
+    align-items: center;
     height: 70px;
     background-color: #303030;
     text-align: center;
