@@ -1,23 +1,21 @@
 .musicplayer {
-    bottom: 0;
+    display: flex;
+    flex-direction: column;
     border: 2px solid #303030;
-    height: 100%;
-    display: inline-block;
-    vertical-align: top;
     background-color: #FEFEFE;
     width: 370px;
-    text-align: left;
-    position: relative;
     z-index: 1;
 }
 
-.top-wrap {
-    height: 100%;
+
+.musicplayer .top-wrap {
+    display: flex;
+    flex-direction: row;
 }
 
 .top-wrap > div {
-    display: inline-block;
-    vertical-align: top;    
+    display: flex;
+    align-content: stretch;
 }
 
 .img-wrap {

@@ -1,66 +1,54 @@
 .header-search {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: row;
-    height: 100%;
-    vertical-align: top;
     margin-right: 10px;
     margin-left: 10px;
 }
 
 .header-search > div {
-    display: inline-block;
-    position: relative;
-    top: 50%;
-    transform: translate(0%, -50%);
     height: 35px;
     background-color: #EFEFEF;
 }
 
-.header-search-icon-wrap {
-    position: relative;
+.header-search .header-search-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 35px;
     border-right : 2px solid #BBB;
     border-top : 2px solid #BBB;
     border-bottom : 2px solid #BBB;
     border-top-left-radius: 0.4rem;
     border-bottom-left-radius: 0.4rem;
-    vertical-align: top;
 }
 
-
-.header-search-icon {
-    position: relative;
-    top: 50%;
-    transform: translate(0% , -50%);
-    vertical-align: top;
-}
-
-.header-search-text-wrap {
+.header-search .header-search-text-wrap {
     border-top : 2px solid #BBB;
     border-bottom : 2px solid #BBB;
-    vertical-align: top;
 }
 
-.header-search-text {
+.header-search .header-search-text {
     border:none;
     height: 100%;
-    position: relative;
-    top: 50%;
-    transform: translate(0% , -50%);
     padding-left: 5px;
     padding-right: 5px;
 }
 
-.header-search-button {
-    vertical-align: top;
-    padding: 3px;
+.header-search .header-search-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
     border: 2px solid #BBB;
     border-top-right-radius: 0.4rem;
     border-bottom-right-radius: 0.4rem;
     cursor: pointer;
+    font-family: 'jua';
 }
 
-.header-search-button:active {
+.header-search .header-search-button:active {
     font-weight: bold;
     color: #069;
 }

@@ -1,11 +1,10 @@
 .header-logo {
     display: flex;
-    align-items: center;
-    height: 100%;
     cursor: pointer;
+    align-items: center;
+    padding: 10px;
 }
 
 .header-logo-img {
-    height: 75%;
-    display: flex;
+    min-height: 35px;
 }

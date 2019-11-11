@@ -24,29 +24,35 @@ class Auth extends Component {
             {this.props.isAuthenticated ? 
                 <div className={cn('auth-userinfo-wrap')}>
                     <div className={cn('auth-userinfo')}>
+
                         <div className={cn('auth-userinfo-icon-wrap')}>
                             <i className={cn('fas fa-user' , 'auth-userinfo-icon')}></i>
                         </div>
+
                         <div className={cn('auth-userinfo-text')}>
                             <p>안녕하세요. {this.props.userName}님.</p>
                         </div>
+
                     </div>
+
                     <div className={cn('auth-loginout-button')} onClick={() => {this.props.AuthActions.fetchLogout()}}>
                         
-                        <p className={cn('loginout-text')}><i className="fas fa-sign-out-alt fa-2x"></i><span> 로그아웃</span></p>
+                        <p className={cn('loginout-text')}><i className="fas fa-sign-out-alt"></i><span> 로그아웃</span></p>
                     </div>
+
                 </div>
                 :
                 <div className={cn('auth-before-login')}>
                     <Link to="/auth" className={cn('auth-loginout-button-wrap')}>
                             <div className={cn('auth-loginout-button')}>
-                                <p className={cn('loginout-text')}><i className="fas fa-sign-in-alt fa-2x"></i><span> 로그인</span></p>  
+                                <p className={cn('loginout-text')}><i className="fas fa-sign-in-alt"></i><span> 로그인</span></p>  
                             </div>
                     </Link>
+
                     <Link to="/signup" className={cn('auth-loginout-button-wrap')}>
                         <div className={cn('auth-loginout-button')}>
                             
-                            <p className={cn('loginout-text')}><i className="far fa-address-card fa-2x"></i><span> 회원가입</span></p>
+                            <p className={cn('loginout-text')}><i className="far fa-address-card"></i><span> 회원가입</span></p>
                         </div>
                     </Link>
                 </div>

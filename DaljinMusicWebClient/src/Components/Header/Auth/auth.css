@@ -6,75 +6,63 @@
 
 
 .header-auth {
-    position: relative;
-    display: inline-block;
-    height: 100%;
-    vertical-align: top;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
     margin-left: 20px;
     margin-right: 20px;
+    font-family: 'jua';
 }
 
 
-.auth-before-login {
-    position: relative;
-    display: inline-block;
-    height: 100%;
+
+
+.header-auth .auth-userinfo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #BBB;
-    vertical-align: top; 
 }
 
-.auth-userinfo-wrap {
-    position: relative;
-    display: inline-block;
-    height: 100%;
-    color: #BBB;
-    vertical-align: top;
+.header-auth .auth-userinfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-.auth-userinfo {
-    display: inline-block;
-    position: relative;
-    top: 50%;
-    transform: translate(0% , -50%);
-}
-
-.auth-userinfo-icon-wrap {
-    display: inline-block;
+.header-auth .auth-userinfo-icon-wrap {
     color: #BBB;
     margin-right: 3px;
     margin-left: 3px;
 }
 
-.auth-userinfo-icon {
+.header-auth .auth-userinfo-icon {
     color: #00EE88;
 }
 
-.auth-userinfo > div{
-    display: inline-block
+
+
+
+.header-auth .auth-before-login {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    flex-direction: row;
+    color: #BBB;
 }
-
-
-
-
 
 .auth-loginout-button-wrap {
-    display: inline-block;
-    height: 100%;
+    text-decoration: none;
+    white-space: nowrap;
 }
-
-
-
-
 
 .auth-loginout-button {
     position: relative;
-    vertical-align: top;
-    display: inline-block;
     color: #BBB;
     cursor: pointer;
     margin-left: 10px;
     margin-right: 10px;
-    position: relative;
     height: 100%;
     overflow: hidden;
 }
@@ -87,62 +75,42 @@
     content: '';
     position: absolute;
     bottom: 0%;
-    left: 0%;
+    right: 100%;
     width: 100%;
-    height: 4px;
+    height: 5px;
     background-color: #00EE88;
-    transform: translate(-100% , 0%);   
-    opacity: 1;
 }
 
 .auth-loginout-button::before {
     content: '';
     position: absolute;
     top: 0%;
-    left: 0%;
+    left: 100%;
     width: 100%;
-    height: 4px;
+    height: 5px;
     background-color: #00EE88;
-    transform: translate(100% , 0%);   
-    opacity: 1;
 }
 
 .auth-loginout-button:hover::after {
-    opacity: 1;
-    transform: translate(0% , 0%);
-    transition: transform 0.8s 0s;
+    right: 0;
+    transition: right .5s;
 }
 
 .auth-loginout-button:hover::before {
-    opacity: 1;
-    transform: translate(0% , 0%);
-    transition: transform 0.8s 0s;
+    left: 0;
+    transition: left .5s;
 }
 
-.auth-loginout-button > p {
-    position: relative;
-    top: 50%;
-    transform: translate(0% , -50%)
-}
-
-.auth-loginout-button > p > *{
-    vertical-align: middle;
-}
-
-.auth-loginout-button > i {
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
+.auth-loginout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
     
-    margin-left: 2px;
-    margin-right: 2px;
 }
 
 .loginout-text {
-    display: inline-block;
-    vertical-align: middle;
     margin-left: 2px;
     margin-right: 2px;
-    font-weight: bold;
-    text-decoration: none;
 }
+

@@ -7,10 +7,11 @@
 
 .header-root {
     display: flex;
-    align-items: center;
-    height: 70px;
+    justify-content: center;
     background-color: #303030;
     text-align: center;
+    position: relative;
+    flex-wrap: wrap;
 }
 
 

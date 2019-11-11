@@ -49,6 +49,7 @@ export default class MusicPlayer extends Component {
         return (
             <div className={cn('musicplayer')}>
                 
+
                 <div className={cn('top-wrap')}>
                     <div className={cn('img-wrap')}>
                         <div className={cn('img')} style={{backgroundImage:`url('/twice1.jpg')`}}></div>

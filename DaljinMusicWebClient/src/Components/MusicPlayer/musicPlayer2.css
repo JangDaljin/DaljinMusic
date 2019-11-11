@@ -1,0 +1,139 @@
+.musicplayer2 {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    width: 100%;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+}
+
+
+.musicplayer2 .scroller {
+    display: flex;
+    justify-content: center;
+}
+
+.musicplayer2 .scroller > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 40px;
+    border: 4px solid #303030;
+    border-radius: 0.5rem;
+    
+}
+
+.musicplayer2 .controller {
+    display: flex;
+    align-content: center;
+    background-color: #303030;
+    color: #EEE;
+    font-family: 'jua';
+    
+    border: 3px solid #CCC;;
+}
+
+.musicplayer2 .controller > .left {
+    flex-grow: 5;
+    display: inline-flex;
+}
+
+.musicplayer2 .controller > .left > .img-wrap {
+    position: relative;
+    width: 80px;
+}
+
+.musicplayer2 .controller > .left > .img-wrap::before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.musicplayer2 .controller > .left > .img-wrap > .img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-size: cover;
+}
+
+.musicplayer2 .controller > .left > .info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    
+    padding-left: 10px;
+    padding-right: 10px;
+} 
+
+.musicplayer2 .controller > .left > .info > .text {
+    display: flex;
+    align-items: center;
+    border: 1px solid blue;
+    flex-grow: 1;
+}
+
+.musicplayer2 .controller > .left > .info > .progress {
+    
+    flex-grow: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid red;
+}
+
+.musicplayer2 .controller > .left > .info > .progress > .progressbar {
+    flex-grow: 1;
+    height: 10px;
+    border: 3px solid #CCC ;
+    position: relative;
+    border-radius: 1rem;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.musicplayer2 .controller > .left > .info > .progress > .progressbar > .position {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 1000px;
+    border: 4px double black;
+    background-color: #CCC;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.musicplayer2 .controller > .center {
+    flex-grow: 5;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.musicplayer2 .controller > .center > .buttons1 {
+    flex: 1 0 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid blue;
+}
+
+.musicplayer2 .controller > .center > .buttons2 {
+    flex: 1 0 40px;
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid red;
+    align-items: center;
+}
+
+.musicplayer2 .controller > .right {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
