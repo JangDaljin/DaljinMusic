@@ -23,7 +23,7 @@
     flex: 0 0 40px;
     border: 4px solid #303030;
     border-radius: 0.5rem;
-    
+    cursor: pointer;
 }
 
 .musicplayer2 .controller {
@@ -37,13 +37,13 @@
 }
 
 .musicplayer2 .controller > .left {
-    flex-grow: 5;
+    flex : 7 0 auto;
     display: inline-flex;
 }
 
 .musicplayer2 .controller > .left > .img-wrap {
     position: relative;
-    width: 80px;
+    width: 100px;
 }
 
 .musicplayer2 .controller > .left > .img-wrap::before {
@@ -66,25 +66,35 @@
     flex: 1;
     flex-direction: column;
     
-    padding-left: 10px;
-    padding-right: 10px;
+    
 } 
 
 .musicplayer2 .controller > .left > .info > .text {
     display: flex;
     align-items: center;
-    border: 1px solid blue;
-    flex-grow: 1;
+    flex: 1 0 40px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
+
+.musicplayer2 .controller > .left > .info > .text > div {
+    width: 100%;
+    padding : 3px 10px 3px 10px;
+    border-radius: 1000rem;
+    background-color: #FFF;
+    color: #303030;
+}
+
 
 .musicplayer2 .controller > .left > .info > .progress {
     
-    flex-grow: 1;
+    flex : 1 0 40px;    
 
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid red;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .musicplayer2 .controller > .left > .info > .progress > .progressbar {
@@ -110,30 +120,54 @@
 }
 
 .musicplayer2 .controller > .center {
-    flex-grow: 5;
+    flex : 3 0 auto;
     display: inline-flex;
     flex-direction: column;
 }
 
-.musicplayer2 .controller > .center > .buttons1 {
+.musicplayer2 .controller > .center > .buttons {
     flex: 1 0 40px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    border: 1px solid blue;
+    padding : 5px
 }
 
-.musicplayer2 .controller > .center > .buttons2 {
-    flex: 1 0 40px;
-    display: flex;
-    justify-content: space-around;
-    border: 1px solid red;
-    align-items: center;
+.musicplayer2 .controller > .center > .buttons1 > .button{
 }
+
+.musicplayer2 .controller > .center > .buttons2 > .button {
+    
+}
+
+.musicplayer2 .controller .button {
+    cursor: pointer;
+    border: 6px double #CCC;
+    background-color: #FFF;
+    color: #303030;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left : 20px;
+    padding-right : 20px;
+    border-radius: 1000px;
+    margin : 0px 10px;
+}
+
+.musicplayer2 .controller .button:hover {
+    background-color: #303030;
+    color: #FFF;
+}
+
 
 .musicplayer2 .controller > .right {
     width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+}
+
+.musicplayer2 .controller > .right:hover {
+    background-color: #FFF;
+    color: #303030;
 }

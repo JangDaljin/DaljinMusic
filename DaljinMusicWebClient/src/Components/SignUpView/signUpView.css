@@ -55,7 +55,7 @@
     height: 100%;
 }
 
-.buttons {
+.viewbody .buttons {
     padding-bottom: 0px !important;
     padding-top: 10px;
 }

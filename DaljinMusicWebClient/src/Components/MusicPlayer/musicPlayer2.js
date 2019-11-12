@@ -12,7 +12,7 @@ class MusicPlayer extends Component {
         return (
             <div className='musicplayer2'>
                 <div className='scroller'>
-                    <div className="fas fa-angle-down fa-2x"></div> 
+                    <div className="fas fa-angle-up fa-2x"></div> 
                 </div>
 
                 <div className='controller'>
@@ -26,7 +26,7 @@ class MusicPlayer extends Component {
                             <div className='info'>
 
                                 <div className='text'>
-                                    가수 - 노래 - 앨범
+                                    <div>가수 - 노래 - 앨범</div>
                                 </div>
 
                                 <div className='progress'>
@@ -42,21 +42,21 @@ class MusicPlayer extends Component {
                             </div>
                     </div>
                     <div className='center'>
-                        <div className='buttons1'>
-                            <i className="fas fa-fast-backward"></i>
-                            <i className="fas fa-pause"></i>
-                            <i className="fas fa-play"></i>
-                            <i className="fas fa-fast-forward"></i>
+                        <div className='buttons buttons1'>
+                            <div className="button fas fa-fast-backward"></div>
+                            <div className="button fas fa-pause"></div>
+                            <div className="button fas fa-play"></div>
+                            <div className="button fas fa-fast-forward"></div>
                         </div>
-                        <div className='buttons2'>
-                            <i className="fas fa-exchange-alt"> 반복</i>
-                            <i className="fas fa-sort-numeric-down"> 순서대로</i>
+                        <div className='buttons buttons2'>
+                            <div className="button fas fa-exchange-alt"></div>
+                            <div className="button fas fa-sort-numeric-down"></div>
                         </div>
                             
                     </div>
 
                     <div className='right'>
-                        <i className="fas fa-list fa-2x"></i>
+                        <div className="fas fa-list fa-2x"></div>
                     </div>
                 </div>
 
