@@ -1,4 +1,4 @@
-.result {
+.search-result {
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 10px;
@@ -11,7 +11,7 @@
     vertical-align: top;
 }
 
-.title {
+.search-result .title {
     height: 30px;
     font-weight: bold;
     font-size: 1.2rem;
@@ -19,47 +19,47 @@
 }
 
 
-.list {
+.search-result .list {
     box-shadow: 0px 0px 5px 5px #AAA;
     height: 600px;
     margin-bottom: 10px;
 }
 
-.list-item {
+.search-result .list > .list-item {
     height: 100px;
     border-top: 1px solid #CCC; 
     border-bottom: 1px solid #CCC;
     cursor: pointer;
 }
 
-.list-item-checked {
+.search-result .list > .list-item-checked {
     background-color: #ccd4fc;
     border: 1px solid white;
     transition: background-color 0.4s 0s;
 }
 
-.list-item:hover {
+.search-result .list > .list-item:hover {
     border: 2px solid #069;
 }
 
-.list-item > div {
+.search-result .list > .list-item > div {
     display: inline-block;
     vertical-align: top;
     height: 100%;
 }
 
-.list-item-img-wrap {
+.search-result .list > .list-item-img-wrap {
     position: relative;
     width: 100px;
 }
 
-.list-item-img-wrap::before {
+.search-result .list > .list-item-img-wrap::before {
     content: '';
     display: block;
     padding-top: 100%;
 }
 
-.list-item-img {
+.search-result .list > .list-item-img-wrap > .list-item-img {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -70,41 +70,41 @@
     background-position: center;
 }
 
-.list-item-info {
+.search-result .list > .list-item-info {
     padding-left: 10px;
     width: calc(100% - 100px);
     
     text-align: left;
 }
 
-.list-item-info > div {
+.search-result .list > .list-item-info > div {
     position: relative;
     height: calc(100% / 3);
 }
 
-.list-item-info > div > p {
+.search-result .list > .list-item-info > div > p {
     position: relative;
     top: 50%;
     transform: translate(0 , -50%);
 }
 
-.list-item-song {
+.search-result .list > .list-item-info .list-item-song {
     font-weight: bold;
 }
 
-.list-item-album {
+.search-result .list > .list-item-info .list-item-album {
     color: #888;
     font-weight: bold;
 }
 
-.pages {
+.search-result .pages {
     height: 40px;
     
     position: relative;
     text-align: center;
 }
 
-.pages > div {
+.search-result .pages > div {
     height: 100%;
     cursor: pointer;
     display: inline-block;
@@ -112,13 +112,13 @@
     position: relative;
 }
 
-.page-wrap {
+.search-result .pages > .page-wrap {
     width: calc(100% / 7 * 5);
     height: 100%;
     position: relative;
 }
 
-.page-wrap > div {
+.search-result .pages > .page-wrap > div {
     display: inline-block;
     vertical-align: top;
     width: calc(100% / 5);
@@ -130,39 +130,39 @@
     font-size: 1.2rem;
 }
 
-.prev {
-    width: calc(100% / 7);
-    position: relative;
-    top: 50%;
-    transform: translate(0 , -50%);
-}
-
-.prev:active {
-    color: #069;
-}
-
-.prev > p {
-    position: relative;
-    top: 50%;
-    transform: translate(0 , -50%);
-}
-
-.next {
-    width: calc(100% / 7);
-
-}
-
-.next:active {
-    color: #069;
-}
-
-.next > p {
-    position: relative;
-    top: 50%;
-    transform: translate(0 , -50%);
-}
-
-.pagechoice {
+.search-result .pages > .page-wrap > .pagechoice {
     color: #069;
     background-color: #CCC;
+}
+
+.search-result .pages > .prev {
+    width: calc(100% / 7);
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.search-result .pages > .prev:active {
+    color: #069;
+}
+
+.search-result .pages .prev > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
+}
+
+.search-result .pages .next {
+    width: calc(100% / 7);
+
+}
+
+.search-result .pages .next:active {
+    color: #069;
+}
+
+.search-result .pages .next > p {
+    position: relative;
+    top: 50%;
+    transform: translate(0 , -50%);
 }

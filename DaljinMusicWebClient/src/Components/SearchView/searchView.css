@@ -1,4 +1,4 @@
-.viewbody {
+.searchview {
     position: relative;
     left: 50%;
     transform: translate(-50% , 0);
@@ -6,21 +6,20 @@
     padding: 20px;
     overflow: hidden;
 }
-
-.rightmenu {
+.searchview .rightmenu {
     position: fixed;
     right: 20px;
     top: 20px;
     border: 2px solid #CCC;
 }
 
-.menu {
+.searchview .rightmenu > .menu {
     padding : 10px;
     border: 2px solid #CCC;
     background-color: #EFEFEF;
     cursor: pointer;
 }
-.menu:hover {
+.searchview .rightmenu > .menu:hover {
     background: #303030;
     color: #CCC;
 }

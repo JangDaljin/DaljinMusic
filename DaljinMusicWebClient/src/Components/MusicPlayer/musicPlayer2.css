@@ -10,10 +10,29 @@
 
 }
 
+.musicplayer-down {
+    bottom: -100px;
+    transition: bottom 1s;
+}
+
+.musicplayer-up {
+    bottom : 0px;
+    transition: bottom 1s;
+}
+
+.musicplayer2 .scroller-rotate {
+    transform: rotate(180deg);
+    transition: transform 1s;
+}
+
+.musicplayer2 .scroller-none {
+    transform: rotate(0deg);
+    transition : transform 1s;
+}
 
 .musicplayer2 .scroller {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .musicplayer2 .scroller > div {
@@ -26,13 +45,15 @@
     cursor: pointer;
 }
 
+
+
 .musicplayer2 .controller {
     display: flex;
     align-content: center;
     background-color: #303030;
     color: #EEE;
     font-family: 'jua';
-    
+    height: 100px;
     border: 3px solid #CCC;;
 }
 
@@ -43,7 +64,7 @@
 
 .musicplayer2 .controller > .left > .img-wrap {
     position: relative;
-    width: 100px;
+    width: 94px;
 }
 
 .musicplayer2 .controller > .left > .img-wrap::before {
@@ -83,6 +104,8 @@
     border-radius: 1000rem;
     background-color: #FFF;
     color: #303030;
+    
+    border: 6px double #CCC;
 }
 
 
@@ -99,6 +122,8 @@
 
 .musicplayer2 .controller > .left > .info > .progress > .progressbar {
     flex-grow: 1;
+    display: flex;
+    align-content: center;
     height: 10px;
     border: 3px solid #CCC ;
     position: relative;
@@ -115,8 +140,6 @@
     border-radius: 1000px;
     border: 4px double black;
     background-color: #CCC;
-    top: 50%;
-    transform: translate(0 , -50%);
 }
 
 .musicplayer2 .controller > .center {
@@ -162,12 +185,20 @@
 .musicplayer2 .controller > .right {
     width: 80px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     cursor: pointer;
+    border: 1px solid #CCC;
 }
 
 .musicplayer2 .controller > .right:hover {
     background-color: #FFF;
     color: #303030;
+}
+
+.musicplayer2 .controller > .right > div {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

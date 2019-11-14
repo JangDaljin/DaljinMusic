@@ -20,7 +20,7 @@ class Router extends Component {
     render () {
         return (
             <BrowserRouter>
-            <Header />
+                <Header />
                 <Switch>
                     <Route exact path="/" component={IndexView} />
                     <Route path="/home" component={IndexView} />
@@ -33,7 +33,7 @@ class Router extends Component {
                     <Route path="/admin" component={AdminView} />
                     <Route component={ErrorView} />
                 </Switch>
-            <MusicPlayer />
+                <MusicPlayer />
             </BrowserRouter>
         )
     }

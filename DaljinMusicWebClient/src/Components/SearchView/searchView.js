@@ -44,7 +44,7 @@ class SearchViewBody extends Component {
 
     render () {
         return (
-            <div className={cn('viewbody')}>
+            <div className={cn('searchview')}>
                 <SearchResult title='곡' items={this.state.searchSongItems} />
                 <SearchResult title='가수' items={this.state.searchSingerItems} />
                 <SearchResult title='앨범' items={this.state.searchAlbumItems} />
