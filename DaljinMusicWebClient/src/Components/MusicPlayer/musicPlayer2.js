@@ -2,11 +2,16 @@ import React , { Component } from 'react'
 import PlayingList from './playingList'
 import { Map , List } from 'immutable'
 
-import Draggable from 'react-draggable'
-
 import styles from './musicPlayer2.css'
 import classNames from 'classnames/bind'
 const cn = classNames.bind(styles)
+
+const mmss = (value) => {
+    const m = value / 60
+    const s = value % 60
+
+    return `${m}:${s}`
+}
 
 class MusicPlayer extends Component {
 
@@ -34,6 +39,8 @@ class MusicPlayer extends Component {
             isPlayingOne : false,
             currentMusicIndex : 0,
             playingList : List(newList),
+
+            progressDraging : false,
         }
     }
 
@@ -53,14 +60,28 @@ class MusicPlayer extends Component {
         this.setState({ playingList : this.state.playingList.filter( item => !item.get('checked') ) })
     }
 
-    onProgressbarClick = (e) => {
-        
+    onProgressbarDown = (e) => {
+        this.setState({progressDraging : true})
+        this.onProgressMoving(e)
     }
 
-    onProgressSeek = (e , data) => {
-        const width = this.progressbar.offsetWidth-26
-        const percentage = (data.x / width) * 100
-        console.log(`PERCENTAGE : ${percentage}`)
+    onProgressbarDrag = (e) => {
+        if(this.state.progressDraging) {
+            this.onProgressMoving(e)
+        }
+    }
+
+    onProgressbarUp = (e) => {
+        this.setState({progressDraging : false})
+    }
+
+    onProgressMoving = (e) => {
+        e.preventDefault()
+        let x = e.nativeEvent.offsetX-10
+        const width = this.progressbar.clientWidth - 20
+        if(x < 0) { x = 0 }
+        else if( x > width) { x = width}
+        this.progressbar.style.setProperty('--progressbar-left' , `${x}px`)
     }
 
     render () {
@@ -87,13 +108,16 @@ class MusicPlayer extends Component {
                                 </div>
 
                                 <div className='progress'>
-                                    00:00
-                                    <div className='progressbar' ref={ ref => this.progressbar = ref} onMouseDown={this.onProgressbarClick}>
-                                        <Draggable axis="x" bounds="parent" defaultPosition={{x :  0 ,  y : -8 }} onDrag={this.onProgressSeek}>
-                                        <div className='position' ref={ ref=> this.progressPosition = ref}></div>
-                                        </Draggable>
+                                    <span className='currenttime time'>00:00</span>
+                                    <div className='progressbar' ref={ ref => this.progressbar = ref} 
+                                    onMouseDown={this.onProgressbarDown} 
+                                    onMouseMove={this.onProgressbarDrag}
+                                    onMouseUp={this.onProgressbarUp}
+                                    onMouseLeave={this.onProgressbarUp}
+                                    >
+                                        
                                     </div>
-                                    11:11
+                                    <span className='fulltime time'>11:11</span>
                                 </div>
 
                             </div>

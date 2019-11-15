@@ -120,26 +120,35 @@
     padding-right: 10px;
 }
 
+.musicplayer2 .controller > .left > .info > .progress > .time {
+    user-select: none;
+}
+
 .musicplayer2 .controller > .left > .info > .progress > .progressbar {
     flex-grow: 1;
-    display: flex;
     align-content: center;
-    height: 10px;
+    height: 18px;
     border: 3px solid #CCC ;
     position: relative;
     border-radius: 1rem;
     margin-left: 10px;
     margin-right: 10px;
     cursor: pointer;
+    --progressbar-left : 50%;
 }
 
-.musicplayer2 .controller > .left > .info > .progress > .progressbar > .position {
+.musicplayer2 .controller > .left > .info > .progress > .progressbar::before {
+    
+    content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
     border-radius: 1000px;
-    border: 4px double black;
-    background-color: #CCC;
+    border: 4px double #FFF;
+    background-color: #303030;
+    top: 50%;
+    left: var(--progressbar-left);
+    transform : translate(0% , -50%);
 }
 
 .musicplayer2 .controller > .center {
