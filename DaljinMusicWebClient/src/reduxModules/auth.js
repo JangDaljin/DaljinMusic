@@ -31,6 +31,9 @@ export const acceptIsLogged = createAction(ACCEPT_ISLOGGED)
 export const ABORT_ISLOGGED = 'auth/ABORT_ISLOGGED'
 export const abortIsLogged = createAction(ABORT_ISLOGGED)
 
+export const ISMOVELOGIN = 'auth/ISMOVELOGIN'
+export const isMoveLogin = createAction(ISMOVELOGIN)
+
 
 const initialState = {
     userId : '',
@@ -84,6 +87,11 @@ export const authReducer = handleActions({
         const newState = { ...initialState }
         return newState
     },
+    [ISMOVELOGIN] : (state , action) => {
+        if(!state.isAuthenticated) {
+            
+        }
+    }
 } , initialState)
 
 

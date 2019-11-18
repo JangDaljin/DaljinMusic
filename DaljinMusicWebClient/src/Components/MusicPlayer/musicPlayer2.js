@@ -7,10 +7,10 @@ import classNames from 'classnames/bind'
 const cn = classNames.bind(styles)
 
 const mmss = (value) => {
-    const m = value / 60
+    const m = parseInt(value / 60)
     const s = value % 60
 
-    return `${m}:${s}`
+    return `${m}:${s < 10 ? '0'+s : s}`
 }
 
 class MusicPlayer extends Component {
@@ -41,6 +41,7 @@ class MusicPlayer extends Component {
             playingList : List(newList),
 
             progressDraging : false,
+            currentDuration : 0,
         }
     }
 
@@ -81,6 +82,9 @@ class MusicPlayer extends Component {
         const width = this.progressbar.clientWidth - 20
         if(x < 0) { x = 0 }
         else if( x > width) { x = width}
+
+        const seekTime = parseInt((x / width) * this.state.playingList.getIn([this.state.currentMusicIndex , 'duration']))
+        this.setState({currentDuration : seekTime})
         this.progressbar.style.setProperty('--progressbar-left' , `${x}px`)
     }
 
@@ -108,16 +112,14 @@ class MusicPlayer extends Component {
                                 </div>
 
                                 <div className='progress'>
-                                    <span className='currenttime time'>00:00</span>
+                                    <span className='currenttime time'>{mmss(this.state.currentDuration)}</span>
                                     <div className='progressbar' ref={ ref => this.progressbar = ref} 
-                                    onMouseDown={this.onProgressbarDown} 
-                                    onMouseMove={this.onProgressbarDrag}
-                                    onMouseUp={this.onProgressbarUp}
-                                    onMouseLeave={this.onProgressbarUp}
-                                    >
-                                        
+                                        onMouseDown={this.onProgressbarDown} 
+                                        onMouseMove={this.onProgressbarDrag}
+                                        onMouseUp={this.onProgressbarUp}
+                                        onMouseLeave={this.onProgressbarUp}>
                                     </div>
-                                    <span className='fulltime time'>11:11</span>
+                                    <span className='fulltime time'>{mmss(this.state.playingList.getIn([this.state.currentMusicIndex , 'duration']))}</span>
                                 </div>
 
                             </div>

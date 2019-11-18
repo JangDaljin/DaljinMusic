@@ -6,6 +6,14 @@ import './modal.css'
 
 class Top100Modal extends Component {
     
+    constructor(props) {
+        super(props)
+        this.state = {
+            show : 1,
+
+            makeListName : '',
+        }
+    }
 
     componentDidMount () {
         this.props.MyMusicActions.fetchGetMyMusicLists({'userId' : this.props.userId})
@@ -13,21 +21,49 @@ class Top100Modal extends Component {
 
     render () {
         return ( 
-            <div className="top100modal">
-                <div className="modal-title">리스트 선택</div>
-                <div className="modal-musiclists">
-                {
-                    this.props.myMusicLists.map((value , index) => 
-                    (
-                        <div className="modal-item" key={index}>{value.listName}</div>
-                    ))
-                    
-                }
+            <React.Fragment>
+            {(this.state.show & 1) !== 0 &&
+                <div className="top100modal">
+                    <div className="modal-title">
+                        <div className="text">리스트 선택</div>
+                        <div className="button" onClick={(e) => {this.props.close()}}>X</div>
+                    </div>
+                    <div className="modal-musiclists">
+                    {
+                        this.props.myMusicLists.map((value , index) => 
+                        (
+                            <div className="modal-item" key={index}>{value.listName}</div>
+                        ))
+                        
+                    }
+                    </div>
+                    <div className="modal-item" onClick={(e) => { this.setState({show : 2}) } }>
+                        <i className='fas fa-plus'> 새 리스트 </i>
+                    </div>
                 </div>
-                <div className="modal-item">
-                    <i className='fas fa-plus'> 새 리스트 </i>
+            }
+
+            {(this.state.show & 2) !== 0 &&
+                <div className="top100modal">
+                    <div className="newlistname">
+                        <input type="text" placeholder="새 리스트 이름" onChange={(e)=> { this.setState({ makeListName : e.target.value })}} />
+                        <span onClick={
+                            (e) => {
+                                if(this.state.makeListName.trim() === '') {
+                                    this.setState({ show : 1 })
+                                }
+                                else {
+                                    this.props.MyMusicActions.modalFetchMakeMusicList({ userId : this.props.userId , listName : this.state.makeListName.trim() })
+                                }
+                            }
+                        }>
+                            {this.state.makeListName.trim() === '' ? "취소" : "확인"}
+                        </span>
+                    </div>
+
                 </div>
-            </div>
+            }
+            </React.Fragment>
         )
     }
 }

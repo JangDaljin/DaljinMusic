@@ -24,6 +24,24 @@
     border : 3px solid #303030;
 }
 
+.top100modal .modal-title > .text {
+    flex : 1 0 calc(100% - 30px);
+    
+}
+
+
+.top100modal .modal-title > .button {
+    flex : 1 0 30px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+.top100modal .modal-title > .button:hover {
+    color: #069;
+}
+
+
 .top100modal .modal-musiclists {
     max-height: 300px;
     overflow-y: scroll;
@@ -47,5 +65,39 @@
 
 .top100modal .modal-item:hover {
     border : 3px solid #069;
+    color: #069;
+}
+
+.top100modal .newlistname {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    min-height: 40px;
+    margin: 5px;
+}
+
+.top100modal .newlistname > input[type="text"] {
+    flex: 4 0 auto;
+    outline: none;
+    border: 2px solid #CCC;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.top100modal .newlistname > span {
+    flex : 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'jua';
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border: 2px solid #CCC;
+    cursor: pointer;
+}
+
+.top100modal .newlistname > span:hover {
     color: #069;
 }

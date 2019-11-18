@@ -88,7 +88,7 @@ class Modal extends Component {
         }
 
         return (
-                <div className={cn('modal')}>
+                <div className={cn('mymusic-modal')}>
                     <div className={cn('modal-title')}>
                         <div className={cn('modal-title-text')}>{title}</div>
                         <div className={cn('modal-title-buttons')} onClick={() => { this.props.onToggleModal() }}>

@@ -134,7 +134,7 @@
     margin-left: 10px;
     margin-right: 10px;
     cursor: pointer;
-    --progressbar-left : 50%;
+    --progressbar-left : 0%;
 }
 
 .musicplayer2 .controller > .left > .info > .progress > .progressbar::before {
@@ -163,13 +163,6 @@
     justify-content: center;
     align-items: center;
     padding : 5px
-}
-
-.musicplayer2 .controller > .center > .buttons1 > .button{
-}
-
-.musicplayer2 .controller > .center > .buttons2 > .button {
-    
 }
 
 .musicplayer2 .controller .button {

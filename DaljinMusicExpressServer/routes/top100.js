@@ -21,20 +21,25 @@ router.get('/' , doAsync( async (req , res , next) => {
 
     console.log(`from : ${p_from} to : ${p_to}`)
     if(!(typeof(from) === String || typeof(to) === String) && ( p_from > 0 && p_to > 0) && (p_from < 101 && p_to < 101)) {
-
-        const musics = await MusicModel.find().sort(p_mode).skip(p_from -1).limit(p_to - p_from + 1).populate('album').populate('singer').lean()
-        for(let i = p_from ; i <= p_to; i++) {
-            const pos = i - p_from 
-            response.list.push(
-                {
-                    rank : `${i}`,
-                    song : musics[pos].song,
-                    singer : musics[pos].singer.name,
-                    album : musics[pos].album.name,
-                    albumImgUri : musics[pos].album.imagePath,
-                    _id : musics[pos]._id
-                }
-            )
+        try {
+            const musics = await MusicModel.find().sort(p_mode).skip(p_from -1).limit(p_to - p_from + 1).populate('album').populate('singer').lean()
+            for(let i = p_from ; i <= p_to; i++) {
+                const pos = i - p_from 
+                response.list.push(
+                    {
+                        rank : `${i}`,
+                        song : musics[pos].song,
+                        singer : musics[pos].singer.name,
+                        album : musics[pos].album.name,
+                        albumImgUri : musics[pos].album.imagePath,
+                        _id : musics[pos]._id
+                    }
+                )
+            }
+        }
+        catch(err) {
+            console.error(err)
+            response.message = "ERROR"
         }
 
     }

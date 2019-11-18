@@ -1,4 +1,4 @@
-.modal {
+.mymusic-modal {
     position: relative;
     left: 50%;
     top: 50%;
@@ -10,7 +10,7 @@
     box-shadow: 0px 0px 5px 5px #303030;
 }
 
-.modal-title {
+.mymusic-modal .modal-title {
     position: relative;
     font-weight: bold;
     font-size: 1.2rem;
@@ -22,7 +22,7 @@
     margin-bottom: 4px;
 }
 
-.modal-title > div {
+.mymusic-modal .modal-title > div {
     vertical-align: top;
     display: inline-block;
     position: absolute;
@@ -30,40 +30,40 @@
     transform: translate(0% , -50%);;
 }
 
-.modal-title-text {
+.mymusic-modal .modal-title > .modal-title-text {
     left: 0;
     padding-left: 5px;
     padding-right: 5px;
 }
 
-.modal-title-buttons {
+.mymusic-modal .modal-title > .modal-title-buttons {
     right: 0;
     text-align: center;
 }
 
-.modal-title-buttons > div {
+.mymusic-modal .modal-title > .modal-title-buttons > div {
     width: 30px;
     cursor: pointer;
 }
 
-.modal-title-buttons > div:hover {
+.mymusic-modal .modal-title > .modal-title-buttons > div:hover {
     color: #069;
 }
 
-.modal-content {
+.mymusic-modal .modal-content {
     padding: 5px;
     font-size: 1rem;
     background-color : #FEFEFE;;
 }
 
-.modal-buttons {
+.mymusic-modal .modal-buttons {
     text-align: right;
     background-color : #FEFEFE;;
     height: 30px;
     
 }
 
-.modal-buttons > div {
+.mymusic-modal .modal-buttons > div {
     vertical-align: top;
     display: inline-block;
     min-width: 80px;
@@ -74,7 +74,7 @@
     border-radius: .25rem;
 }
 
-.modal-buttons > div:hover {
+.mymusic-modal .modal-buttons > div:hover {
     border: 2px solid #069;
 }
 
