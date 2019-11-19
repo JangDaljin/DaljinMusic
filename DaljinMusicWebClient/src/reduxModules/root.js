@@ -10,6 +10,7 @@ import { myMusicReducer as myMusic , myMusicSaga} from './myMusic'
 import { testReducer as test , testSaga } from './test'
 import { adminReducer as admin , adminSaga} from './admin'
 import { searchReducer as search , searchSaga } from './search'
+import { musicPlayerReducer as musicPlayer } from './musicPlayer'
 
 export const rootReducer = combineReducers({
     auth,
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers({
     test,
     admin,
     search,
+    musicPlayer,
 })
 
 

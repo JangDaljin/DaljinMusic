@@ -27,7 +27,7 @@
     margin-left: 20px;
 }
 
-.mymusic-modal {
+.mymusic-modal-wrap {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -35,6 +35,6 @@
     height: 100%;
 }
 
-.mymusic-modal-hidden {
+.mymusic-modal-wrap-hidden {
     display: none !important;
 }

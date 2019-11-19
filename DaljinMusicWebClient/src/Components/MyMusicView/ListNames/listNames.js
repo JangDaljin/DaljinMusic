@@ -11,20 +11,18 @@ const cn = classNames.bind(styles)
 
 class ListName extends Component {
 
-
     render () {
         return (
                 <div>
-                    {this.props.list.length > 0 &&
-
-                        this.props.list.map(
+                    {
+                        this.props.myMusicLists.map(
                             (value , index) => (
-                                <div key={index} className={cn('mymusicnames-list-item-wrap' , { 'mymusicnames-list-wrap-selected' : value.selected })} onClick={() => {
-                                    this.props.MyMusicAction.selectList({selectedList : index})
+                                <div key={index} className={cn('mymusicnames-list-item-wrap' , { 'mymusicnames-list-wrap-selected' : value.get('selected') })} onClick={() => {
+                                    this.props.MyMusicAction.selectList({selectedListIndex : index})
                                 }}>
-                                    <div className={cn('mymusicnames-list-item' , { 'mymusicnames-list-selected' : value.selected })}>
-                                        <div>{value.listName}</div>
-                                        <div className={cn('mymusicnames-list-delete')} onClick={(e) => { e.stopPropagation(); this.props.onChangeModal(MODAL_SELECTOR.LIST_DELETE , value._id) }}>
+                                    <div className={cn('mymusicnames-list-item' , { 'mymusicnames-list-selected' : value.get('selected') })}>
+                                        <div>{value.get('listName')}</div>
+                                        <div className={cn('mymusicnames-list-delete')} onClick={(e) => { e.stopPropagation(); this.props.onChangeModal(MODAL_SELECTOR.LIST_DELETE , value.get('_id')) }}>
                                             <i className="far fa-minus-square fa-2x"></i>
                                         </div>
                                     </div>
@@ -43,7 +41,7 @@ class ListName extends Component {
 
 export default connect(
     (state) => ({
-        
+        myMusicLists : state.myMusic.myMusicLists
     }),
     (dispatch) => ({
         MyMusicAction : bindActionCreators(myMusicAction , dispatch)

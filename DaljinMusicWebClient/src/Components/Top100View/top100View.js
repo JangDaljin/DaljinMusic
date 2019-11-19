@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux'
 import * as top100Actions from '../../ReduxModules/top100'
 import * as myMusicActions from '../../ReduxModules/myMusic'
 import Modal from './Modal/modal'
-
+import { AuthConfirm } from '../common'
+import { withRouter } from 'react-router-dom'
 
 import classNames from 'classnames/bind'
 import styles from './top100View.css'
@@ -27,7 +28,7 @@ class Top100ViewBody extends Component {
             let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
             let clientHeight = document.documentElement.clientHeight;
             if(parseInt(scrollTop+clientHeight) === parseInt(scrollHeight)) {
-                this.getMoreItem(this.props.items.length+1 , this.props.items.length+10)
+                this.getMoreItem(this.props.items.size+1 , this.props.items.size+10)
             }
         } , true)
     }
@@ -47,35 +48,41 @@ class Top100ViewBody extends Component {
                         this.props.items.map((value , index) => (
                             <div key={index} className={cn('top100-list-item')}>
                                 <div className={cn('top100-list-item-ranking')}>
-                                    <p>{value.rank}</p>
+                                    <p>{value.get('rank')}</p>
                                 </div>
                                 <div className={cn('top100-list-item-img')}>
-                                    <div className={cn('top100-list-item-album-img')} style={{backgroundImage:`url('${value.albumImgUri}')`}}>
+                                    <div className={cn('top100-list-item-album-img')} style={{backgroundImage:`url('${value.get('albumImgUri')}')`}}>
 
                                     </div>
                                 </div>
 
                                 <div className={cn('top100-list-item-info')}>
                                     <div className={cn('top100-list-item-song')}>
-                                        <p>{value.song}</p>
+                                        <p>{value.get('song')}</p>
                                     </div>
                                     <div className={cn('top100-list-item-singer')}>
-                                        <p>{value.singer}</p>
+                                        <p>{value.get('singer')}</p>
                                     </div>
                                     <div className={cn('top100-list-item-album')}>
-                                        <p>{value.album}</p>
+                                        <p>{value.get('album')}</p>
                                     </div>
                                 </div>
                                 
                                 <div className={cn('top100-list-item-buttons')}>
                                         <div className={cn('top100-list-item-play' , 'top100-list-button')}><i className={cn('fas fa-play' ,'fa-2x')}></i></div>
-                                        <div className={cn('top100-list-item-add' , 'top100-list-button')} 
-                                        onClick={
+                                        <div className={cn('top100-list-item-add' , 'top100-list-button')}><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
+                                        <div className={cn('top100-list-item-list' , 'top100-list-button')} onClick={
                                             (e) => {
-                                                this.setState({ showModal : true , selectedMusicId : ''})
+                                                if(this.props.isAuthenticated) {
+                                                    this.setState({ showModal : true , selectedMusicId : this.props.items.getIn([index , '_id'])})
+                                                }
+                                                else {
+                                                    if(AuthConfirm()) {
+                                                        this.props.history.push('/auth')
+                                                    }
+                                                }
                                             }
-                                        }><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
-                                        <div className={cn('top100-list-item-list' , 'top100-list-button')}><i className={cn('fas fa-list' , 'fa-2x')}></i></div>
+                                        }><i className={cn('fas fa-list' , 'fa-2x')}></i></div>
                                 </div>
 
                             </div>
@@ -97,10 +104,11 @@ class Top100ViewBody extends Component {
 
 export default connect(
     (state) => ({
-        items : state.top100.items.toJS()
+        items : state.top100.items,
+        isAuthenticated : state.auth.isAuthenticated
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),
         MyMusicActions : bindActionCreators(myMusicActions , dispatch)
     })
-)(Top100ViewBody)
+)(withRouter(Top100ViewBody))

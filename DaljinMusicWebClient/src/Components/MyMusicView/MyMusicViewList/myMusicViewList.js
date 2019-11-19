@@ -1,12 +1,16 @@
 import React , { Component } from 'react'
 import classNames from 'classnames/bind'
 import styles from './myMusicViewList.css'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as myMusicActions from '../../../ReduxModules/myMusic'
 const cn = classNames.bind(styles)
 
 const itemPerPage = 6;
 const pagePerBar = 5;
 
-export default class MyMusicViewList extends Component {
+class MyMusicViewList extends Component {
     
     constructor(props) {
         super(props)
@@ -16,17 +20,16 @@ export default class MyMusicViewList extends Component {
             curPage : 1,
             curShowPages : 0,
             pages : [],
-            currentListName : ''
         }
 
         
     }
 
     componentDidUpdate(prevProps , prevState) {
-        if(this.props.musicListName !== this.state.currentListName) {
+        if(prevProps.currentSelectedListIndex !== this.props.currentSelectedListIndex) {
 
             const initPage = [];
-            const _totalPage = Math.ceil(this.props.musicList.length / itemPerPage)
+            const _totalPage = Math.ceil(this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).size / itemPerPage)
             for(let i = 1; i <= _totalPage; i++) {
                 initPage.push(i)
             }
@@ -36,36 +39,34 @@ export default class MyMusicViewList extends Component {
                 pages : initPage,
                 curPage : 1,
                 curShowPages : 0,
-                currentListName : this.props.musicListName
             })
         }
-
     }
 
     render () {
         return (
             <div>
-                <div className={cn('mymusic-list-title')}><p><i className="fas fa-stream"></i> { this.props.musicListName } </p></div>
-                {this.props.musicList.length > 0 ?
+                <div className={cn('mymusic-list-title')}><p><i className="fas fa-stream"></i> { this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'listName']) } </p></div>
+                {this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).size > 0 ?
                     <div className={cn('mymusic-list')}>
                         <div className={cn('mymusic-list-wrap')}>
                         {   
-                            this.props.musicList.slice((this.state.curPage-1) * itemPerPage , this.state.curPage * itemPerPage).map(
+                            this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).slice((this.state.curPage-1) * itemPerPage , this.state.curPage * itemPerPage).map(
                                 (value , index) => (
-                                    <div key={index} className={cn('mymusic-list-item' , {'mymusic-checked' : value.checked})} onClick={ ()=> { this.props.onCheck(value) } }>
+                                    <div key={index} className={cn('mymusic-list-item' , {'mymusic-checked' : value.get('checked')})} onClick={ ()=> { this.props.onCheck(value) } }>
                                         <div className={cn('mymusic-list-album-img-wrap')}>
-                                            <div className={cn('mymusic-list-album-img')} style={{backgroundImage : `url('${value.albumImgUri}')`}}>
+                                            <div className={cn('mymusic-list-album-img')} style={{backgroundImage : `url('${value.get('albumImgUri')}')`}}>
                                             </div>
                                         </div>
                                         <div className={cn('mymusic-list-info')}>
                                             <div className={cn('mymusic-list-info-song')}>
-                                                <p>{value.song}</p>
+                                                <p>{value.get('song')}</p>
                                             </div>
                                             <div className={cn('mymusic-list-info-singer')}>
-                                                <p>{value.singer}</p>
+                                                <p>{value.get('singer')}</p>
                                             </div>
                                             <div className={cn('mymusic-list-info-album')}>
-                                                <p>{value.album}</p>
+                                                <p>{value.get('album')}</p>
                                             </div>
                                         </div>
                                         <div className={cn('mymusic-list-buttons')}>
@@ -123,3 +124,12 @@ export default class MyMusicViewList extends Component {
 }
 
 
+export default connect(
+    (state) => ({
+        myMusicLists : state.myMusic.myMusicLists,
+        currentSelectedListIndex : state.myMusic.currentSelectedListIndex
+    }),
+    (dispatch) => ({
+        MyMusicActions : bindActionCreators(myMusicActions , dispatch)
+    })
+)(MyMusicViewList)

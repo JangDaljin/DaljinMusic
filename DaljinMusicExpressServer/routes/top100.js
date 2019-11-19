@@ -10,7 +10,7 @@ router.get('/' , doAsync( async (req , res , next) => {
     const { from , to , mode} = req.query
     const p_from = parseInt(from)
     const p_to = parseInt(to)
-    const p_mode = (mode === null || mode === undefined || mode == '' || mode == 'total') ? '-totalPlayCount' : (mode == 'week') ? '-weekPlayCount' : '-dayPlayCount' 
+    const p_mode = (mode === null || typeof mode === 'undefined' || mode == '' || mode == 'total') ? '-totalPlayCount' : (mode == 'week') ? '-weekPlayCount' : '-dayPlayCount' 
     const response = {
         from : p_from,
         to : p_to,   
@@ -20,9 +20,12 @@ router.get('/' , doAsync( async (req , res , next) => {
 
 
     console.log(`from : ${p_from} to : ${p_to}`)
-    if(!(typeof(from) === String || typeof(to) === String) && ( p_from > 0 && p_to > 0) && (p_from < 101 && p_to < 101)) {
+    if(( p_from > 0 && p_to > 0) && (p_from < 101 && p_to < 101)) {
         try {
             const musics = await MusicModel.find().sort(p_mode).skip(p_from -1).limit(p_to - p_from + 1).populate('album').populate('singer').lean()
+
+            if(musics.length < 1) throw new Error('검색 갯수 0개')
+
             for(let i = p_from ; i <= p_to; i++) {
                 const pos = i - p_from 
                 response.list.push(
@@ -43,7 +46,6 @@ router.get('/' , doAsync( async (req , res , next) => {
         }
 
     }
-
     res.json(response)
 }))
 

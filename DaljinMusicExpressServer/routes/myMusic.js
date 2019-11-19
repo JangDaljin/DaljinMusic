@@ -14,7 +14,7 @@ router.post('/getmusiclists' , doAsync(async (req , res , next) => {
 
     if( userId === req.session.userId) {
         try {
-            const user = await UserModel.findOne({ 'userId' : userId}).populate('mymusiclist.list' , 'list listname').lean()
+            const user = await UserModel.findOne({ 'userId' : userId}).populate('myMusicLists.list').lean()
             if(user !== null) {
                 response.myMusicLists = user.myMusicLists
                 response.message = '검색 완료'
@@ -107,18 +107,24 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
 router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
     
     const response = {
-        message : ''
+        message : '',
+        myMusicList : []
     }
 
-    const { userId , listId , addList } = req.body;
+    const { userId , listId , musicId } = req.body;
 
-    if(userId == req.session.id) {
+    if(userId == req.session.userId) {
         try {
             const user = await UserModel.findOne({'userId' : userId})
             const musicList = user.myMusicLists.find(obj => obj._id == listId)
             const list = musicList.list
-            for(const item of addList) {
-                list.push(item)
+            if(Array.isArray(musicId)) {
+                for(const _musicId of musicId) {
+                    list.push(_musicId)
+                }
+            }
+            else {
+                list.push(musicId)
             }
             await user.save()
         }
@@ -141,15 +147,20 @@ router.post('/removemusicinlist' , doAsync(async (req , res , next) => {
         message : ''
     }
 
-    const { userId , listId , removeList } = req.body;
+    const { userId , listId , musicId } = req.body;
 
-    if(userId = req.session.id) {
+    if(userId == req.session.userId) {
         try {
             const user = await UserModel.findOne({'userId' : userId})
             const musicList = user.myMusicLists.find(obj => obj._id == listId)
             const list = musicList.list
-            for(const item of removeList) {
-                list.splice(list.findIndex((obj) => obj._id == item))
+            if(Array.isArray(musicId)) {
+                for(const _musicId of musicId) {
+                    list.splice(list.findIndex( obj => obj._id == _musicId))
+                }
+            }
+            else {
+                list.splice(list.findIndex( obj => obj._id == musicId))
             }
         }
         catch(err) {

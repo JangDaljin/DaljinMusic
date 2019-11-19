@@ -32,7 +32,11 @@ class Top100Modal extends Component {
                     {
                         this.props.myMusicLists.map((value , index) => 
                         (
-                            <div className="modal-item" key={index}>{value.listName}</div>
+                            <div className="modal-item" key={index} onClick={
+                                (e) => {
+                                    this.props.MyMusicActions.fetchAddMusicInList({ 'userId' : this.props.userId , 'listId' : this.props.myMusicLists.getIn([index , '_id']) , 'musicId' : this.props.selectedMusicId })
+                                }
+                            }>{value.get('listName')}</div>
                         ))
                         
                     }
@@ -49,12 +53,11 @@ class Top100Modal extends Component {
                         <input type="text" placeholder="새 리스트 이름" onChange={(e)=> { this.setState({ makeListName : e.target.value })}} />
                         <span onClick={
                             (e) => {
-                                if(this.state.makeListName.trim() === '') {
-                                    this.setState({ show : 1 })
-                                }
-                                else {
+                                if(this.state.makeListName.trim() !== '') {
                                     this.props.MyMusicActions.modalFetchMakeMusicList({ userId : this.props.userId , listName : this.state.makeListName.trim() })
+                                    this.setState({makeListName : ''})
                                 }
+                                this.setState({ show : 1 })
                             }
                         }>
                             {this.state.makeListName.trim() === '' ? "취소" : "확인"}
@@ -72,7 +75,7 @@ class Top100Modal extends Component {
 export default connect(
     (state) => ({
         userId : state.auth.userId,
-        myMusicLists : state.myMusic.myMusicLists.toJS()
+        myMusicLists : state.myMusic.myMusicLists
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicActions , dispatch)

@@ -27,14 +27,14 @@ class TopTenMusic extends Component {
                             this.props.top10.map(
                                 (value , index) => (
                                     <div className={cn('toptenmusic-list-item')} key={index}>
-                                        <div className={cn('toptenmusic-list-rank' , `rank${index+1}`)}>
+                                        <div className={cn('toptenmusic-list-rank' , `rank${value.get('rank')}`)}>
                                             <p>{(index > 2)? `#${index+1}` : <i className="fas fa-medal"></i> }</p>
                                         </div>
                                         <div className={cn('toptenmusic-list-song')}>
-                                            <p>{value.song}</p>
-                                        </div>
+                                            <p>{value.get('song')}</p>
+                                        </div> 
                                         <div className={cn('toptenmusic-list-singer')}>
-                                            <p>{value.singer}</p>
+                                            <p>{value.get('singer')}</p>
                                         </div>
                                         <div className={cn('toptenmusic-list-buttons')}>
                                             <div className={cn('toptenmusic-list-play' , 'toptenmusic-list-button')}><i className={cn('fas fa-play')}></i></div>
@@ -54,7 +54,7 @@ class TopTenMusic extends Component {
 
 export default connect(
     (state) => ({
-        top10 : state.top100.items.slice(0,10)
+        top10 : state.top100.items.slice(0 , 10)
     }),
     (dispatch) => ({
         top100Actions : bindActionCreators(Top100Actions , dispatch)

@@ -1,6 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest } from 'redux-saga/effects'
-import { List } from 'immutable'
+import { List , fromJS } from 'immutable'
 import Config from '../config'
 import { post } from './Request/request'
 export const FETCH_GET_MYMUSICLISTS = 'mymusic/FETCTGETMUSICLISTS'
@@ -64,16 +64,18 @@ export const ABORT_REMOVE_MUSIC_IN_LIST = 'mymusic/ABORTREMOVEMUSICINLIST'
 export const abortRemoveMusicInList = createAction(ABORT_REMOVE_MUSIC_IN_LIST)
 
 const myMusicInitialState = {
+    
+    currentSelectedListIndex : -1,  
+
     myMusicLists : List([]),
-    curSelectList : -1,  
-    uploadProgress : 0,
     /* 
     //리스트 구조
     {
+        selected : boolean,
         listName : '',
-        items : [
+        list : [
             {
-                id : '',
+                _id : '',
                 album : '',
                 albumImgUri : '',
                 song : '',
@@ -91,8 +93,8 @@ export const myMusicReducer = handleActions({
         const newState = { ...state }
         newState.myMusicLists = newState.myMusicLists.clear()
         const { myMusicLists} = action.payload
-
-        newState.myMusicLists = newState.myMusicLists.concat(myMusicLists.map(value => { value.selected = false; return value }))
+        myMusicLists.map(value => { value.selected = false; return value})
+        newState.myMusicLists = newState.myMusicLists.concat(fromJS(myMusicLists))
         return newState
     },
     [ABORT_GET_MYMUSICLISTS] : (state , action) => {
@@ -101,21 +103,9 @@ export const myMusicReducer = handleActions({
     },
     [SELECT_LIST] : (state , action) => {
         const newState = { ...state }
-        const { selectedList } = action.payload
-        newState.curSelectList = selectedList
-        //newState.myMusicLists.forEach((value , index , array) => { array[index].selected = false })
-        newState.myMusicLists = newState.myMusicLists.map((value) => value.selected = false ).setIn([selectedList , 'selected'] , true)
-        
-        return newState
-    },
-    [TOGGLE_CHECKED] : (state , action) => {
-        const newState = { ...state }
-        const item = action.payload
-
-        const foundItem = newState.myMusicList[newState.curSelectList].items.find((value) => ( value.id === item.id ))
-        if(foundItem !== undefined) {
-            foundItem.checked = !foundItem.checked
-        }
+        const { selectedListIndex } = action.payload
+        newState.currentSelectedListIndex = selectedListIndex
+        newState.myMusicLists = newState.myMusicLists.map((value) => value.set('selected' , false)).setIn([selectedListIndex , 'selected'] , true)
         return newState
     },
     [MODAL_ACCEPT_UPLOAD_FILE] : (state , action) => {
@@ -131,7 +121,7 @@ export const myMusicReducer = handleActions({
     [MODAL_ACCEPT_MAKE_MUSIC_LIST] : (state , action) => {
         const newState = { ...state }
         const { myMusicLists , message } = action.payload
-        newState.myMusicLists = myMusicLists
+        newState.myMusicLists = newState.myMusicLists.clear().concat(fromJS(myMusicLists))
         window.alert(message)
         return newState
     },
@@ -142,7 +132,7 @@ export const myMusicReducer = handleActions({
     [MODAL_ACCEPT_DELETE_MUSIC_LIST] : (state , action) => {
         const newState = { ...state }
         const { myMusicLists , message } = action.payload
-        newState.myMusicLists = myMusicLists
+        newState.myMusicLists = newState.myMusicLists.clear().concat(fromJS(myMusicLists))
         window.alert(message);
         return newState
     },
@@ -152,6 +142,9 @@ export const myMusicReducer = handleActions({
     },
     [ACCEPT_ADD_MUSIC_IN_LIST] : (state , action) => {
         const newState = { ...state }
+
+
+
 
         return newState
     },

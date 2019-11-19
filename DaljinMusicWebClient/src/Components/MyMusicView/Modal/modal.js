@@ -89,18 +89,18 @@ class Modal extends Component {
 
         return (
                 <div className={cn('mymusic-modal')}>
-                    <div className={cn('modal-title')}>
-                        <div className={cn('modal-title-text')}>{title}</div>
-                        <div className={cn('modal-title-buttons')} onClick={() => { this.props.onToggleModal() }}>
+                    <div className={cn('title')}>
+                        <div className={cn('title-text')}>{title}</div>
+                        <div className={cn('title-buttons')} onClick={() => { this.props.onToggleModal() }}>
                             <div>
                                 <p>X</p>
                             </div>
                         </div>
                     </div>
-                    <div className={cn('modal-content')}>
+                    <div className={cn('content')}>
                         {content}
                     </div>
-                    <div className={cn('modal-buttons')}>
+                    <div className={cn('buttons')}>
                         {buttons}
                     </div>
                 </div>
@@ -110,6 +110,7 @@ class Modal extends Component {
 
 export default connect(
     (state) => ({
+        myMusicLists : state.myMusic.myMusicLists,
         uploadProgress : state.myMusic.uploadProgress,
         userId : state.auth.userId
     }),

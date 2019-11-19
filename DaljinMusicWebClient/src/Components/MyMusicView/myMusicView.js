@@ -68,14 +68,13 @@ class MyMusicViewBody extends Component {
                     {this.props.isAuthenticated &&
                         <React.Fragment>
                             <div className={cn('mymusic-left')}>
-                                <MyMusicViewListNames list={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onChangeModal={this.doChangeModal} />
+                                <MyMusicViewListNames onChangeModal={this.doChangeModal} />
                             </div>
 
                             <div className={cn('mymusic-center')}>
                                 {
-                                    this.props.myMusicLists.length > 0 && this.props.curSelectList !== -1 &&
-                                    <MyMusicViewList musicListName={ this.props.myMusicLists[this.props.curSelectList].listName }
-                                                    musicList={ this.props.myMusicLists[this.props.curSelectList].list } onCheck={this.doCheck} />
+                                    this.props.myMusicLists.size > 0 && this.props.curSelectList !== -1 &&
+                                    <MyMusicViewList onCheck={this.doCheck} />
                                 }
                             </div>
 
@@ -83,8 +82,8 @@ class MyMusicViewBody extends Component {
                                 <MyMusicViewButtons onChangeModal={this.doChangeModal} />
                             </div>
 
-                            <div className={cn('mymusic-modal' , {'mymusic-modal-hidden' : !this.state.modalShow})}>
-                                <Modal mode={this.state.mode} modeParam={this.state.modeParam} listNames={this.props.myMusicLists.map((value) => ({ listName : value.listName , _id : value._id , selected : value.selected}))} onToggleModal={this.doToggleModal} />
+                            <div className={cn('mymusic-modal-wrap' , {'mymusic-modal-wrap-hidden' : !this.state.modalShow})}>
+                                <Modal mode={this.state.mode} modeParam={this.state.modeParam} onToggleModal={this.doToggleModal} />
                             </div>
                         </React.Fragment>
                     }
@@ -95,7 +94,7 @@ class MyMusicViewBody extends Component {
 
 export default connect(
     (state) => ({
-        myMusicLists : state.myMusic.myMusicLists.toJS(),
+        myMusicLists : state.myMusic.myMusicLists,
         curSelectList : state.myMusic.curSelectList,
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,
