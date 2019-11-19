@@ -14,7 +14,15 @@ router.post('/getmusiclists' , doAsync(async (req , res , next) => {
 
     if( userId === req.session.userId) {
         try {
-            const user = await UserModel.findOne({ 'userId' : userId}).populate('myMusicLists.list').lean()
+            const user = await UserModel.findOne({ 'userId' : userId}).populate(
+                {
+                    path : 'myMusicLists.list',
+                    populate : 'singer album'
+                }
+            ).lean()
+
+            console.dir(user)
+
             if(user !== null) {
                 response.myMusicLists = user.myMusicLists
                 response.message = '검색 완료'

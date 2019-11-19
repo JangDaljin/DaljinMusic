@@ -1,7 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest} from 'redux-saga/effects'
 import { get } from './Request/request'
-import Config from '../config'
 
 export const FETCH_TODAYSMUSIC = 'todaysmusic/FETCH'
 export const fetchTodaysMusic = createAction(FETCH_TODAYSMUSIC)
@@ -39,7 +38,7 @@ export const todaysMusicReducer = handleActions({
 } , todaysmusicState)
 
 function* fetchSaga(action) {
-    yield get( `${Config.SERVER}/todaysmusic` , ACCEPT_TODAYSMUSIC , ABORT_TODAYSMUSIC)
+    yield get(`/todaysmusic` , ACCEPT_TODAYSMUSIC , ABORT_TODAYSMUSIC)
 }
 
 export function* todaysMusicSaga() {

@@ -1,6 +1,7 @@
 .mymusicnames-list-item-wrap {
     width: 100%;
     padding-right: 50px;
+    font-family: 'jua';
 }
 
 .mymusicnames-list-item-wrap:hover {
@@ -53,6 +54,13 @@
     height: 50px;
     cursor: pointer;
     border-radius: 0.5rem;
+    font-family: 'jua';
+    font-size: 1.2rem;
+}
+
+.mymusicnames-addlist-button:hover {
+    color: #069;
+    border : 4px solid #069;
 }
 
 .mymusicnames-addlist-button > p {
@@ -77,4 +85,12 @@
     cursor: default !important;
     background-color: #303030;
     color : #EEE
+}
+
+.mymusicnames-list-delete {
+    cursor: pointer;
+}
+
+.mymusicnames-list-delete:hover {
+    color: #E00f1A;
 }

@@ -11,5 +11,5 @@ module.exports.getTime = (date = new Date()) => {
 }
 
 module.exports.isNUW = (param) => {
-    return param === null ? true : param === undefined ? true : typeof(param) !== 'String' ? false : str.trim() == '' ? true : false
+    return param === null ? true : typeof param === 'undefined' ? true : typeof param !== 'string' ? false : str.trim() == '' ? true : false
 }

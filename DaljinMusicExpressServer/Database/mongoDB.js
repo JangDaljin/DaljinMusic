@@ -39,7 +39,7 @@ const Category = new Schema({
 
 const Album = new Schema({
     name : { type : String, required : true },
-    imagePath : String
+    albumImgUri : String,
 })
 
 const Music = new Schema({

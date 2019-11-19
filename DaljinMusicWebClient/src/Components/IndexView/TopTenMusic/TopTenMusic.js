@@ -9,9 +9,8 @@ const cn = classNames.bind(styles)
 
 class TopTenMusic extends Component {
 
-    constructor (props) {
-        super(props)
-        props.top100Actions.fetchTop100({ from : 1 , to :  10})
+    componentDidMount() {
+        this.props.top100Actions.fetchTop100({ from : 1 , to :  10})
     }
 
     render () {

@@ -1,7 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest } from 'redux-saga/effects'
 import { List , fromJS } from 'immutable'
-import Config from '../config'
 import { post } from './Request/request'
 export const FETCH_GET_MYMUSICLISTS = 'mymusic/FETCTGETMUSICLISTS'
 export const fetchGetMyMusicLists = createAction(FETCH_GET_MYMUSICLISTS)
@@ -165,7 +164,7 @@ export const myMusicReducer = handleActions({
 
 
 function* fetchGetMyMusicListsSaga(action) {
-    yield post(`${Config.SERVER}/mymusic/getmusiclists` , { 'Content-Type' : 'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSICLISTS , ABORT_GET_MYMUSICLISTS)
+    yield post(`/mymusic/getmusiclists` , { 'Content-Type' : 'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSICLISTS , ABORT_GET_MYMUSICLISTS)
 }
 
 function* fetchUploadSaga (action) {
@@ -176,23 +175,23 @@ function* fetchUploadSaga (action) {
     for(const file of fileList) {
         formData.append('fileList' , file , file.name)
     }
-    yield post(`${Config.SERVER}/mymusic/upload` , {} , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
+    yield post(`/mymusic/upload` , {} , formData , MODAL_ACCEPT_UPLOAD_FILE , MODAL_ABORT_UPLOAD_FILE)
 }
 
 function* fetchMakeMusicListSaga(action) {
-    yield post(`${Config.SERVER}/mymusic/makemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_MAKE_MUSIC_LIST , MODAL_ABORT_MAKE_MUSIC_LIST)
+    yield post(`/mymusic/makemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_MAKE_MUSIC_LIST , MODAL_ABORT_MAKE_MUSIC_LIST)
 }
 
 function* fetchDeleteMusicListSaga(action) {
-    yield post(`${Config.SERVER}/mymusic/deletemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_DELETE_MUSIC_LIST , MODAL_ABORT_DELETE_MUSIC_LIST)
+    yield post(`/mymusic/deletemusiclist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , MODAL_ACCEPT_DELETE_MUSIC_LIST , MODAL_ABORT_DELETE_MUSIC_LIST)
 }
 
 function* fetchAddMusicInListSaga(action) {
-    yield post(`${Config.SERVER}/mymusic/addmusicinlist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_ADD_MUSIC_IN_LIST , ABORT_ADD_MUSIC_IN_LIST)
+    yield post(`/mymusic/addmusicinlist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_ADD_MUSIC_IN_LIST , ABORT_ADD_MUSIC_IN_LIST)
 }
 
 function* fetchRemoveMusicInListSaga(action) {
-    yield post(`${Config.SERVER}/mymusic/removemusicinlist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_REMOVE_MUSIC_IN_LIST , ABORT_REMOVE_MUSIC_IN_LIST)
+    yield post(`/mymusic/removemusicinlist` , { 'Content-Type' : 'application/json' } , JSON.stringify(action.payload) , ACCEPT_REMOVE_MUSIC_IN_LIST , ABORT_REMOVE_MUSIC_IN_LIST)
 }
 
 export function* myMusicSaga() {

@@ -55,18 +55,18 @@ class MyMusicViewList extends Component {
                                 (value , index) => (
                                     <div key={index} className={cn('mymusic-list-item' , {'mymusic-checked' : value.get('checked')})} onClick={ ()=> { this.props.onCheck(value) } }>
                                         <div className={cn('mymusic-list-album-img-wrap')}>
-                                            <div className={cn('mymusic-list-album-img')} style={{backgroundImage : `url('${value.get('albumImgUri')}')`}}>
+                                            <div className={cn('mymusic-list-album-img')} style={{backgroundImage : `url('${value.getIn(['album' , 'albumImgUri'])}')`}}>
                                             </div>
                                         </div>
                                         <div className={cn('mymusic-list-info')}>
                                             <div className={cn('mymusic-list-info-song')}>
-                                                <p>{value.get('song')}</p>
+                                                <p>{value.getIn(['song'])}</p>
                                             </div>
                                             <div className={cn('mymusic-list-info-singer')}>
-                                                <p>{value.get('singer')}</p>
+                                                <p>{value.getIn(['singer' , 'name'])}</p>
                                             </div>
                                             <div className={cn('mymusic-list-info-album')}>
-                                                <p>{value.get('album')}</p>
+                                                <p>{value.getIn(['album' , 'name'])}</p>
                                             </div>
                                         </div>
                                         <div className={cn('mymusic-list-buttons')}>

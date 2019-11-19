@@ -8,7 +8,7 @@ const multer = require('multer')
 
 
 const fs = require('fs')
-const { UPLOAD_PATH , ALBUM_IMG_PATH , MUSIC_PATH } = process.env
+const { UPLOAD_PATH , ALBUM_IMG_PATH , MUSIC_PATH , ALBUM_IMG_URI } = process.env
 const { getAudioDurationInSeconds } = require('get-audio-duration')
 
 const MusicModel = require('../Database/mongoDB').musicModel
@@ -25,7 +25,7 @@ const upload = multer({
         },
         filename :  function(req,  file , cb) {
             const ext = file.originalname.substr(file.originalname.lastIndexOf('.') + 1 , file.originalname.length)
-            cb(null , `${new Date().getTime()}.${ext}`)
+            setTimeout(function(){cb(null , `${new Date().getTime()}.${ext}`)} , 10)
         }
     })
 })
@@ -51,7 +51,7 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
     console.dir(musicFiles)
     */
     
-
+    console.log(ALBUM_IMG_URI)
 
     //파일 길이만큼 반복
     for(let i = 0 ; i < musicFiles.length ; i++) {
@@ -62,10 +62,11 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
             fs.renameSync(musicOldPath , musicNewPath)
 
             //앨범사진 파일 옮기기
-            let albumNewPath = ''
+            let albumImgUri = ''
             if(albums[i].isThere) {
                 const albumOldPath = `${UPLOAD_PATH}/${albumImgFiles[albums[i].index].filename}`
-                albumNewPath = `${ALBUM_IMG_PATH}/${albumImgFiles[albums[i].index].filename}`
+                const albumNewPath = `${ALBUM_IMG_PATH}/${albumImgFiles[albums[i].index].filename}`
+                albumImgUri = `${ALBUM_IMG_URI}/${albumImgFiles[albums[i].index].filename}`
                 fs.renameSync(albumOldPath , albumNewPath)
             }
 
@@ -76,7 +77,7 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
             }
             else {
                 const singerModel = new SingerModel({
-                    name : singers[i].name
+                    'name' : singers[i].name
                 })
                 const singerDoc = await singerModel.save()
                 singerId = singerDoc._id
@@ -92,8 +93,8 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
             }
             else if(albums[i].name !== '') {
                 const albumModel = new AlbumModel({
-                    name : albums[i].name,
-                    imagePath : albumNewPath
+                    'name' : albums[i].name,
+                    'albumImgUri' : albumImgUri,
                 })
                 const albumDoc = await albumModel.save()
                 albumId = albumDoc._id

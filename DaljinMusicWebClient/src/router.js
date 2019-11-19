@@ -23,7 +23,6 @@ class Router extends Component {
                 <Header />
                 <Switch>
                     <Route exact path="/" component={IndexView} />
-                    <Route path="/home" component={IndexView} />
                     <Route path="/top100" component={Top100View} />
                     <Route path="/mymusic" component={MyMusicView} />
                     <Route path="/search" component={SearchView} />

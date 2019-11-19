@@ -1,6 +1,5 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest } from 'redux-saga/effects'
-import Config from '../config'
 import { post } from './Request/request'
 
 export const FETCH_MUSIC_UPLOAD = 'admin/FETCH_MUSIC_UPLOAD'
@@ -45,7 +44,7 @@ function* fetchMusicUploadSaga(action) {
         formData.append('musicFiles' , file)
     }
 
-    yield post(`${Config.SERVER}/admin/musicupload` , {} , formData , ACCEPT_MUSIC_UPLOAD , ABORT_MUSIC_UPLOAD)
+    yield post(`/admin/musicupload` , {} , formData , ACCEPT_MUSIC_UPLOAD , ABORT_MUSIC_UPLOAD)
 }
 
 export function* adminSaga() {

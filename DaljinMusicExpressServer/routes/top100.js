@@ -33,7 +33,7 @@ router.get('/' , doAsync( async (req , res , next) => {
                         rank : `${i}`,
                         song : musics[pos].song,
                         singer : musics[pos].singer.name,
-                        album : musics[pos].album.name,
+                        album : musics[pos].album,
                         albumImgUri : musics[pos].album.imagePath,
                         _id : musics[pos]._id
                     }

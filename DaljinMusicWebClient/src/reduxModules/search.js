@@ -1,6 +1,5 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest } from 'redux-saga/effects'
-import Config from '../config'
 import { get } from './Request/request'
 
 import { List } from 'immutable'
@@ -74,18 +73,18 @@ export const searchReducer = handleActions({
 
 function* fetchSearchSingerSaga(action) {
     const { search } = action.payload
-    yield get(`${Config.SERVER}/search/singer?search=${search}` , ACCEPT_SEARCH_SINGER , ABORT_SEARCH_SINGER)
+    yield get(`/search/singer?search=${search}` , ACCEPT_SEARCH_SINGER , ABORT_SEARCH_SINGER)
 }
 
 function* fetchSearchSongSaga(action) {
     const { search } = action.payload
-    yield get(`${Config.SERVER}/search/song?search=${search}` , ACCEPT_SEARCH_SONG , ABORT_SEARCH_SONG)
+    yield get(`/search/song?search=${search}` , ACCEPT_SEARCH_SONG , ABORT_SEARCH_SONG)
 }
 
 function* fetchSearchAlbumSaga(action) {
     const { search } = action.payload
     console.log(search)
-    yield get(`${Config.SERVER}/search/album?search=${search}` , ACCEPT_SEARCH_ALBUM , ABORT_SEARCH_ALBUM)
+    yield get(`/search/album?search=${search}` , ACCEPT_SEARCH_ALBUM , ABORT_SEARCH_ALBUM)
 }
 
 export function* searchSaga() {

@@ -1,6 +1,5 @@
 import { createAction , handleActions } from 'redux-actions'
 import { post } from './Request/request'
-import Config from '../config'
 
 import { takeLatest } from 'redux-saga/effects'
 
@@ -45,15 +44,15 @@ export const testReducer = handleActions({
 
 
 function* testFetchSaga (action) {
-    yield post(`${Config.SERVER}/test/start` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT , ABORT)
+    yield post(`/test/start` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT , ABORT)
 }
 
 function* refMakeFetchSaga (action) {
-    yield post(`${Config.SERVER}/test/makeref` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT , ABORT)
+    yield post(`/test/makeref` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT , ABORT)
 }
 
 function* testMakeFetchSaga (action) {
-    yield post(`${Config.SERVER}/test/maketest` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT , ABORT)
+    yield post(`/test/maketest` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT , ABORT)
 }
 
 export function* testSaga() {

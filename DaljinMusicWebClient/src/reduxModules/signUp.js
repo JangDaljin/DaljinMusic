@@ -1,7 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest} from 'redux-saga/effects'
 import { post } from './Request/request'
-import Config from '../config'
 
 export const FETCH_SIGNUP = 'signup/FETCH_SIGNUP'
 export const fetchSignUp = createAction(FETCH_SIGNUP)
@@ -77,11 +76,11 @@ export const signUpReducer = handleActions({
 
 function* fetchSignUpSaga (action) {
     //const { userId , userPw , userName } = action.payload
-    yield post(`${Config.SERVER}/signup` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } ,  JSON.stringify(action.payload) , ACCEPT_SIGNUP , ABORT_SIGNUP)
+    yield post(`/signup` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } ,  JSON.stringify(action.payload) , ACCEPT_SIGNUP , ABORT_SIGNUP)
 }
 
 function* duplIdCheckSaga (action) {
-    yield post(`${Config.SERVER}/signup/idcheck` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } ,  JSON.stringify(action.payload) , ACCEPT_ID_CHECK , ABORT_ID_CHECK)
+    yield post(`/signup/idcheck` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } ,  JSON.stringify(action.payload) , ACCEPT_ID_CHECK , ABORT_ID_CHECK)
 }
 
 

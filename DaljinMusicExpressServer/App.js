@@ -7,6 +7,8 @@ const express = require('express')
 , http = require('http')
 , cors = require('cors')
 , bodyParser = require('body-parser')
+, fs = require('fs')
+, util = require('util')
 
 //내부모듈
 const AuthRouter = require('./routes/auth')
@@ -24,7 +26,7 @@ const SearchRouter = require('./routes/search')
 const MongoDB = require('./Database/mongoDB')
 
 //기본 설정사항
-const PORT = process.env.PORT
+const { PORT , MUSIC_PATH , UPLOAD_PATH , ALBUM_IMG_PATH , ALBUM_IMG_URI } = process.env
 
 //EXPRESS 사용
 var app = express()
@@ -38,6 +40,7 @@ app.use(bodyParser.json())
 
 //공개 경로 설정
 //app.use('/' , express.static('../public'))
+app.use(`${ALBUM_IMG_URI}` , express.static('./albumImgs'))
 
 //세션
 app.use(session(
@@ -66,9 +69,38 @@ app.use('/admin' , AdminRouter)
 app.use('/search' , SearchRouter)
 
 
+const directorySetting = async () => {
+    const exists = util.promisify(fs.exists)
+    const mkdir = util.promisify(fs.mkdir)
+
+    if(await exists(UPLOAD_PATH)) {
+        console.log(`UPLOAD PATH : ${UPLOAD_PATH} ALREADY EXIST`)
+    }
+    else {
+        await mkdir(UPLOAD_PATH)
+        console.log(`UPLOAD PATH : ${UPLOAD_PATH} MAKE COMPLETE`)
+    }
+    if(await exists(MUSIC_PATH)) {
+        console.log(`MUSIC PATH : ${MUSIC_PATH} ALREADY EXIST`)
+    }
+    else {
+        await mkdir(MUSIC_PATH)
+        console.log(`MUSIC PATH : ${MUSIC_PATH} MAKE COMPLETE`)
+    }
+    if(await exists(ALBUM_IMG_PATH)) {
+        console.log(`ALBUM PATH : ${ALBUM_IMG_PATH} ALREADY EXIST`)
+    }
+    else {
+        await mkdir(ALBUM_IMG_PATH)
+        console.log(`ALBUM PATH : ${ALBUM_IMG_PATH} MAKE COMPLETE`)
+    }
+}
 
 
 http.createServer(app).listen(PORT , () => {
+    directorySetting()
+
+    console.log(ALBUM_IMG_URI)
     console.log(`SERVER OPEN (PORT : ${PORT})`)
     MongoDB.connect();
 })

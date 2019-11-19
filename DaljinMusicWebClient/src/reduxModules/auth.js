@@ -1,6 +1,5 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest} from 'redux-saga/effects'
-import Config from '../config'
 import { post } from './Request/request'
 
 export const FETCH_LOGIN = 'auth/FETCH_LOGIN'
@@ -88,15 +87,15 @@ export const authReducer = handleActions({
 
 function* fetchLoginSaga (action) {
     //const state = yield select() //'redux-saga/effects'
-    yield post(`${Config.SERVER}/auth/login` , { 'Content-Type' : 'application/json', 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_LOGIN , ABORT_LOGIN )
+    yield post(`/auth/login` , { 'Content-Type' : 'application/json', 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_LOGIN , ABORT_LOGIN )
 }
 
 function* fetchLogoutSaga(action) {
-    yield post(`${Config.SERVER}/auth/logout` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_LOGOUT , ABORT_LOGOUT )
+    yield post(`/auth/logout` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_LOGOUT , ABORT_LOGOUT )
 } 
 
 function* fetchIsLoggedSaga() {
-    yield post(`${Config.SERVER}/auth/islogged` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_ISLOGGED , ABORT_ISLOGGED )
+    yield post(`/auth/islogged` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_ISLOGGED , ABORT_ISLOGGED )
 }
 
 

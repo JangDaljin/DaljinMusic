@@ -1,7 +1,6 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest } from 'redux-saga/effects'
 import { get } from './Request/request'
-import Config from '../config'
 
 export const FETCH_HNNMUSIC = 'hotnnewmusic/FETCH'
 export const hnnMusicFetch = createAction(FETCH_HNNMUSIC)
@@ -29,7 +28,7 @@ export const hnnMusicReducer = handleActions({
 }, hnnInitialState)
 
 function* fetchSaga(action) {
-    yield get(`${Config.SERVER}/hotnnewmusic` , ACCEPT_HNNMUSIC , ABORT_HNNMUSIC)
+    yield get(`/hotnnewmusic` , ACCEPT_HNNMUSIC , ABORT_HNNMUSIC)
 }
 
 export function* hnnMusicSaga() {

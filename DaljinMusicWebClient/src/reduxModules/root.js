@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { fork} from 'redux-saga/effects'
+import { fork } from 'redux-saga/effects'
 import { authReducer as auth , authSaga} from './auth'
 import { signUpReducer as signUp , signUpSaga } from './signUp'
 import { todaysMusicReducer as todaysMusic , todaysMusicSaga } from './todaysMusic'

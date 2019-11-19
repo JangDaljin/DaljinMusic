@@ -21,22 +21,16 @@ class Top100ViewBody extends Component {
 
 
     componentDidMount () {
-        
-        this.getMoreItem(1 , 10);
+        this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10})
         window.addEventListener('scroll' , () => {
             let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
             let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
             let clientHeight = document.documentElement.clientHeight;
             if(parseInt(scrollTop+clientHeight) === parseInt(scrollHeight)) {
-                this.getMoreItem(this.props.items.size+1 , this.props.items.size+10)
+                this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
             }
         } , true)
     }
-
-    getMoreItem = (from , to) => {
-        this.props.Top100Actions.fetchTop100({'from' : from  , 'to' : to})
-    }
-
 
 
     render () {
@@ -51,7 +45,12 @@ class Top100ViewBody extends Component {
                                     <p>{value.get('rank')}</p>
                                 </div>
                                 <div className={cn('top100-list-item-img')}>
-                                    <div className={cn('top100-list-item-album-img')} style={{backgroundImage:`url('${value.get('albumImgUri')}')`}}>
+
+                                    <div className={cn('top100-list-item-album-img')} 
+                                    style={
+                                        {
+                                            backgroundImage : `url('${process.env.REACT_APP_SERVER}${value.getIn(['album' , 'albumImgUri'])}')`
+                                        }}>
 
                                     </div>
                                 </div>
@@ -64,7 +63,7 @@ class Top100ViewBody extends Component {
                                         <p>{value.get('singer')}</p>
                                     </div>
                                     <div className={cn('top100-list-item-album')}>
-                                        <p>{value.get('album')}</p>
+                                        <p>{value.getIn(['album' , 'name'])}</p>
                                     </div>
                                 </div>
                                 
@@ -105,7 +104,7 @@ class Top100ViewBody extends Component {
 export default connect(
     (state) => ({
         items : state.top100.items,
-        isAuthenticated : state.auth.isAuthenticated
+        isAuthenticated : state.auth.isAuthenticate,
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),
