@@ -59,16 +59,17 @@ class MusicPlayer extends Component {
     render () {
         return (
             <React.Fragment>
-            <div className={cn('musicplayer2' , { 'musicplayer-down' : !this.state.isShow } , {'musicplayer-up' : this.state.isShow})}>
-                <div className='scroller'>
-                    <div className={cn('fas fa-angle-up fa-2x' , { 'scroller-rotate' : this.state.isShow} , {'scroller-none' : !this.state.isShow})} onClick={(e) => { this.setState({isShow : !this.state.isShow})}}>
-                    </div> 
-                </div>
+            <div className={cn('musicplayer-scroller' , { 'scroller-rotate' : this.state.isShow} , {'scroller-none' : !this.state.isShow})}>
+                <div className={cn('fas fa-angle-up fa-2x')} onClick={(e) => { this.setState({isShow : !this.state.isShow})}}>
+                </div> 
+            </div>
 
+
+            <div className={cn('musicplayer' , { 'musicplayer-down' : !this.state.isShow } , {'musicplayer-up' : this.state.isShow})}>
                 <div className='controller'>
                     <div className='left'>
                             <div className='img-wrap'>
-                                <div className='img' style={{backgroundImage:`url('/twice2.jpg')`}}>
+                                <div className='img' style={{backgroundImage:`url('${this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'albumImgUri'])}')`}}>
 
                                 </div>
                             </div>
@@ -76,7 +77,18 @@ class MusicPlayer extends Component {
                             <div className='info'>
 
                                 <div className='text'>
-                                    <div>가수 - 노래 - 앨범</div>
+                                    
+                                    <div>
+                                        {this.props.playList.size > 0 &&
+                                        <p>
+                                            {this.props.playList.getIn([this.props.currentMusicIndex , 'singer' , 'name'])}
+                                            -
+                                            {this.props.playList.getIn([this.props.currentMusicIndex , 'song'])}
+                                            -
+                                            {this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'name'])}
+                                        </p>
+                                        }
+                                    </div>
                                 </div>
 
                                 <div className='progress'>

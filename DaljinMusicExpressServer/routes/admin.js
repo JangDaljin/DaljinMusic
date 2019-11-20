@@ -108,7 +108,7 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                 singer : singerId,
                 album : albumId,
                 filePath : musicNewPath,
-                playTime : await getAudioDurationInSeconds(musicNewPath),
+                duration : await getAudioDurationInSeconds(musicNewPath),
                 uploadDate : getTime(),
                 totalPlayCount : 0,
                 weekPlayCount : 0,

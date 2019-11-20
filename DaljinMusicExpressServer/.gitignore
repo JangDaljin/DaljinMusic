@@ -2,5 +2,6 @@
 
 # dependencies
 /node_modules
-/musics/*
-/albumImgs/*
+/musics
+/albumImgs
+/uploads

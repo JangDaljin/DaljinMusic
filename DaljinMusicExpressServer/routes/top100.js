@@ -26,19 +26,10 @@ router.get('/' , doAsync( async (req , res , next) => {
 
             if(musics.length < 1) throw new Error('검색 갯수 0개')
 
-            for(let i = p_from ; i <= p_to; i++) {
-                const pos = i - p_from 
-                response.list.push(
-                    {
-                        rank : `${i}`,
-                        song : musics[pos].song,
-                        singer : musics[pos].singer.name,
-                        album : musics[pos].album,
-                        albumImgUri : musics[pos].album.imagePath,
-                        _id : musics[pos]._id
-                    }
-                )
-            }
+
+            musics.map((value, index) => { value.rank = index+1; return value})
+            response.list = musics
+            
         }
         catch(err) {
             console.error(err)

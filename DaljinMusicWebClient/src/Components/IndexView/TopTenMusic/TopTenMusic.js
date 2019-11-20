@@ -33,7 +33,7 @@ class TopTenMusic extends Component {
                                             <p>{value.get('song')}</p>
                                         </div> 
                                         <div className={cn('toptenmusic-list-singer')}>
-                                            <p>{value.get('singer')}</p>
+                                            <p>{value.getIn(['singer' , 'name'])}</p>
                                         </div>
                                         <div className={cn('toptenmusic-list-buttons')}>
                                             <div className={cn('toptenmusic-list-play' , 'toptenmusic-list-button')}><i className={cn('fas fa-play')}></i></div>

@@ -185,6 +185,82 @@ router.post('/removemusicinlist' , doAsync(async (req , res , next) => {
     res.json(response)
 }))
 
+router.post('/getplaylist' , doAsync(async (req , res , next) => {
+    const response = {
+        message : '',
+        playList : []
+    }
+
+    const { userId } = req.body
+    if(userId == req.session.userId) {
+        const user = await UserModel.findOne({ 'userId' : userId}).populate({path : 'playList' , populate : 'singer album'}).lean()
+        response.playList = user.playList
+    }
+    else {
+        console.log('검증 실패')
+        response.message = '검증 실패'
+    }
+
+    res.json(response)
+}))
+
+router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
+    const response = {
+        message : '',
+        playList : []
+    }
+    const { userId , addList } = req.body
+
+    if(userId == req.session.userId) {
+        try {
+            //const doc = await UserModel.updateOne({'userId' : userId} , {$push : { 'playList' : { $each : [addList] }}})
+            const user = await UserModel.findOne({'userId' : userId})
+            user.playList.push([addList])
+            const doc = await user.save()
+            const afterPopulate = await UserModel.populate(doc , { path : 'playList' , populate : { path : 'singer album' }})
+            response.playList = afterPopulate.playList
+        }
+        catch(err) {
+            console.error(err)
+            console.message = '저장 실패'
+        }
+    }
+    else {
+        console.log('아이디 검증 실패')
+        response.message = '아이디 검증 실패'
+    }
+    res.json(response)
+}))
+
+router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
+    const response = {
+        message : '',
+        playList : []
+    }
+
+    const { userId , removeList } = req.body
+
+    if(userId == req.session.userId) {
+        try {
+            const user = await UserModel.findOne({'userId' : userId})
+            user.playList.pull([removeList])
+            const doc = await user.save()
+            const afterPopulate = await UserModel.populate(doc , { path : 'playList' , populate : { path : 'singer album' }})
+            response.playList = afterPopulate.playList
+        }
+        catch(err) {
+            console.error(err)
+            response.message = '삭제 실패'
+        }
+    }
+    else {
+        console.log('아이디 검증 실패')
+        response.message = '아이디 검증 실패'
+    }
+    res.json(response)
+
+}))
+
 
 
 module.exports = router

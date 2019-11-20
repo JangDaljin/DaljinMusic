@@ -1,4 +1,36 @@
-.musicplayer2 {
+.musicplayer-scroller {
+    display: inline-block;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+}
+
+.musicplayer-scroller > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 40px;
+    border: 4px solid #303030;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    background-color: white;
+}
+
+.scroller-rotate {
+    bottom: 100px;
+    transform: rotate(180deg);
+    transition: all 1s;
+}
+
+.scroller-none {
+    bottom: 0px;
+    transform: rotate(0deg);
+    transition : all 1s;;
+}
+
+.musicplayer {
     display: flex;
     align-content: center;
     flex-direction: column;
@@ -7,7 +39,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-
+    height: 100px;;
 }
 
 .musicplayer-down {
@@ -20,60 +52,34 @@
     transition: bottom 1s;
 }
 
-.musicplayer2 .scroller-rotate {
-    transform: rotate(180deg);
-    transition: transform 1s;
-}
 
-.musicplayer2 .scroller-none {
-    transform: rotate(0deg);
-    transition : transform 1s;
-}
-
-.musicplayer2 .scroller {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.musicplayer2 .scroller > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 40px;
-    border: 4px solid #303030;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
-
-
-
-.musicplayer2 .controller {
+.musicplayer .controller {
     display: flex;
     align-content: center;
     background-color: #303030;
     color: #EEE;
     font-family: 'jua';
-    height: 100px;
+    height: 100%;
     border: 3px solid #CCC;;
 }
 
-.musicplayer2 .controller > .left {
+.musicplayer .controller > .left {
     flex : 7 0 auto;
     display: inline-flex;
 }
 
-.musicplayer2 .controller > .left > .img-wrap {
+.musicplayer .controller > .left > .img-wrap {
     position: relative;
     width: 94px;
 }
 
-.musicplayer2 .controller > .left > .img-wrap::before {
+.musicplayer .controller > .left > .img-wrap::before {
     content: '';
     display: block;
     padding-top: 100%;
 }
 
-.musicplayer2 .controller > .left > .img-wrap > .img {
+.musicplayer .controller > .left > .img-wrap > .img {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -82,7 +88,7 @@
     background-size: cover;
 }
 
-.musicplayer2 .controller > .left > .info {
+.musicplayer .controller > .left > .info {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -90,7 +96,7 @@
     
 } 
 
-.musicplayer2 .controller > .left > .info > .text {
+.musicplayer .controller > .left > .info > .text {
     display: flex;
     align-items: center;
     flex: 1 0 40px;
@@ -98,7 +104,7 @@
     padding-right: 10px;
 }
 
-.musicplayer2 .controller > .left > .info > .text > div {
+.musicplayer .controller > .left > .info > .text > div {
     width: 100%;
     padding : 3px 10px 3px 10px;
     border-radius: 1000rem;
@@ -109,7 +115,7 @@
 }
 
 
-.musicplayer2 .controller > .left > .info > .progress {
+.musicplayer .controller > .left > .info > .progress {
     
     flex : 1 0 40px;    
 
@@ -120,11 +126,11 @@
     padding-right: 10px;
 }
 
-.musicplayer2 .controller > .left > .info > .progress > .time {
+.musicplayer .controller > .left > .info > .progress > .time {
     user-select: none;
 }
 
-.musicplayer2 .controller > .left > .info > .progress > .progressbar {
+.musicplayer .controller > .left > .info > .progress > .progressbar {
     flex-grow: 1;
     align-content: center;
     height: 18px;
@@ -137,7 +143,7 @@
     --progressbar-left : 0%;
 }
 
-.musicplayer2 .controller > .left > .info > .progress > .progressbar::before {
+.musicplayer .controller > .left > .info > .progress > .progressbar::before {
     
     content: '';
     position: absolute;
@@ -151,13 +157,13 @@
     transform : translate(0% , -50%);
 }
 
-.musicplayer2 .controller > .center {
+.musicplayer .controller > .center {
     flex : 3 0 auto;
     display: inline-flex;
     flex-direction: column;
 }
 
-.musicplayer2 .controller > .center > .buttons {
+.musicplayer .controller > .center > .buttons {
     flex: 1 0 40px;
     display: flex;
     justify-content: center;
@@ -165,7 +171,7 @@
     padding : 5px
 }
 
-.musicplayer2 .controller .button {
+.musicplayer .controller .button {
     cursor: pointer;
     border: 6px double #CCC;
     background-color: #FFF;
@@ -178,13 +184,13 @@
     margin : 0px 10px;
 }
 
-.musicplayer2 .controller .button:hover {
+.musicplayer .controller .button:hover {
     background-color: #303030;
     color: #FFF;
 }
 
 
-.musicplayer2 .controller > .right {
+.musicplayer .controller > .right {
     width: 80px;
     display: flex;
     align-items: stretch;
@@ -193,12 +199,12 @@
     border: 1px solid #CCC;
 }
 
-.musicplayer2 .controller > .right:hover {
+.musicplayer .controller > .right:hover {
     background-color: #FFF;
     color: #303030;
 }
 
-.musicplayer2 .controller > .right > div {
+.musicplayer .controller > .right > div {
     flex: 1 0 auto;
     display: flex;
     align-items: center;

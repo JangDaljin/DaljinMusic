@@ -22,13 +22,13 @@ class LoginForm extends Component {
     componentDidUpdate (prevProps , prevState) {
         
         if(this.props.isAuthenticated === true) {
-            this.props.history.push('/home')
+            this.props.history.push('/')
         }
     }
 
     componentDidMount () {
         if(this.props.isAuthenticated === true) {
-            this.props.history.push('/home')
+            this.props.history.push('/')
         }
     }
 

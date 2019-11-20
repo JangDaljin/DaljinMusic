@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as top100Actions from '../../ReduxModules/top100'
 import * as myMusicActions from '../../ReduxModules/myMusic'
+import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
 import Modal from './Modal/modal'
 import { AuthConfirm } from '../common'
 import { withRouter } from 'react-router-dom'
@@ -32,6 +33,13 @@ class Top100ViewBody extends Component {
         } , true)
     }
 
+    addMusicPlayer = (index) => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : this.props.items.getIn([index , '_id'])})
+    }
+
+    play = (index) => {
+        this.addMusicPlayer(this.props.items.get(index))
+    }
 
     render () {
         return (
@@ -60,7 +68,7 @@ class Top100ViewBody extends Component {
                                         <p>{value.get('song')}</p>
                                     </div>
                                     <div className={cn('top100-list-item-singer')}>
-                                        <p>{value.get('singer')}</p>
+                                        <p>{value.getIn(['singer' , 'name'])}</p>
                                     </div>
                                     <div className={cn('top100-list-item-album')}>
                                         <p>{value.getIn(['album' , 'name'])}</p>
@@ -69,7 +77,11 @@ class Top100ViewBody extends Component {
                                 
                                 <div className={cn('top100-list-item-buttons')}>
                                         <div className={cn('top100-list-item-play' , 'top100-list-button')}><i className={cn('fas fa-play' ,'fa-2x')}></i></div>
-                                        <div className={cn('top100-list-item-add' , 'top100-list-button')}><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
+                                        <div className={cn('top100-list-item-add' , 'top100-list-button')} onClick={
+                                            (e) => {
+                                                this.addMusicPlayer(index)
+                                            }
+                                        }><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
                                         <div className={cn('top100-list-item-list' , 'top100-list-button')} onClick={
                                             (e) => {
                                                 if(this.props.isAuthenticated) {
@@ -103,11 +115,14 @@ class Top100ViewBody extends Component {
 
 export default connect(
     (state) => ({
+        userId : state.auth.userId,
         items : state.top100.items,
         isAuthenticated : state.auth.isAuthenticate,
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),
-        MyMusicActions : bindActionCreators(myMusicActions , dispatch)
+        MyMusicActions : bindActionCreators(myMusicActions , dispatch),
+        MusicPlayerActions : bindActionCreators(musicPlayerActions , dispatch)
+
     })
 )(withRouter(Top100ViewBody))
