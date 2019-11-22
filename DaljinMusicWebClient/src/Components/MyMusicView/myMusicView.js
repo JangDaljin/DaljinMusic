@@ -26,28 +26,24 @@ class MyMusicViewBody extends Component {
     }
 
     componentDidUpdate(prevProps , prevState) {
-        if(prevProps.idCheckTrying !== this.props.idCheckTrying) {
-            this.initState();
+        if(prevProps.authMonitor && !this.props.authMonitor) {
+            this.initState()
         }
     }
 
-    componentDidMount() {
-        this.initState();
+    componentDidMount(prevProps , prevState) {
+        this.initState()
     }
 
     initState = () => {
-        //세션확인이 완료되면
-        if(!this.props.idCheckTrying) {
-            //로그인 되어있으면 음악리스트 요청
-            if(this.props.isAuthenticated) {
-                this.props.MyMusicActions.fetchGetMyMusicLists({userId : this.props.userId})
-            }
-            //로그인 안되어있으면 로그인 창으로 이동
-            else {
-                this.props.history.push('/auth')
-            }
+        if(this.props.isAuthenticated) {
+            this.props.MyMusicActions.fetchGetMyMusicLists({userId : this.props.userId})
+        }
+        else {
+            this.props.history.push('/auth')
         }
     }
+
 
     doToggleModal = () => {
         this.setState({ modalShow : !this.state.modalShow})
@@ -73,7 +69,7 @@ class MyMusicViewBody extends Component {
 
                             <div className={cn('mymusic-center')}>
                                 {
-                                    this.props.myMusicLists.size > 0 && this.props.curSelectList !== -1 &&
+                                    this.props.myMusicLists.size > 0 && this.props.currentSelectedListIndex !== -1 &&
                                     <MyMusicViewList onCheck={this.doCheck} />
                                 }
                             </div>
@@ -95,10 +91,10 @@ class MyMusicViewBody extends Component {
 export default connect(
     (state) => ({
         myMusicLists : state.myMusic.myMusicLists,
-        curSelectList : state.myMusic.curSelectList,
+        currentSelectedListIndex : state.myMusic.currentSelectedListIndex,
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,
-        idCheckTrying : state.auth.idCheckTrying,
+        authMonitor : state.auth.monitor,
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicAction , dispatch)

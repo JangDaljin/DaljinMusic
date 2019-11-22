@@ -34,11 +34,12 @@ class Top100ViewBody extends Component {
     }
 
     addMusicPlayer = (index) => {
-        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : this.props.items.getIn([index , '_id'])})
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.items.getIn([index , '_id'])]})
     }
 
     play = (index) => {
-        this.addMusicPlayer(this.props.items.get(index))
+        this.addMusicPlayer(index)
+        this.props.MusicPlayerActions.fetchPlayMusic({'_id' : this.props.items.getIn([index , '_id'])})
     }
 
     render () {
@@ -76,7 +77,11 @@ class Top100ViewBody extends Component {
                                 </div>
                                 
                                 <div className={cn('top100-list-item-buttons')}>
-                                        <div className={cn('top100-list-item-play' , 'top100-list-button')}><i className={cn('fas fa-play' ,'fa-2x')}></i></div>
+                                        <div className={cn('top100-list-item-play' , 'top100-list-button')} onClick={
+                                            (e) => {
+                                                this.play(index)
+                                            }
+                                        }><i className={cn('fas fa-play' ,'fa-2x')}></i></div>
                                         <div className={cn('top100-list-item-add' , 'top100-list-button')} onClick={
                                             (e) => {
                                                 this.addMusicPlayer(index)
@@ -117,7 +122,7 @@ export default connect(
     (state) => ({
         userId : state.auth.userId,
         items : state.top100.items,
-        isAuthenticated : state.auth.isAuthenticate,
+        isAuthenticated : state.auth.isAuthenticated,
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),

@@ -10,8 +10,13 @@ const cn = classNames.bind(styles)
 class PlayList extends Component {
 
     componentDidUpdate(prevProps , prevState) {
-        if(!this.props.idCheckTrying && this.props.isAuthenticated) {
-            this.props.MusicPlayerActions.fetchGetPlayList({'userId' : this.props.userId})
+        if(prevProps.authMonitor && !this.props.authMonitor) {
+            if(this.props.isAuthenticated) {
+                this.props.MusicPlayerActions.fetchGetPlayList({'userId' : this.props.userId})
+            }
+            else {
+                this.props.MusicPlayerActions.clearPlayList()   
+            }
         }
     }
 
@@ -23,7 +28,13 @@ class PlayList extends Component {
                     <div className="button-wrap" onClick={ e => { this.props.MusicPlayerActions.changeChecked() } }>
                         <i className="far fa-check-square"></i><span> 전체선택</span>   
                     </div>
-                    <div className="button-wrap" onClick={ e => { this.props.MusicPlayerActions.fetchPlayListItemRemove({'userId' : this.props.userId , 'removeList' : this.props.playList.map((value) => value._id).toJS()}) }}>
+                    <div className="button-wrap" onClick={ 
+                        e => { 
+                            this.props.MusicPlayerActions.fetchPlayListItemRemove(
+                                {
+                                    'userId' : this.props.userId ,
+                                    'removeList' : this.props.playList.filter(value => value.get('checked')).toJS().map(value => value._id)}) 
+                        }}>
                         <i className="fas fa-trash"></i><span> 선택삭제</span>   
                     </div>
                 </div>
@@ -31,7 +42,7 @@ class PlayList extends Component {
                     <div className="list">
                     {
                         this.props.playList.map(
-                            (value , index) => (
+                            (value , index) => (        
                                 <div className='list-item' key={index}>
                                     {value.get('checked') ?
                                         <span className="far fa-check-circle checkbox" onClick={(e) => this.props.MusicPlayerActions.changeChecked(index) }></span>
@@ -54,7 +65,7 @@ class PlayList extends Component {
 export default connect(
     (state) => ({
         userId : state.auth.userId,
-        idCheckTrying : state.auth.idCheckTrying,
+        authMonitor : state.auth.monitor,
         isAuthenticated : state.auth.isAuthenticated,
         playList : state.musicPlayer.playList
     }),

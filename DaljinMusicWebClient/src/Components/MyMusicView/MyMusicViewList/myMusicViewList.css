@@ -21,6 +21,7 @@
     width: 90%;
     height: 100px;
     border: 2px solid #CCC;
+    margin-top: 3px;
     margin-bottom: 3px;
     cursor: pointer;
 }
@@ -29,13 +30,20 @@
     border: 3px solid #0697;
 }
 
-.mymusic-checked {
+.mymusic-list-item-checked {
     box-shadow: 0px 0px 5px 5px #999;
     
     margin-top : 15px;
     margin-bottom: 15px;
 
-    transition: box-shadow .3s 0s;
+    transition: all .3s;
+}
+
+.mymusic-list-item-unchecked {
+    box-shadow: none;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    transition: all .3s;
 }
 
 .mymusic-list-item > div {
@@ -43,6 +51,7 @@
     vertical-align: top;
     height: 100%;
 }
+
 
 .mymusic-list-album-img-wrap {
     position: relative;
@@ -122,7 +131,6 @@
     width: calc(100% / 7);
     cursor: pointer;
 }
-
 
 .mymusic-pages-right {
     width: 15%;

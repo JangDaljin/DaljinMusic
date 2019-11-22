@@ -1,6 +1,9 @@
 import { createAction , handleActions } from 'redux-actions'
-import { takeLatest} from 'redux-saga/effects'
+import { takeLatest , put} from 'redux-saga/effects'
 import { post } from './Request/request'
+
+export const MONITOR = 'auth/MONITOR'
+export const monitor = createAction(MONITOR)
 
 export const FETCH_LOGIN = 'auth/FETCH_LOGIN'
 export const fetchLogin = createAction(FETCH_LOGIN)
@@ -10,7 +13,6 @@ export const acceptLogin = createAction(ACCEPT_LOGIN)
 
 export const ABORT_LOGIN = 'auth/ABORT_LOGIN'
 export const abortLogin = createAction(ABORT_LOGIN)
-
 
 export const FETCH_LOGOUT = 'auth/FETCH_LOGOUT'
 export const fetchLogout = createAction(FETCH_LOGOUT)
@@ -34,14 +36,20 @@ const initialState = {
     userId : '',
     userName : '',
     isAuthenticated : false,
-    idCheckTrying : true,
+    monitor : false,
 }
 
 export const authReducer = handleActions({
+
+    [MONITOR] : (state , action) => {
+        const newState = { ...state }
+        newState.monitor = action.payload
+        return newState
+    },
+
     [ACCEPT_LOGIN] : (state , action) => {
         const newState = { ...state }
         const { userId , userName , isAuthenticated , message } = action.payload
-        newState.idCheckTrying = false
         newState.userId = userId
         newState.userName = userName
         newState.isAuthenticated = isAuthenticated
@@ -54,25 +62,19 @@ export const authReducer = handleActions({
     },
     [ABORT_LOGIN] : (state , action) => {
         const newState = { ...initialState }
-        newState.idCheckTrying = false
         return newState
     },
-    [ACCEPT_LOGOUT] : (state , action) => {
-        const newState = { ...state }
-        const { userId , userName , isAuthenticated } = action.payload
-        newState.userId = userId
-        newState.userName = userName
-        newState.isAuthenticated = isAuthenticated
+    [ACCEPT_LOGOUT] : (state , action) => { 
+        const newState = { ...initialState }
         return newState
     },
     [ABORT_LOGOUT] : (state , action) => {
-        const newState = { ...initialState }
+        const newState = { ...state }
         return newState
     },
     [ACCEPT_ISLOGGED] : (state , action) => {
         const newState = { ...state }
         const { userId , userName , isAuthenticated } = action.payload
-        newState.idCheckTrying = false
         newState.userId = userId
         newState.userName = userName
         newState.isAuthenticated = isAuthenticated
@@ -86,16 +88,21 @@ export const authReducer = handleActions({
 
 
 function* fetchLoginSaga (action) {
-    //const state = yield select() //'redux-saga/effects'
+    yield put({type : MONITOR , payload : true})
     yield post(`/auth/login` , { 'Content-Type' : 'application/json', 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_LOGIN , ABORT_LOGIN )
+    yield put({type : MONITOR , payload : false})
 }
 
 function* fetchLogoutSaga(action) {
+    yield put({type : MONITOR , payload : true})
     yield post(`/auth/logout` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_LOGOUT , ABORT_LOGOUT )
+    yield put({type : MONITOR , payload : false})
 } 
 
 function* fetchIsLoggedSaga() {
+    yield put({type : MONITOR , payload : true})
     yield post(`/auth/islogged` , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache' : 'no-cache' } , JSON.stringify({}) , ACCEPT_ISLOGGED , ABORT_ISLOGGED )
+    yield put({type : MONITOR , payload : false})
 }
 
 

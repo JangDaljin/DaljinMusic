@@ -53,7 +53,7 @@ class MyMusicViewList extends Component {
                         {   
                             this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).slice((this.state.curPage-1) * itemPerPage , this.state.curPage * itemPerPage).map(
                                 (value , index) => (
-                                    <div key={index} className={cn('mymusic-list-item' , {'mymusic-checked' : value.get('checked')})} onClick={ ()=> { this.props.onCheck(value) } }>
+                                    <div key={index} className={cn('mymusic-list-item' , {'mymusic-list-item-checked' : value.get('checked')} , {'mymusic-list-item-unchecked' : !value.get('checked')})} onClick={ ()=> { this.props.MyMusicActions.checkListItem(index) } }>
                                         <div className={cn('mymusic-list-album-img-wrap')}>
                                             <div className={cn('mymusic-list-album-img')} style={{backgroundImage : `url('${value.getIn(['album' , 'albumImgUri'])}')`}}>
                                             </div>

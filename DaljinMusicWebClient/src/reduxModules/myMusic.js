@@ -14,8 +14,8 @@ export const abortGetMyMusicLists = createAction(ABORT_GET_MYMUSICLISTS)
 export const SELECT_LIST = 'mymusic/SELECTLIST'
 export const selectList = createAction(SELECT_LIST)
 
-export const TOGGLE_CHECKED = 'mymusic/TOGGLECHECKED'
-export const toggleChecked = createAction(TOGGLE_CHECKED)
+export const CHECK_LIST_ITEM = 'mymusic/CHECK_LIST_ITEM'
+export const checkListItem = createAction(CHECK_LIST_ITEM)
 
 export const MODAL_FETCH_UPLOAD_FILE = 'mymusic/MODALFETCHUPLOADFILE'
 export const modalFetchUploadFile = createAction(MODAL_FETCH_UPLOAD_FILE)
@@ -80,7 +80,7 @@ const myMusicInitialState = {
                 song : '',
                 singer : '',
                 time : '',
-                chcked : '' // 클라이언트 전용
+                checked : '' // 클라이언트 전용
             }
         ]
     }
@@ -92,7 +92,15 @@ export const myMusicReducer = handleActions({
         const newState = { ...state }
         newState.myMusicLists = newState.myMusicLists.clear()
         const { myMusicLists} = action.payload
-        myMusicLists.map(value => { value.selected = false; return value})
+        myMusicLists.map(
+            value => { 
+                value.selected = false;
+                value.list.map(
+                    _value => {
+                    _value.checked = false;
+                    return _value;
+                });
+                return value})
         newState.myMusicLists = newState.myMusicLists.concat(fromJS(myMusicLists))
         return newState
     },
@@ -105,6 +113,12 @@ export const myMusicReducer = handleActions({
         const { selectedListIndex } = action.payload
         newState.currentSelectedListIndex = selectedListIndex
         newState.myMusicLists = newState.myMusicLists.map((value) => value.set('selected' , false)).setIn([selectedListIndex , 'selected'] , true)
+        return newState
+    },
+    [CHECK_LIST_ITEM] : (state , action) => {
+        const newState = { ...state }
+        const index = action.payload
+        newState.myMusicLists = newState.myMusicLists.updateIn([newState.currentSelectedListIndex , 'list' , index , 'checked'] , value => !value)
         return newState
     },
     [MODAL_ACCEPT_UPLOAD_FILE] : (state , action) => {
