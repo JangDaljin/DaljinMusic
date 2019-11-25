@@ -33,7 +33,7 @@ class PlayList extends Component {
                             this.props.MusicPlayerActions.fetchPlayListItemRemove(
                                 {
                                     'userId' : this.props.userId ,
-                                    'removeList' : this.props.playList.filter(value => value.get('checked')).toJS().map(value => value._id)}) 
+                                    'removeList' : this.props.playList.filter(value => value.get('checked')).toJS().map((value , index) => index)}) 
                         }}>
                         <i className="fas fa-trash"></i><span> 선택삭제</span>   
                     </div>

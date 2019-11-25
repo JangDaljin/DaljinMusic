@@ -247,8 +247,8 @@ router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
     if(userId == req.session.userId) {
         try {
             const user = await UserModel.findOne({'userId' : userId})
-            for(const _id of removeList) {
-                user.playList.pull(_id)
+            for(const index of removeList) {
+                user.playList.splice(index , 1)
             }
             await user.save()
         }

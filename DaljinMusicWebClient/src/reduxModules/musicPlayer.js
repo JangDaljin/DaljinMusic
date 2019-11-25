@@ -160,13 +160,19 @@ export const musicPlayerReducer = handleActions({
 
     [PLAYLIST_ITEM_REMOVE] : (state , action) => {
         const newState = { ...state }
-        newState.playList = newState.playList.filter(value => !(value.get('checked')))
-        console.dir(newState.playList.toJS())
+        const { removeList }= action.payload
+        for(const index of removeList) {
+            if(index === newState.currentMusicIndex) {
+                newState.currentMusicIndex = 0;
+            }
+            newState.playList = newState.playList.splice(index , 1)
+        }
+        //newState.playList = newState.playList.filter(value => !(value.get('checked')))
         return newState
     },
 
     [ACCEPT_PLAYLIST_ITEM_REMOVE] : (state , action) => {
-        const newState = { ...state }
+        const newState = { ...state }       
         return newState
     },
 
@@ -191,7 +197,7 @@ function* fetchPlayListItemAddSaga(action) {
 }
 
 function* fetchPlayListItemRemoveSaga(action) {
-    yield put({type : PLAYLIST_ITEM_REMOVE})
+    yield put({type : PLAYLIST_ITEM_REMOVE , payload : action.payload})
     yield post('/mymusic/playlistitemremove' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAYLIST_ITEM_REMOVE , ABORT_PLAYLIST_ITEM_REMOVE)
 }
 

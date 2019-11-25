@@ -37,19 +37,19 @@ class LoginForm extends Component {
             <div className={cn('loginform')}>
                 <div className={cn('loginform-left')}>
                     <div className={cn('loginform-id')}>
-                        <input className={cn('loginform-id-input')} type='text' placeholder="아이디" onChange={(e)=> {this.setState({userId : e.target.value})}}/>
+                        <input className={cn('loginform-id-input')} type='text' placeholder="아이디" onChange={(e)=> {this.setState({userId : e.target.value})}} onBlur={(e) => {this.password.focus()}}/>
                     </div>
 
                     <div className={cn('loginform-pw')}>
-                        <input className={cn('loginform-pw-input')} type='password' placeholder="비밀번호" onChange={(e)=> {this.setState({userPw : e.target.value})}} />
+                        <input className={cn('loginform-pw-input')} ref={ref => this.password = ref} type='password' placeholder="비밀번호" onChange={(e)=> {this.setState({userPw : e.target.value})}} onBlur={(e) => { this.loginbutton.focus()}} />
                     </div>
                 </div>
 
                 <div className={cn('loginform-right')}> 
 
-                    <div className={cn('loginform-loginbutton')} onClick={()=> {this.props.AuthActions.fetchLogin({userId: this.state.userId , userPw:this.state.userPw})}}>
+                    <button className={cn('loginform-loginbutton')} ref={ref => this.loginbutton = ref} onClick={()=> {this.props.AuthActions.fetchLogin({userId: this.state.userId , userPw:this.state.userPw})}}>
                         <i className="fas fa-sign-in-alt fa-3x"></i>
-                    </div>
+                    </button>
                 </div>
             </div>
         )
