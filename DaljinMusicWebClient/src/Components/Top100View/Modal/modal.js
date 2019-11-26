@@ -35,6 +35,7 @@ class Top100Modal extends Component {
                             <div className="modal-item" key={index} onClick={
                                 (e) => {
                                     this.props.MyMusicActions.fetchAddMusicInList({ 'userId' : this.props.userId , 'listId' : this.props.myMusicLists.getIn([index , '_id']) , 'musicId' : this.props.selectedMusicId })
+                                    this.props.close()
                                 }
                             }>{value.get('listName')}</div>
                         ))

@@ -155,23 +155,22 @@ export const myMusicReducer = handleActions({
     },
     [ACCEPT_ADD_MUSIC_IN_LIST] : (state , action) => {
         const newState = { ...state }
-
-
-
-
+        window.alert('추가되었습니다.')
         return newState
     },
     [ABORT_ADD_MUSIC_IN_LIST] : (state , action) => {
         const newState = { ...myMusicInitialState }
+        window.alert('아이템 추가에 실패하였습니다.')
         return newState
     },
     [ACCEPT_REMOVE_MUSIC_IN_LIST] : (state , action) => {
         const newState = { ...state }
-
+        window.alert('삭제되었습니다.')
         return newState
     },
     [ABORT_REMOVE_MUSIC_IN_LIST] : (state , action) => {
         const newState = {...myMusicInitialState }
+        window.alert('삭제에 실패하였습니다.')
         return newState
     }
 } , myMusicInitialState)

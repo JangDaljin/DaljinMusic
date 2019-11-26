@@ -24,12 +24,16 @@ router.get('/' , doAsync( async (req , res , next) => {
         try {
             const musics = await MusicModel.find().sort(p_mode).skip(p_from -1).limit(p_to - p_from + 1).populate('album').populate('singer').lean()
 
-            if(musics.length < 1) throw new Error('검색 갯수 0개')
-
-
-            musics.map((value, index) => { value.rank = index+1; return value})
-            response.list = musics
+            if(musics.length < 1) {
+                response.from = -1
+                response.to = -1
+                throw new Error('검색 갯수 0개')
+            }
             
+
+            musics.map((value, index) => { value.rank = p_from+index; return value})
+            response.to = p_from + musics.length - 1
+            response.list = musics
         }
         catch(err) {
             console.error(err)

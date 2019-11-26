@@ -20,17 +20,22 @@ class Top100ViewBody extends Component {
         selectedMusicId : '',
     }
 
+    handleScroll = () => {
+        let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
+        let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
+        let clientHeight = document.documentElement.clientHeight;
+        if(parseInt(scrollTop+clientHeight) === parseInt(scrollHeight)) {
+            this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
+        }
+    }
 
     componentDidMount () {
-        this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10})
-        window.addEventListener('scroll' , () => {
-            let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
-            let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
-            let clientHeight = document.documentElement.clientHeight;
-            if(parseInt(scrollTop+clientHeight) === parseInt(scrollHeight)) {
-                this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
-            }
-        } , true)
+        this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true})
+        window.addEventListener('scroll' , this.handleScroll , true)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll' , this.handleScroll , true)
     }
 
     addMusicPlayer = (index) => {

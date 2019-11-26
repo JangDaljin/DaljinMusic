@@ -73,10 +73,9 @@ const musicPlayerInitialState = {
 export const musicPlayerReducer = handleActions({
     [CHANGE_CURRENT_MUSIC_INDEX] : (state , action) => {
         const newState = { ...state }
-
-        if(typeof action.payload === 'undefined')
+        if(typeof action.payload == 'undefined')
             newState.currentMusicIndex = newState.playList.size-1
-        else if(typeof action.payload === 'number')
+        else if(typeof action.payload == 'number')
             newState.currentMusicIndex = action.payload
         else 
             newState.currentMusicIndex = action.payload.index
@@ -135,7 +134,6 @@ export const musicPlayerReducer = handleActions({
         const newState = { ...state }
         const { playList } = action.payload
         playList.map(value => { value.checked = false; return value})
-        console.dir(playList)
         newState.playList = newState.playList.clear().concat(fromJS(playList))    
         return newState
     },
@@ -161,11 +159,11 @@ export const musicPlayerReducer = handleActions({
     [PLAYLIST_ITEM_REMOVE] : (state , action) => {
         const newState = { ...state }
         const { removeList }= action.payload
-        for(const index of removeList) {
-            if(index === newState.currentMusicIndex) {
+        for(let cnt = removeList.length -1 ; cnt > -1; cnt--) {
+            if(removeList[cnt] === newState.currentMusicIndex) {
                 newState.currentMusicIndex = 0;
             }
-            newState.playList = newState.playList.splice(index , 1)
+            newState.playList = newState.playList.splice(removeList[cnt] , 1)
         }
         //newState.playList = newState.playList.filter(value => !(value.get('checked')))
         return newState
@@ -186,6 +184,7 @@ export const musicPlayerReducer = handleActions({
 
 function* fetchPlayMusicSaga(action) {
     yield post('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
+    yield put({type: CHANGE_CURRENT_MUSIC_INDEX})
 }
 
 function* fetchGetPlayListSaga(action) {

@@ -51,7 +51,11 @@ class PlayList extends Component {
                                     }
                                     
 
-                                    <span className="list-item-name">{`${value.getIn(['singer' , 'name'])} - ${value.get('song')} - ${value.getIn(['album' , 'name'])}`}</span>
+                                    <span className="list-item-name" onClick={
+                                        (e) => {
+                                            this.props.MusicPlayerActions.fetchPlayMusic({'_id' : this.props.playList.getIn([index , '_id'])});
+                                        }
+                                    }>{`${value.getIn(['singer' , 'name'])} - ${value.get('song')} - ${value.getIn(['album' , 'name'])}`}</span>
                                 </div>
                             )
                         )

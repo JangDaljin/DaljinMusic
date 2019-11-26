@@ -2,7 +2,8 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as Top100Actions from '../../../ReduxModules/top100'
-
+import * as MyMusicActions from '../../../ReduxModules/myMusic'
+import * as MusicPlayerActions from '../../../ReduxModules/musicPlayer'
 import classNames from 'classnames/bind'
 import styles from './TopTenMusic.css'
 const cn = classNames.bind(styles)
@@ -10,7 +11,16 @@ const cn = classNames.bind(styles)
 class TopTenMusic extends Component {
 
     componentDidMount() {
-        this.props.top100Actions.fetchTop100({ from : 1 , to :  10})
+        this.props.top100Actions.fetchTop100({ from : 1 , to :  10 , init : true})
+    }
+
+    addMusicPlayer = (index) => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.top10.getIn([index , '_id'])]})
+    }
+
+    play = (index) => {
+        this.addMusicPlayer(index)
+        this.props.MusicPlayerActions.fetchPlayMusic({'_id' : this.props.top10.getIn([index , '_id'])})
     }
 
     render () {
@@ -36,8 +46,14 @@ class TopTenMusic extends Component {
                                             <p>{value.getIn(['singer' , 'name'])}</p>
                                         </div>
                                         <div className={cn('toptenmusic-list-buttons')}>
-                                            <div className={cn('toptenmusic-list-play' , 'toptenmusic-list-button')}><i className={cn('fas fa-play')}></i></div>
-                                            <div className={cn('toptenmusic-list-addlist' , 'toptenmusic-list-button')}><i className={cn('fas fa-plus')}></i></div>
+                                            <div className={cn('toptenmusic-list-play' , 'toptenmusic-list-button')} 
+                                            onClick={(e)=>{ this.play(index); }}>
+                                                <i className={cn('fas fa-play')}></i>
+                                            </div>
+                                            <div className={cn('toptenmusic-list-addlist' , 'toptenmusic-list-button')} 
+                                            onClick={(e)=>{this.addMusicPlayer(index)}}>
+                                                <i className={cn('fas fa-plus')}></i>
+                                            </div>
                                         </div>
                                     </div>
                                 )
@@ -53,9 +69,13 @@ class TopTenMusic extends Component {
 
 export default connect(
     (state) => ({
-        top10 : state.top100.items.slice(0 , 10)
+        top10 : state.top100.items.slice(0,10),
+        isAuthenticated : state.auth.isAuthenticated,
+        userId : state.auth.userId,
     }),
     (dispatch) => ({
-        top100Actions : bindActionCreators(Top100Actions , dispatch)
+        top100Actions : bindActionCreators(Top100Actions , dispatch),
+        myMusicActions : bindActionCreators(MyMusicActions , dispatch),
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch)
     })
 )(TopTenMusic)

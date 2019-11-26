@@ -36,7 +36,7 @@ const initialState = {
     userId : '',
     userName : '',
     isAuthenticated : false,
-    monitor : false,
+    monitor : true,
 }
 
 export const authReducer = handleActions({

@@ -11,7 +11,7 @@ const cn = classNames.bind(styles)
 
 const mmss = (value) => {
     const m = parseInt(value / 60)
-    const s = value % 60
+    const s = Math.round(value % 60)
 
     return `${m}:${s < 10 ? '0'+s : s}`
 }

@@ -39,7 +39,7 @@ const Category = new Schema({
 
 const Album = new Schema({
     name : { type : String, required : true },
-    albumImgUri : { type : String, default : `${process.env.ALBUM_IMG_URI}/noimage.jpg` }
+    albumImgUri : { type : String, default : `${process.env.ALBUM_IMG_URI}/noimage.png` }
 })
 
 const Music = new Schema({

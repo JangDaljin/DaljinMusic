@@ -26,13 +26,16 @@ class MyMusicViewBody extends Component {
     }
 
     componentDidUpdate(prevProps , prevState) {
+        console.log('didupdate')
         if(prevProps.authMonitor && !this.props.authMonitor) {
             this.initState()
         }
     }
 
-    componentDidMount(prevProps , prevState) {
-        this.initState()
+    componentDidMount () {
+        if(!this.props.authMonitor) {
+            this.initState()
+        }
     }
 
     initState = () => {

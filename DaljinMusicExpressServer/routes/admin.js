@@ -92,10 +92,17 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                 albumId = albums[i]._id
             }
             else if(albums[i].name !== '') {
-                const albumModel = new AlbumModel({
-                    'name' : albums[i].name,
-                    'albumImgUri' : albumImgUri,
-                })
+                let albumModel = null
+                if(albumImgUri == '')
+                    albumModel = new AlbumModel({
+                        'name' : albums[i].name,
+                    })
+                else
+                    albumModel = new AlbumModel({
+                        'name' : albums[i].name,
+                        'albumImgUri' : albumImgUri,
+                    })
+                
                 const albumDoc = await albumModel.save()
                 albumId = albumDoc._id
             }
