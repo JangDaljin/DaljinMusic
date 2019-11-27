@@ -1,14 +1,15 @@
-import * as serviceWorker from './serviceWorker';
+
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
 
 import React from 'react'
 import ReactDom from 'react-dom'
 import { createStore , applyMiddleware } from 'redux'
 import createSagaMiddleWare from 'redux-saga'
 import { Provider } from 'react-redux'
-
 import { rootReducer , rootSaga } from './ReduxModules/root'
 import Router from './router'
-
+import * as serviceWorker from './serviceWorker';
 
 const sagaMiddleWare = createSagaMiddleWare()
 

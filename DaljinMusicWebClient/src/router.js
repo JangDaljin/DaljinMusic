@@ -15,6 +15,7 @@ import SignUpView from './Components/SignUpView/signUpView'
 import TestView from './Components/TestView/test'
 import AdminView from './Components/AdminView/adminView'
 import MusicPlayer from './Components/MusicPlayer/musicPlayer'
+import Modal from './Components/Modal/modal'
 class Router extends Component {
 
     render () {
@@ -33,6 +34,7 @@ class Router extends Component {
                     <Route component={ErrorView} />
                 </Switch>
                 <MusicPlayer />
+                <Modal />
             </BrowserRouter>
         )
     }
