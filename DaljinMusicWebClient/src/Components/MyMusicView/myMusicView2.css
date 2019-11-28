@@ -1,0 +1,92 @@
+.mymusicview-left {
+    position: fixed !important;
+    left: 0%;
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    width: 300px;
+    background-color: #EEE;
+}
+
+.mymusicview-list-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-family: 'jua';
+    font-size: 1.5rem;
+    height: 80px;
+    border-bottom:3px solid #303030;
+    background-color: #505050;
+}
+
+.mymusicview-list-buttons > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.4rem;
+    border: 3px solid #CCC;
+    width: 36px;
+    height: 36px;
+    color: #CCC;
+    text-align: center;
+    cursor: pointer;
+}
+
+.mymusicview-list-buttons > div:hover {
+    border-color: #0AC;
+    color: #0AC;
+    background-color: #303030;
+}
+
+.mymusicview-listname {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'jua';
+    font-size: 1.2rem;
+    background-color: #EEE;
+    height: 50px;
+    border: 3px solid #303030;
+    cursor: pointer;
+    margin-top: -3px;
+}
+
+.mymusicview-listname:hover {
+    background-color: #CCC;
+    border : 3px solid #069;
+    color: #069;
+    z-index: 1;
+}
+
+
+.mymusicview-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 600px);
+    margin-left: 300px;
+}
+
+
+.mymusicview-right {
+    position: fixed;
+    right: 0%;
+    vertical-align: top;
+    display: inline-flex;
+    flex-direction: column;
+    width: 300px;
+    border-top: 3px solid black;
+}
+
+.mymusicview-right > .right-buttons {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    border: 3px solid black;
+    border-top-width: 0px;
+    padding : 10px;
+    font-family: 'jua';
+    color: #303030;
+    cursor: pointer;
+}

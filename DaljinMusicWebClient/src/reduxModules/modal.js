@@ -13,7 +13,7 @@ export const MODAL_SET_CONTENTS = 'modal/SET_CONTENTS'
 export const modalSetContents = createAction(MODAL_SET_CONTENTS)
 
 const modalInitialState = {
-    show : true,
+    show : false,
     showTitleBar : true,
     showButtons : true,
 

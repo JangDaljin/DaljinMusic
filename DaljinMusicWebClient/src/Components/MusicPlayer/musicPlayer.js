@@ -67,7 +67,7 @@ class MusicPlayer extends Component {
 
             <div className={cn('musicplayer' , { 'musicplayer-down' : !this.state.isShow } , {'musicplayer-up' : this.state.isShow})}>
                 <div className='controller'>
-                    <div className='left'>
+                    <div className={cn('left')}>
                             <div className='img-wrap'>
                                 <div className='img' style={{backgroundImage:`url('${this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'albumImgUri'])}')`}}>
 

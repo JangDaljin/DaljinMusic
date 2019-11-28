@@ -14,20 +14,23 @@ class Modal extends Component {
         return (
             <div className={cn('modal-background' , {'modal-open' : this.props.show} , {'modal-close' : !this.props.show})}>
                 <div className={cn('modal')}>
-                    <div className={cn('top')}>
-                        top
-                        {this.props.title}
-                    </div>
+                    {this.props.showTitleBar &&
+                        <div className={cn('top')}>
+                            {this.props.title}
+                        </div>
+                    }
+
 
                     <div className={cn('center')} onClick={(e) => { this.props.ModalActions.modalClose()}}>
-                        center
                         {this.props.center}
                     </div>
 
-                    <div className={cn('bottom')}>
-                        bottom
-                        {this.props.bottom}
-                    </div>
+                    {this.props.showButtons&&
+                        <div className={cn('bottom')}>
+                            {this.props.bottom}
+                        </div>
+                    }
+
                 </div>
             </div>
         )
