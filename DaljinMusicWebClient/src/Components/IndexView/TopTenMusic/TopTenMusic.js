@@ -37,7 +37,7 @@ class TopTenMusic extends Component {
                                 (value , index) => (
                                     <div className={cn('toptenmusic-list-item')} key={index}>
                                         <div className={cn('toptenmusic-list-rank' , `rank${value.get('rank')}`)}>
-                                            <p>{(index > 2)? `#${index+1}` : <i className="fas fa-medal"></i> }</p>
+                                            <p>{(index > 2)? `${index+1}` : <i className="fas fa-medal"></i> }</p>
                                         </div>
                                         <div className={cn('toptenmusic-list-song')}>
                                             <p>{value.get('song')}</p>

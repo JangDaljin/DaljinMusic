@@ -49,9 +49,8 @@ class Top100ViewBody extends Component {
 
     render () {
         return (
-            <React.Fragment>
             <div className={cn('top100')}>
-                <div className={cn('top100-left')}>
+                <React.Fragment>
                     {
                         this.props.items.map((value , index) => (
                             <div key={index} className={cn('top100-list-item')}>
@@ -110,15 +109,10 @@ class Top100ViewBody extends Component {
                         ))
                         
                     }
-                </div>
+                </React.Fragment>
 
 
             </div>
-            {this.state.showModal &&
-                <Modal selectedMusicId={this.state.selectedMusicId} close={() => { this.setState({ showModal : false }) } }/>
-            }
-            
-            </React.Fragment>
         )
     }
 }

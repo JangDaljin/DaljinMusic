@@ -6,6 +6,7 @@
 
 
 .header-root {
+    flex-basis: 1 1 80px;
     display: flex;
     justify-content: center;
     background-color: #303030;

@@ -11,6 +11,8 @@ import { rootReducer , rootSaga } from './ReduxModules/root'
 import Router from './router'
 import * as serviceWorker from './serviceWorker';
 
+import './index.css'
+
 const sagaMiddleWare = createSagaMiddleWare()
 
 const store = createStore(rootReducer , applyMiddleware(sagaMiddleWare))

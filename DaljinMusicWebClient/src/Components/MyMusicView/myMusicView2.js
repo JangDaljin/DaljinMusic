@@ -124,7 +124,6 @@ export default connect(
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,
         authMonitor : state.auth.monitor,
-        clientHeight : state.window.width,
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicAction , dispatch)

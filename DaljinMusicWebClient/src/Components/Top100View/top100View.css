@@ -1,30 +1,13 @@
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
 .top100 {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50% , 0%);
+    flex: 9 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
 }
 
-.top100 > div {
-    display: inline-block;
-    vertical-align: top;
-}
-
-.top100-left {
-    padding: 10px;
-}
-.top100-list {
-    text-align: center;
-}
 
 .top100-list-item { 
-    position: relative;
-    width: 706px;
     border: 2px solid #CCC;
     margin-bottom: 1px;
 }

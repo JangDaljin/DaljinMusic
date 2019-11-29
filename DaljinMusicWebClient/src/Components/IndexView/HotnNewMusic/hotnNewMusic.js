@@ -35,20 +35,17 @@ class HotnNewMusic extends Component {
                     </div>
 
                     <div className={cn('hotnnewmusic-right')}>
-                        <div className={cn('hotnnewmusic-list')}>
+
                             {
                                 this.props.items.map(
                                     (value , index) => (
                                         <div className={cn('hotnnewmusic-list-item' , { 'hot' : !value.isNew } , { 'new' : value.isNew })} key={index} onMouseOver={() => { this.setState({curAlbumImgUri : value.albumImgUri}) }}>
-                                            <div className={cn('hotnnewmusic-list-item-info')}>
-                                                <div className={cn('hotnnewmusic-list-item-singer')}><p>{value.singer}</p></div>
-                                                <div className={cn('hotnnewmusic-list-item-song')}><p>{value.song}</p></div>
-                                            </div>
+                                            <div className={cn('hotnnewmusic-list-item-singer')}>{value.singer}</div>
+                                            <div className={cn('hotnnewmusic-list-item-song')}>{value.song}</div>
                                         </div> 
                                     )
                                 )
                             }
-                        </div>
                     </div>
                 </div>
             </div>

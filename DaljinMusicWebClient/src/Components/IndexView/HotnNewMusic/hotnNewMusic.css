@@ -1,14 +1,6 @@
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
 .hotnnewmusic {
-    width: 100%;
-    display: inline-block;
-
-
+    display: flex;
+    flex-direction: column;
 }
 
 .hotnnewmusic-title {
@@ -26,14 +18,13 @@
 }
 
 .hotnnewmusic-content {
-    width: 100%;
+    display: flex;
     border: 2px solid #BBB;
 }
 
 .hotnnewmusic-left {
-    width: 240px;
-    display: inline-block;
-    vertical-align: top;
+    flex: 1 0 auto;
+    display: flex;
     position: relative;
 }
 
@@ -57,33 +48,24 @@
 
 
 .hotnnewmusic-right {
-    width: calc(100% - 240px);
-    display: inline-block;
-    vertical-align: top;
-    padding: 0px;
-    height: 240px;
-}
-
-.hotnnewmusic-list {
-    width: 100%;
-    margin: 0px;
-    box-sizing: border-box;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .hotnnewmusic-list-item {
-    height: 80px;
-    width: 100%;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding-left: 10px;
     position: relative;
     border-left: 2px solid #BBB;
-    position: relative;
 }
 
 .hotnnewmusic-list-item:hover {
     background-color: #EEE;
 }
-
-
 
 .hotnnewmusic-list-item::after {
     content: '';
@@ -96,14 +78,6 @@
 
 .hotnnewmusic-list-item:last-child::after {
     border: 1px solid transparent;
-}
-
-
-
-.hotnnewmusic-list-item-info {
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
 }
 
 .hot {
