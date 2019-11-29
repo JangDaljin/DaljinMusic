@@ -20,6 +20,7 @@ class MyMusicView2 extends Component {
         if(!this.props.authMonitor) {
             this.initState()
         }
+
     }
 
     initState = () => {
@@ -33,24 +34,38 @@ class MyMusicView2 extends Component {
 
     render() {
         return (
-            <React.Fragment>
+            <div className={cn('mymusicview')}>
             <div className={cn('mymusicview-left')}>
                 <div className={cn('mymusicview-list-buttons')}>
                     <div><i className="fas fa-plus"></i></div>
-                    <div><i className="fas fa-minus"></i></div>
+                    <div><i className="fas fa-pencil-alt"></i></div>
                     <div><i className="fas fa-cog"></i></div>
                 </div>
 
                 {
                     this.props.myMusicLists.map(
                         (value , index) => (
-                            <div className={cn('mymusicview-listname')} key={index}>
-                                {value.get('listName')}
+                            <div className={cn('mymusicview-listname')} key={index} onClick={(e) => { this.props.MyMusicActions.selectList({selectedListIndex : index}) }}>
+                                <div className={cn('listname-left')}>
+                                    {value.get('listName')}
+                                </div>
+                                <div className={cn('listname-right')}>
+                                    {this.props.myMusicLists.getIn([index , 'checked'])?
+                                        <i className="far fa-check-circle" onClick={(e) => { this.props.MyMusicActions.checkList(index) }}></i>
+                                        :
+                                        <i className="far fa-circle" onClick={(e) => { this.props.MyMusicActions.checkList(index) }}></i>
+                                    }
+                                </div>
                             </div>
                         )
                     )
                 }
+
+                <div className={cn('left-navi')}>
+                    <i className='fas fa-angle-right fa-2x'></i>
+                </div>
             </div>
+
             <div className={cn('mymusicview-right')}>
                 <div className={cn('right-buttons')}>
                     <p><i className={cn('fas fa-play')}></i>&nbsp;재생</p>
@@ -68,30 +83,34 @@ class MyMusicView2 extends Component {
                     <p><i className={cn('fas fa-cloud-download-alt')}></i>&nbsp;다운로드</p>
                 </div>
             </div>
-            <div className={cn('mymusicview-center')}>
-                {this.props.currentSelectedListIndex < this.props.myMusicLists.size && this.props.currentSelectedListIndex > -1 ?
-                    <React.Fragment>
-                    <div className={cn('selected-musiclist-name')}><p><i className="fas fa-stream"></i> { this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'listName']) } </p></div>
-                    {
-                    this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).map(
-                        (value , index) => (
-                            <div key={index}>
-                                {value.get('song')}
-                            </div>
-                        )
-                    )
-                    }
-                    </React.Fragment>
-                    :
-                    <div className={cn('mymusic-musiclist-no-item')}>
-                    <p><i className="fas fa-exclamation-circle fa-2x"></i></p>
-                    <p> 자료가 존재하지 않습니다.</p>
-                    </div>
-                }
-            </div>
-
             
-            </React.Fragment>
+            <div className={cn('mymusicview-center')} ref={ref => this.center = ref}>
+                <div className={cn('mymusicview-center-contents-wrap')}>
+                    {this.props.currentSelectedListIndex < this.props.myMusicLists.size && this.props.currentSelectedListIndex > -1 ?
+                        <React.Fragment>
+                        <div className={cn('selected-musiclist-name')}><p><i className="fas fa-stream"></i> { this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'listName']) } </p></div>
+                        <div className={cn('selected-musiclist')}>
+                        {
+                            this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).map(
+                                (value , index) => (
+                                    <div key={index}>
+                                        {value.get('song')}
+                                    </div>
+                                )
+                            )
+                        }
+                        </div>
+                        </React.Fragment>
+                        :
+                        <div className={cn('musiclist-no-item')}>
+                        <p><i className="fas fa-exclamation-circle fa-2x"></i></p>
+                        <p> 자료가 존재하지 않습니다.</p>
+                        </div>
+                    }
+                </div>
+               
+            </div>
+           </div>
         )
     }
 
@@ -105,6 +124,7 @@ export default connect(
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,
         authMonitor : state.auth.monitor,
+        clientHeight : state.window.width,
     }),
     (dispatch) => ({
         MyMusicActions : bindActionCreators(myMusicAction , dispatch)

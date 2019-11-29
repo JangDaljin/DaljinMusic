@@ -14,6 +14,9 @@ export const abortGetMyMusicLists = createAction(ABORT_GET_MYMUSICLISTS)
 export const SELECT_LIST = 'mymusic/SELECTLIST'
 export const selectList = createAction(SELECT_LIST)
 
+export const CHECK_LIST = 'mymusic/CHECK_LIST'
+export const checkList = createAction(CHECK_LIST)
+
 export const CHECK_LIST_ITEM = 'mymusic/CHECK_LIST_ITEM'
 export const checkListItem = createAction(CHECK_LIST_ITEM)
 
@@ -94,7 +97,7 @@ export const myMusicReducer = handleActions({
         const { myMusicLists} = action.payload
         myMusicLists.map(
             value => { 
-                value.selected = false;
+                value.checked = false;
                 value.list.map(
                     _value => {
                     _value.checked = false;
@@ -115,6 +118,14 @@ export const myMusicReducer = handleActions({
         newState.myMusicLists = newState.myMusicLists.map((value) => value.set('selected' , false)).setIn([selectedListIndex , 'selected'] , true)
         return newState
     },
+
+    [CHECK_LIST] : (state , action) => {
+        const newState = { ...state }
+        const index = action.payload
+        newState.myMusicLists = newState.myMusicLists.updateIn([index , 'checked'], (value => !value) )
+        return newState
+    },
+
     [CHECK_LIST_ITEM] : (state , action) => {
         const newState = { ...state }
         const index = action.payload

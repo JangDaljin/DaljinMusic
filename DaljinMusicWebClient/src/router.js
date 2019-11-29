@@ -17,7 +17,25 @@ import TestView from './Components/TestView/test'
 import AdminView from './Components/AdminView/adminView'
 import MusicPlayer from './Components/MusicPlayer/musicPlayer'
 import Modal from './Components/Modal/modal'
+
+import * as WindowActions from './ReduxModules/window'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 class Router extends Component {
+
+    windowResize = () => {
+        this.props.windowActions.windowResize({width : window.innerWidth , height : window.innerHeight})
+    }
+
+    componentDidMount () {
+        this.windowResize()
+        window.addEventListener('resize' , this.windowResize)
+    }
+
+    componentWillUnmount () {
+        window.removeEventListener('resize' , this.windowResize)
+    }
+
 
     render () {
         return (
@@ -41,4 +59,11 @@ class Router extends Component {
     }
 }
 
-export default Router
+export default connect(
+    (state) => ({
+
+    }),
+    (dispatch) => ({
+        windowActions : bindActionCreators(WindowActions , dispatch)
+    })
+)(Router)

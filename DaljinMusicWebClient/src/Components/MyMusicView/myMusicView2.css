@@ -1,11 +1,26 @@
+.mymusicview {
+    height: 100%;    
+    border: 1px solid red;
+}
+
 .mymusicview-left {
-    position: fixed !important;
     left: 0%;
-    position: relative;
+    position: absolute;
     display: inline-flex;
     flex-direction: column;
     width: 300px;
     background-color: #EEE;
+}
+
+.left-navi {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: -20px;
+    width: 20px;
+    height: 20px;
+    top: 50%;
 }
 
 .mymusicview-list-buttons {
@@ -59,23 +74,58 @@
     z-index: 1;
 }
 
+.mymusicview-listname > .listname-left {
+    flex : 9 0 auto;
+    text-align: center;
+}
 
-.mymusicview-center {
+.mymusicview-listname > .listname-right {
+    flex: 1 0 auto;
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(100% - 600px);
-    margin-left: 300px;
+}
+
+.mymusicview-center {
+    display: flex;
+    padding: 0px 300px;
+}
+
+.mymusicview-center-contents-wrap {
+    flex: 1 0 auto;
+    padding: 10px;
+    height: 100%;
+}
+
+.selected-musiclist-name {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    font-size: 2rem;
+    font-family: 'jua';
+}
+
+.musiclist-no-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'jua';
+    border: 4px dashed #303030;
+    background-color: #EEE;
+    font-size: 1.7rem;
+    border-radius: 1rem;
+    height: 500px;
 }
 
 
 .mymusicview-right {
-    position: fixed;
     right: 0%;
-    vertical-align: top;
+    position: absolute;
     display: inline-flex;
     flex-direction: column;
-    width: 300px;
+    width: 200px;
     border-top: 3px solid black;
 }
 
@@ -89,4 +139,9 @@
     font-family: 'jua';
     color: #303030;
     cursor: pointer;
+}
+
+.mymusicview-right > .right-buttons:hover {
+    background-color: #EEE;
+    color: #069;
 }
