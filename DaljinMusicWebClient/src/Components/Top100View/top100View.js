@@ -50,7 +50,10 @@ class Top100ViewBody extends Component {
     render () {
         return (
             <div className={cn('top100')}>
-                <React.Fragment>
+                <div className={cn('top100-padding')}>
+
+                </div>
+                <div className={cn('top100-list')}>
                     {
                         this.props.items.map((value , index) => (
                             <div key={index} className={cn('top100-list-item')}>
@@ -109,8 +112,10 @@ class Top100ViewBody extends Component {
                         ))
                         
                     }
-                </React.Fragment>
+                </div>
+                <div className={cn('top100-padding')}>
 
+                </div>
 
             </div>
         )

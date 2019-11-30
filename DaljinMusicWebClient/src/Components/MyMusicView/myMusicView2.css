@@ -1,25 +1,14 @@
 .mymusicview {
     flex : 9 0 auto;
+    display: flex;
 }
 
 .mymusicview-left {
-    left: 0%;
-    position: absolute;
-    display: inline-flex;
-    flex-direction: column;
-    width: 300px;
-    background-color: #EEE;
-}
-
-.left-navi {
+    flex: 1 0 100px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: -20px;
-    width: 20px;
-    height: 20px;
-    top: 50%;
+    flex-direction: column;
+    background-color: #EEE;
+    border-right: 4px solid #CCC;
 }
 
 .mymusicview-list-buttons {
@@ -87,8 +76,8 @@
 }
 
 .mymusicview-center {
+    flex: 4 0 auto;
     display: flex;
-    padding: 0px 300px;
 }
 
 .mymusicview-center-contents-wrap {
@@ -120,11 +109,10 @@
 
 
 .mymusicview-right {
-    right: 0%;
-    position: absolute;
+    flex: 1 0 100px;
+    
     display: inline-flex;
     flex-direction: column;
-    width: 200px;
     border-top: 3px solid black;
 }
 
