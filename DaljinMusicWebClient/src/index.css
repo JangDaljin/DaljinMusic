@@ -17,3 +17,20 @@ body {
     flex-direction: column;
     height: 100%;
 }
+
+:root {
+    --headerheight : 0px
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    border: 2px solid #CCC;
+    background-color: #EEE;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10rem;
+    background-color: #888;
+}

@@ -1,17 +1,10 @@
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
-
 .header-root {
-    flex-basis: 1 1 80px;
+    flex: 0 0 80px;
+    position: relative;
     display: flex;
     justify-content: center;
     background-color: #303030;
     text-align: center;
-    position: relative;
     flex-wrap: wrap;
 }
 

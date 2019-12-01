@@ -2,17 +2,36 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
+import { List  , fromJS } from 'immutable'
 import * as myMusicAction from '../../ReduxModules/myMusic'
-
 import classNames from 'classnames/bind'
 import style from './myMusicView2.css'
 const cn = classNames.bind(style)
 
 class MyMusicView2 extends Component {
 
+    constructor(props) {
+        super(props)
+    }
+
+    state = {
+        currentSelectedListIndex :-1 ,
+        checkedLists : []
+    }
+
+
     componentDidUpdate(prevProps , prevState) {
         if(prevProps.authMonitor && !this.props.authMonitor) {
             this.initState()
+        }
+
+        if(prevProps.myMusicLists !== this.props.myMusicLists ) {
+            let list = List()
+
+            for(let i = 0 ; i < this.props.myMusicLists.size; i++) {
+                list = list.push(fromJS(Array(this.props.myMusicLists.getIn([i , 'list']).size).fill(false)))
+            }
+            this.setState({ checkedLists : list })
         }
     }
 
@@ -32,6 +51,14 @@ class MyMusicView2 extends Component {
         }
     }
 
+    selectList = (index) => {
+        this.setState({ currentSelectedListIndex : index})
+    }
+
+    checkListItem = (index) => {
+        this.setState({ checkedLists : this.state.checkedLists.updateIn([this.state.currentSelectedListIndex , index] , value => !value )})
+    }
+
     render() {
         return (
             <div className={cn('mymusicview')}>
@@ -45,15 +72,15 @@ class MyMusicView2 extends Component {
                         {
                             this.props.myMusicLists.map(
                                 (value , index) => (
-                                    <div className={cn('mymusicview-listname')} key={index} onClick={(e) => { this.props.MyMusicActions.selectList({selectedListIndex : index}) }}>
+                                    <div className={cn('mymusicview-listname' , { 'selected-list' : this.state.currentSelectedListIndex === index})} key={index} onClick={(e) => { this.selectList(index) }}>
                                         <div className={cn('listname-left')}>
-                                            {value.get('listName')}
+                                            {`${value.get('listName')}(${value.get('list').size})`}
                                         </div>
                                         <div className={cn('listname-right')}>
                                             {this.props.myMusicLists.getIn([index , 'checked'])?
-                                                <i className="far fa-check-circle" onClick={(e) => { this.props.MyMusicActions.checkList(index) }}></i>
+                                                <i className="far fa-check-circle" onClick={(e) => { e.stopPropagation(); this.props.MyMusicActions.checkList(index) }}></i>
                                                 :
-                                                <i className="far fa-circle" onClick={(e) => { this.props.MyMusicActions.checkList(index) }}></i>
+                                                <i className="far fa-circle" onClick={(e) => { e.stopPropagation(); this.props.MyMusicActions.checkList(index) }}></i>
                                             }
                                         </div>
                                     </div>
@@ -66,22 +93,35 @@ class MyMusicView2 extends Component {
                 
                 <div className={cn('mymusicview-center')} ref={ref => this.center = ref}>
                     <div className={cn('mymusicview-center-contents-wrap')}>
-                        {this.props.currentSelectedListIndex < this.props.myMusicLists.size && this.props.currentSelectedListIndex > -1 ?
+                        {this.state.currentSelectedListIndex === -1 ? <div></div> :
+                        this.props.myMusicLists.getIn([this.state.currentSelectedListIndex , 'list']).size > 0?
                             <React.Fragment>
-                            <div className={cn('selected-musiclist-name')}><p><i className="fas fa-stream"></i> { this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'listName']) } </p></div>
                             <div className={cn('selected-musiclist')}>
                             {
-                                this.props.myMusicLists.getIn([this.props.currentSelectedListIndex , 'list']).map(
+                                this.props.myMusicLists.getIn([this.state.currentSelectedListIndex , 'list']).map(
                                     (value , index) => (
-                                        <div key={index} className={cn('selected-musiclist-info')}>
-                                            <div className={cn('selected-musiclist-info-song')}>
-                                                {value.get('song')}
+
+                                        <div key={index} className={cn('selected-musiclist-item' , 
+                                        { 'check-item' : this.state.checkedLists.getIn([this.state.currentSelectedListIndex , index]) },
+                                        { 'uncheck-item' : !this.state.checkedLists.getIn([this.state.currentSelectedListIndex , index]) }
+                                        )} 
+                                        onClick={(e) => { this.checkListItem(index) }}>
+
+                                            <div className={cn('selected-musiclist-img-wrap')}>
+                                                <div className={cn('selected-musiclist-img')} style={{backgroundImage : `url('${value.getIn(['album' , 'albumImgUri'])}')`}}>
+
+                                                </div>
                                             </div>
-                                            <div className={cn('selected-musiclist-info-singer')}>
-                                                {value.getIn(['singer' , 'name'])}
-                                            </div>
-                                            <div className={cn('selected-musiclist-info-album')}>
-                                                {value.getIn(['album' , 'name'])}
+                                            <div className={cn('selected-musiclist-info')}>
+                                                <div className={cn('selected-musiclist-info-song')}>
+                                                    {value.get('song')}
+                                                </div>
+                                                <div className={cn('selected-musiclist-info-singer')}>
+                                                    {value.getIn(['singer' , 'name'])}
+                                                </div>
+                                                <div className={cn('selected-musiclist-info-album')}>
+                                                    {value.getIn(['album' , 'name'])}
+                                                </div>
                                             </div>
                                         </div>
                                     )
@@ -126,7 +166,6 @@ class MyMusicView2 extends Component {
 export default connect(
     (state) => ({
         myMusicLists : state.myMusic.myMusicLists,
-        currentSelectedListIndex : state.myMusic.currentSelectedListIndex,
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,
         authMonitor : state.auth.monitor,

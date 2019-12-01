@@ -11,15 +11,6 @@ export const acceptGetMyMusicLists = createAction(ACCEPT_GET_MYMUSICLISTS)
 export const ABORT_GET_MYMUSICLISTS = 'mymusic/ABORTGETMYMUSICLISTS'
 export const abortGetMyMusicLists = createAction(ABORT_GET_MYMUSICLISTS)
 
-export const SELECT_LIST = 'mymusic/SELECTLIST'
-export const selectList = createAction(SELECT_LIST)
-
-export const CHECK_LIST = 'mymusic/CHECK_LIST'
-export const checkList = createAction(CHECK_LIST)
-
-export const CHECK_LIST_ITEM = 'mymusic/CHECK_LIST_ITEM'
-export const checkListItem = createAction(CHECK_LIST_ITEM)
-
 export const MODAL_FETCH_UPLOAD_FILE = 'mymusic/MODALFETCHUPLOADFILE'
 export const modalFetchUploadFile = createAction(MODAL_FETCH_UPLOAD_FILE)
 
@@ -66,8 +57,6 @@ export const ABORT_REMOVE_MUSIC_IN_LIST = 'mymusic/ABORTREMOVEMUSICINLIST'
 export const abortRemoveMusicInList = createAction(ABORT_REMOVE_MUSIC_IN_LIST)
 
 const myMusicInitialState = {
-    
-    currentSelectedListIndex : -1,  
 
     myMusicLists : List([]),
     /* 
@@ -83,7 +72,6 @@ const myMusicInitialState = {
                 song : '',
                 singer : '',
                 time : '',
-                checked : '' // 클라이언트 전용
             }
         ]
     }
@@ -97,10 +85,8 @@ export const myMusicReducer = handleActions({
         const { myMusicLists} = action.payload
         myMusicLists.map(
             value => { 
-                value.checked = false;
                 value.list.map(
                     _value => {
-                    _value.checked = false;
                     return _value;
                 });
                 return value})
@@ -111,27 +97,7 @@ export const myMusicReducer = handleActions({
         const newState = { ...myMusicInitialState } 
         return newState
     },
-    [SELECT_LIST] : (state , action) => {
-        const newState = { ...state }
-        const { selectedListIndex } = action.payload
-        newState.currentSelectedListIndex = selectedListIndex
-        newState.myMusicLists = newState.myMusicLists.map((value) => value.set('selected' , false)).setIn([selectedListIndex , 'selected'] , true)
-        return newState
-    },
 
-    [CHECK_LIST] : (state , action) => {
-        const newState = { ...state }
-        const index = action.payload
-        newState.myMusicLists = newState.myMusicLists.updateIn([index , 'checked'], (value => !value) )
-        return newState
-    },
-
-    [CHECK_LIST_ITEM] : (state , action) => {
-        const newState = { ...state }
-        const index = action.payload
-        newState.myMusicLists = newState.myMusicLists.updateIn([newState.currentSelectedListIndex , 'list' , index , 'checked'] , value => !value)
-        return newState
-    },
     [MODAL_ACCEPT_UPLOAD_FILE] : (state , action) => {
         const newState = { ...state }
         console.log("ACCEPT UPLOAD")

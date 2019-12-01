@@ -15,10 +15,22 @@ const cn = classNames.bind(styles)
 
 class Header extends Component {
 
+    headerResize = () => {
+        document.documentElement.style.setProperty('--headerheight' , `${this.headerRoot.clientHeight}px`)
+    }
+
+    componentDidMount() {
+        this.headerResize()
+        window.addEventListener('resize', this.headerResize)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize' , this.headerResize)
+    }
 
     render () {
         return (
-            <div className={cn('header-root')}>
+            <div className={cn('header-root')} ref={ref => this.headerRoot = ref}>
                 <Logo />
                 
                 <Navigator />
