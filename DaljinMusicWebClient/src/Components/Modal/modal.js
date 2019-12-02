@@ -16,18 +16,25 @@ class Modal extends Component {
                 <div className={cn('modal')}>
                     {this.props.showTitleBar &&
                         <div className={cn('top')}>
-                            {this.props.title}
+                            <div className={cn('title')}>
+                                {this.props.contents.get('title')}
+                            </div>
+                            <div className={cn('top-button')}>
+                                <div className={cn('close-button')} onClick={(e) => { this.props.ModalActions.modalClose()}}>
+                                    X
+                                </div>
+                            </div>
                         </div>
                     }
 
 
-                    <div className={cn('center')} onClick={(e) => { this.props.ModalActions.modalClose()}}>
-                        {this.props.center}
+                    <div className={cn('center')}>
+                        {this.props.contents.get('body').toJS()}
                     </div>
 
                     {this.props.showButtons&&
                         <div className={cn('bottom')}>
-                            {this.props.bottom}
+                            {this.props.contents.get('buttons').toJS()}
                         </div>
                     }
 
@@ -43,7 +50,7 @@ export default connect(
         show : state.modal.show,
         showTitleBar : state.modal.showTitleBar,
         showButtons : state.modal.showButtons,
-        contents : state.modal.contents.toJS()
+        contents : state.modal.contents,
     }),
     (dispatch) => ({
         ModalActions : bindActionCreators(modalActions , dispatch)

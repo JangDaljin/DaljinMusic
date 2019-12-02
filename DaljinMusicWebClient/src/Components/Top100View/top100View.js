@@ -4,8 +4,7 @@ import { bindActionCreators } from 'redux'
 import * as top100Actions from '../../ReduxModules/top100'
 import * as myMusicActions from '../../ReduxModules/myMusic'
 import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
-import Modal from './Modal/modal'
-import { AuthConfirm } from '../common'
+import * as ModalActions from '../../ReduxModules/modal'
 import { withRouter } from 'react-router-dom'
 
 import classNames from 'classnames/bind'
@@ -15,10 +14,6 @@ const cn = classNames.bind(styles)
 class Top100ViewBody extends Component {
 
 
-    state = {
-        showModal : false,
-        selectedMusicId : '',
-    }
 
     handleScroll = () => {
         let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
@@ -30,6 +25,7 @@ class Top100ViewBody extends Component {
     }
 
     componentDidMount () {
+        this.props.MyMusicActions.fetchGetMyMusicLists({'userId' : this.props.userId})
         this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true})
         window.addEventListener('scroll' , this.handleScroll , true)
     }
@@ -46,6 +42,25 @@ class Top100ViewBody extends Component {
         this.addMusicPlayer(index)
         this.props.MusicPlayerActions.fetchPlayMusic({'_id' : this.props.items.getIn([index , '_id'])})
     }
+
+    onClickAddList = (index) => {
+        const title = '새 음악 추가'
+        const body = [] , buttons = []
+        for(let i = 0 ; i < this.props.myMusicLists.size ; i++) {
+            body.push(
+            <div key={body.length} onClick={(e) => { 
+                
+                this.props.ModalActions.modalClose()
+            }}>
+                    {this.props.myMusicLists.getIn([i , 'listName'])}
+            </div>)
+        }
+
+        this.props.ModalActions.modalSetContents({'title' : title, 'body' : body, 'buttons' : buttons})
+        this.props.ModalActions.modalOpen()
+    }
+
+
 
     render () {
         return (
@@ -95,16 +110,7 @@ class Top100ViewBody extends Component {
                                             }
                                         }><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
                                         <div className={cn('top100-list-item-list' , 'top100-list-button')} onClick={
-                                            (e) => {
-                                                if(this.props.isAuthenticated) {
-                                                    this.setState({ showModal : true , selectedMusicId : this.props.items.getIn([index , '_id'])})
-                                                }
-                                                else {
-                                                    if(AuthConfirm()) {
-                                                        this.props.history.push('/auth')
-                                                    }
-                                                }
-                                            }
+                                            (e) => { this.onClickAddList(index) }
                                         }><i className={cn('fas fa-list' , 'fa-2x')}></i></div>
                                 </div>
 
@@ -127,11 +133,12 @@ export default connect(
         userId : state.auth.userId,
         items : state.top100.items,
         isAuthenticated : state.auth.isAuthenticated,
+        myMusicLists : state.myMusic.myMusicLists
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),
         MyMusicActions : bindActionCreators(myMusicActions , dispatch),
-        MusicPlayerActions : bindActionCreators(musicPlayerActions , dispatch)
-
+        MusicPlayerActions : bindActionCreators(musicPlayerActions , dispatch),
+        ModalActions : bindActionCreators(ModalActions , dispatch),
     })
 )(withRouter(Top100ViewBody))

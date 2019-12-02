@@ -52,16 +52,20 @@ router.post('/makemusiclist' , doAsync(async(req , res , next) => {
 
     if(userId === req.session.userId) {
         try {
-            
-            const user = await UserModel.findOne({'userId' : userId })
+            const user = await UserModel.findOne({'userId' : userId }).populate({
+                path : 'myMusicLists.list',
+                populate : 'singer album'
+            })
             if(user !== null) {
                 user.myMusicLists.push({ 'listName' : listName , 'list' : []})
+                await user.save()
+                response.myMusicLists = user.myMusicLists
+                response.message = '생성 완료'
             }
-            await user.save()
-            response.myMusicLists = user.myMusicLists
-            response.message = '생성 완료'
         }
         catch (err) {
+            console.error(err)
+            console.log("생성 오류")
             response.message = '생성 오류'
         }
     }
@@ -84,7 +88,10 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
 
     if (userId === req.session.userId) {
         try {
-            const user = await UserModel.findOne({ 'userId' : userId})
+            const user = await UserModel.findOne({ 'userId' : userId}).populate({
+                path : 'myMusicLists.list',
+                populate : 'singer album'
+            })
             if(user !== null) {
                 const index = user.myMusicLists.findIndex((value) => ( value._id == listId ) )
                 user.myMusicLists.splice(index , 1)
@@ -105,9 +112,45 @@ router.post('/deletemusiclist' , doAsync(async(req , res , next) => {
     else {
         response.message = '검증 실패'
     }
+    res.json(response)
+}))
 
+router.post('/renamemusiclist' , doAsync( async ( req , res , next) => {
+    const { userId , listId , name } = req.body
 
-    console.log(response)
+    console.log(`userId : ${userId} , listId : ${listId} , name : ${name}`)
+    const response = {
+        message : '',
+        myMusicLists : []
+    }
+
+    if(userId == req.session.userId) {
+        try {
+            const user = await UserModel.findOne({ 'userId' : userId}).populate({
+                path : 'myMusicLists.list',
+                populate : 'singer album'
+            })
+            if(user !== null) {
+                const index = user.myMusicLists.findIndex(value => value._id == listId)
+                console.log(index)
+                user.myMusicLists[index].listName = name
+                await user.save()
+                response.message = "수정 성공"
+                response.myMusicLists = user.myMusicLists
+            }
+        }
+        catch(err) {
+            console.error(err)
+            console.log('수정에러')
+            response.message = '수정에러'
+        }
+    
+    }
+    else {
+        console.log('검증 에러')
+        response.message = '검증 에러'
+    }
+
     res.json(response)
 }))
 
@@ -115,14 +158,17 @@ router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
     
     const response = {
         message : '',
-        myMusicList : []
+        myMusicLists : []
     }
 
     const { userId , listId , musicId } = req.body;
 
     if(userId == req.session.userId) {
         try {
-            const user = await UserModel.findOne({'userId' : userId})
+            const user = await UserModel.findOne({'userId' : userId}).populate({
+                path : 'myMusicLists.list',
+                populate : 'singer album'
+            })
             const musicList = user.myMusicLists.find(obj => obj._id == listId)
             const list = musicList.list
             if(Array.isArray(musicId)) {
@@ -134,6 +180,10 @@ router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
                 list.push(musicId)
             }
             await user.save()
+            
+            response.myMusicLists = user.myMusicLists
+            console.log("음악 추가 성공")
+            response.message = "음악 추가 성공"
         }
         catch(err) {
             console.err(err)
@@ -151,24 +201,30 @@ router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
 
 router.post('/removemusicinlist' , doAsync(async (req , res , next) => {
     const response = {
-        message : ''
+        message : '',
+        myMusicLists : [],
     }
 
-    const { userId , listId , musicId } = req.body;
+    const { userId , listId , indexes } = req.body;
 
     if(userId == req.session.userId) {
         try {
-            const user = await UserModel.findOne({'userId' : userId})
-            const musicList = user.myMusicLists.find(obj => obj._id == listId)
-            const list = musicList.list
-            if(Array.isArray(musicId)) {
-                for(const _musicId of musicId) {
-                    list.splice(list.findIndex( obj => obj._id == _musicId))
-                }
+            const user = await UserModel.findOne({'userId' : userId}).populate({
+                path : 'myMusicLists.list',
+                populate : 'singer album'
+            })
+            const myMusicList = user.myMusicLists.find(obj => obj._id == listId).list
+
+            const sortedMusicIndexes = indexes.sort((a , b) => b - a)
+
+            for(const index of sortedMusicIndexes) {
+                myMusicList.splice(index , 1)
             }
-            else {
-                list.splice(list.findIndex( obj => obj._id == musicId))
-            }
+
+            await user.save()
+            response.myMusicLists = user.myMusicLists
+            response.message = '삭제 성공'
+            console.log('삭제 성공')
         }
         catch(err) {
             console.err(err);
@@ -216,12 +272,12 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
 
 
         if(userId == req.session.userId) {
-            console.log(foundMusics)
-                const user = await UserModel.findOne({'userId' : userId})
-                for(const foundMusic of foundMusics) {
-                    user.playList.push(foundMusic._id)
-                }
-                await user.save()
+            
+            const user = await UserModel.findOne({'userId' : userId})
+            for(const foundMusic of foundMusics) {
+                user.playList.push(foundMusic._id)
+            }
+            await user.save()
         }
         else {
             console.log('아이디 검증 실패')

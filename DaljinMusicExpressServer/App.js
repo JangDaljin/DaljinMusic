@@ -99,8 +99,6 @@ const directorySetting = async () => {
 
 http.createServer(app).listen(PORT , () => {
     directorySetting()
-
-    console.log(ALBUM_IMG_URI)
     console.log(`SERVER OPEN (PORT : ${PORT})`)
     MongoDB.connect();
 })

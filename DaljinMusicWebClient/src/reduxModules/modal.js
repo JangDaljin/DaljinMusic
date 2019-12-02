@@ -33,6 +33,7 @@ export const modalReducer = handleActions({
     [MODAL_CLOSE] : (state , action) => {
         const newState = { ...state }
         newState.show = false
+        newState.contents = newState.contents.set('title' , '').update('body' , (list) => list.clear()).update('buttons' , (list)=>list.clear())
         return newState
     },
     [MODAL_SET_CONTENTS] : (state , action) => {
