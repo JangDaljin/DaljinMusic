@@ -39,7 +39,18 @@ export const modalReducer = handleActions({
     [MODAL_SET_CONTENTS] : (state , action) => {
         const newState = { ...state }
         const { title , body , buttons } = action.payload
-        newState.contents = newState.contents.set('title' , title).update('body' , (list) => list.clear().concat(fromJS(body))).update('buttons' , (list)=>list.clear().concat(fromJS(buttons)))
+        if(typeof title !== 'undefined') {
+            newState.contents = newState.contents.set('title' , title)
+        }
+
+        if(typeof body !== 'undefined') {
+            newState.contents = newState.contents.update('body' , (list) => list.clear().concat(fromJS(body)))
+        }
+
+        if(typeof buttons !== 'undefined') {
+            newState.contents = newState.contents.update('buttons' , (list)=>list.clear().concat(fromJS(buttons)))
+        }
+
         return newState
     },
 } , modalInitialState)

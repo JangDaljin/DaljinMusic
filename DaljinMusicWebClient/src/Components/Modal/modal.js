@@ -1,7 +1,6 @@
 import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import * as modalActions from '../../ReduxModules/modal'
-import { Map , List } from 'immutable'
 import classNames from 'classnames/bind'
 import style from './modal.css'
 import { bindActionCreators } from 'redux'
@@ -10,34 +9,6 @@ const cn = classNames.bind(style)
 
 class Modal extends Component {
 
-    constructor(props) {
-        super(props);
-        
-    }
-
-    state = {
-        show : false,
-        showTitleBar : true,
-        showButtons : true,
-
-        contents : Map({
-            title : '',
-            body : List([]),
-            buttons : List([]),
-        })
-    }
-
-    open = () => {
-        this.setState({ show : true })
-    }
-    
-    close = () => {
-        this.setState({ show : false , contents = this.state.contents.set('title' , '').update('body' , (list) => list.clear()).update('buttons' , (list)=>list.clear()) })
-    }
-
-    setContent = (title , body , buttons) => {
-        thiis.setState({ contents : this.state.contents.set('title' , title).update('body' , (list) => list.clear().concat(fromJS(body))).update('buttons' , (list)=>list.clear().concat(fromJS(buttons)))}
-    }
 
     render () {
         return (

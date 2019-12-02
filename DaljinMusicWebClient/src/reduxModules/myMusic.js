@@ -1,7 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
-import { takeLatest } from 'redux-saga/effects'
+import { takeLatest , put } from 'redux-saga/effects'
 import { List , fromJS } from 'immutable'
-import { post } from './Request/request'
+import { post} from './Request/request'
 export const FETCH_GET_MYMUSICLISTS = 'mymusic/FETCTGETMUSICLISTS'
 export const fetchGetMyMusicLists = createAction(FETCH_GET_MYMUSICLISTS)
 
@@ -65,11 +65,16 @@ export const acceptRemoveMusicInList = createAction(ACCEPT_REMOVE_MUSIC_IN_LIST)
 export const ABORT_REMOVE_MUSIC_IN_LIST = 'mymusic/ABORTREMOVEMUSICINLIST'
 export const abortRemoveMusicInList = createAction(ABORT_REMOVE_MUSIC_IN_LIST)
 
+export const LOADING_START = 'mymusic/LOADING_START'
+export const loadingStart = createAction(LOADING_START)
 
+export const LOADING_END = 'mymusic/LOADING_END'
+export const loadingEnd = createAction(LOADING_END)
 
 const myMusicInitialState = {
 
     myMusicLists : List([]),
+    loading : false,
     /* 
     //리스트 구조
     {
@@ -178,12 +183,24 @@ export const myMusicReducer = handleActions({
         const newState = {...myMusicInitialState }
         window.alert('삭제에 실패하였습니다.')
         return newState
-    }
+    },
+    [LOADING_START] : (state , action) => {
+        const newState = { ...state }
+        newState.loading = true
+        return newState
+    },
+    [LOADING_END] : (state , action) => {
+        const newState = { ...state }
+        newState.loading = false
+        return newState
+    },
 } , myMusicInitialState)
 
 
 function* fetchGetMyMusicListsSaga(action) {
+    yield put({type : LOADING_START})
     yield post(`/mymusic/getmusiclists` , { 'Content-Type' : 'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSICLISTS , ABORT_GET_MYMUSICLISTS)
+    yield put({type : LOADING_END})
 }
 
 function* fetchUploadSaga (action) {

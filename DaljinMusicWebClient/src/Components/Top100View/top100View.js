@@ -6,12 +6,16 @@ import * as myMusicActions from '../../ReduxModules/myMusic'
 import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
 import * as ModalActions from '../../ReduxModules/modal'
 import { withRouter } from 'react-router-dom'
-
+import Loading from '../LoadingView/loading'
 import classNames from 'classnames/bind'
 import styles from './top100View.css'
 const cn = classNames.bind(styles)
 
 class Top100ViewBody extends Component {
+
+    state = {
+        selected : Array(100).fill(false)
+    }
 
     handleScroll = () => {
         let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
@@ -26,6 +30,22 @@ class Top100ViewBody extends Component {
         this.props.MyMusicActions.fetchGetMyMusicLists({'userId' : this.props.userId})
         this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true})
         window.addEventListener('scroll' , this.handleScroll , true)
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps.myMusicListsLoading && !this.props.myMusicListsLoading) {
+            const body = []
+            for(let i = 0 ; i < this.props.myMusicLists.size ; i++) {
+                body.push(
+                <div key={body.length} onClick={(e) => { 
+                    this.props.MyMusicActions.fetchAddMusicInList({'userId' : this.props.userId , 'listId' : this.props.myMusicLists.getIn([i , '_id']) , 'musicId' : ''})
+                    this.props.ModalActions.modalClose()
+                }}>
+                        {this.props.myMusicLists.getIn([i , 'listName'])}
+                </div>)
+            }
+            this.props.ModalActions.modalSetContents({'body' : body})
+        }
     }
 
     componentWillUnmount() {
@@ -43,19 +63,13 @@ class Top100ViewBody extends Component {
 
     onClickAddList = (index) => {
         const title = '새 음악 추가'
-        const body = [] , buttons = []
-        for(let i = 0 ; i < this.props.myMusicLists.size ; i++) {
-            body.push(
-            <div key={body.length} onClick={(e) => { 
-                
-                this.props.ModalActions.modalClose()
-            }}>
-                    {this.props.myMusicLists.getIn([i , 'listName'])}
-            </div>)
-        }
-
-        this.props.ModalActions.modalSetContents({'title' : title, 'body' : body, 'buttons' : buttons})
+        const body = []
+        
+        body.push(<Loading key={body.length} />)
+        this.props.ModalActions.modalSetContents({'title' : title, 'body' : body })
         this.props.ModalActions.modalOpen()
+
+        this.props.MyMusicActions.fetchGetMyMusicLists({userId : this.props.userId})
     }
 
 
@@ -131,7 +145,8 @@ export default connect(
         userId : state.auth.userId,
         items : state.top100.items,
         isAuthenticated : state.auth.isAuthenticated,
-        myMusicLists : state.myMusic.myMusicLists
+        myMusicLists : state.myMusic.myMusicLists,
+        myMusicListsLoading : state.myMusic.loading
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),
