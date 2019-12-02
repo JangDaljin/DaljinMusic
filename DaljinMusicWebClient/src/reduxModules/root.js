@@ -7,7 +7,6 @@ import { suggestMusicReducer as suggestMusic , suggestMusicSaga } from './sugges
 import { hnnMusicReducer as hnnMusic , hnnMusicSaga } from './hotnNewMusic'
 import { top100Reducer as top100 , top100Saga } from './top100'
 import { myMusicReducer as myMusic , myMusicSaga} from './myMusic'
-import { testReducer as test , testSaga } from './test'
 import { adminReducer as admin , adminSaga} from './admin'
 import { searchReducer as search , searchSaga } from './search'
 import { musicPlayerReducer as musicPlayer , musicPlayerSaga} from './musicPlayer'
@@ -21,7 +20,6 @@ export const rootReducer = combineReducers({
     hnnMusic,
     top100,
     myMusic,
-    test,
     admin,
     search,
     musicPlayer,
@@ -37,7 +35,6 @@ export function *rootSaga() {
     yield fork(hnnMusicSaga)
     yield fork(top100Saga)
     yield fork(myMusicSaga)
-    yield fork(testSaga)
     yield fork(adminSaga)
     yield fork(searchSaga)
     yield fork(musicPlayerSaga)

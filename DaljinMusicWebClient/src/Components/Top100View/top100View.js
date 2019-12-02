@@ -13,8 +13,6 @@ const cn = classNames.bind(styles)
 
 class Top100ViewBody extends Component {
 
-
-
     handleScroll = () => {
         let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
         let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);

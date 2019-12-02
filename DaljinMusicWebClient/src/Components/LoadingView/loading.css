@@ -1,0 +1,55 @@
+.ring-wrap {
+    width: 100%;
+    position: relative;
+}
+
+.ring-wrap::after {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.ring {
+    position: absolute;
+    top: 25%;
+    left : 25%;
+    bottom: 25%;
+    right: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1vmax solid #CCC;
+    border-radius: 50%;
+    font-family: 'jua';
+    font-size: 2.5vmax;
+    color: #FFF000;
+    letter-spacing: 1vmax;
+    background-color: #303030;
+    font-weight: bold;
+    text-shadow: 0px 0px 10px #FFF000;
+}
+
+.ring::before {
+    content: '';
+    position: absolute;
+    top: -1vmax;
+    left: -1vmax;
+    width: 100%;
+    height: 100%;
+    border: 1vmax solid transparent;
+    border-top: 1vmax solid #FFF000;
+    border-right: 1vmax solid #069;
+    border-left: 1vmax solid #069;
+    border-bottom: 1vmax solid #FFF000;
+    border-radius: 50%;
+    animation: animateCircle 1.5s linear infinite;
+}
+
+@keyframes animateCircle {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

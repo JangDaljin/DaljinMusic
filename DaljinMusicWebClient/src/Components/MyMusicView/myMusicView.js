@@ -8,9 +8,10 @@ import * as myMusicActions from '../../ReduxModules/myMusic'
 import * as modalActions from '../../ReduxModules/modal'
 import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
 
+
+
 import classNames from 'classnames/bind'
 import style from './myMusicView.css'
-
 const cn = classNames.bind(style)
 
 class MyMusicView extends Component {
