@@ -14,7 +14,7 @@ import Header from './Components/Header/header'
 import SignUpView from './Components/SignUpView/signUpView'
 import TestView from './Components/TestView/test'
 import AdminView from './Components/AdminView/adminView'
-import MusicPlayer from './Components/MusicPlayer/musicPlayer'
+import MusicPlayer from './Components/MusicPlayer/musicPlayer2'
 import Modal from './Components/Modal/modal'
 class Router extends Component {
 

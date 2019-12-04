@@ -1,0 +1,109 @@
+.musicplayer-background {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: #30303088;
+}
+
+.musicplayer {
+    width: 400px;
+    border: 2px solid #303030;
+    box-shadow: 0px 0px 10  px 10px #303030;
+    display: flex;
+    flex-direction: column;
+    background-color: #303030;
+    font-family: 'jua';
+    color: #EEE;
+}
+
+.musicplayer-padding {
+    flex : 1 1 50px;
+}
+
+.controller {
+    display: flex;
+    border: 2px solid #EEE;
+}
+
+.controller > .img-wrap {
+    position: relative;
+    width: 101px;
+    background : url('/twice2.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-top: 2px solid #303030;
+    border-left: 2px solid #303030;
+    border-bottom: 2px solid #303030;
+}
+
+.controller > .img-wrap::after {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.controller > .img-wrap > .img {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.controller > .info {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.controller > .info > div {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    padding : 0px 10px;
+    background-color: #EEE;
+    color: #303030;
+}
+
+.info-song {
+    border : 2px solid #303030;
+    border-bottom: none;
+}
+
+.info-singer {
+    border : 2px solid #303030;
+}
+
+.info-album {
+    border : 2px solid #303030;
+    border-top: none;
+}
+
+.buttons {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: 2px solid #EEE;
+    margin-top: -2px;
+}
+.buttons > .button {
+    cursor: pointer;
+}
+
+.buttons > .button:hover {
+    color: #069;
+}
+
+.list {
+    height: 400px;
+    border : 2px solid #EEE;
+    border-top: none;
+}

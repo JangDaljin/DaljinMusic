@@ -1,6 +1,7 @@
 import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { List , fromJS } from 'immutable'
 import * as top100Actions from '../../ReduxModules/top100'
 import * as myMusicActions from '../../ReduxModules/myMusic'
 import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
@@ -14,7 +15,9 @@ const cn = classNames.bind(styles)
 class Top100ViewBody extends Component {
 
     state = {
-        selected : Array(100).fill(false)
+        selected : List(fromJS(Array(100).fill(false))),
+        showBottom : false,
+        selectedItemCount : 0,
     }
 
     handleScroll = () => {
@@ -52,13 +55,23 @@ class Top100ViewBody extends Component {
         window.removeEventListener('scroll' , this.handleScroll , true)
     }
 
-    addMusicPlayer = (index) => {
-        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.items.getIn([index , '_id'])]})
+    addMusicPlayer = () => {
+        const addList = [];
+        
+        this.state.selected.forEach((value , index) => {
+            if(value) {
+                addList.push(this.props.items.getIn([index , '_id']))
+            }
+        })
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : addList })
+        this.setState({ selected : this.state.selected.map(value => { value = false; return value }) , selectedItemCount : 0 , showBottom : false})
     }
 
-    play = (index) => {
-        this.addMusicPlayer(index)
-        this.props.MusicPlayerActions.fetchPlayMusic({'_id' : this.props.items.getIn([index , '_id'])})
+    play = () => {
+        const firstSelectedMusicIndex = this.state.selected.findIndex(value => value)
+        const musicId = this.props.items.getIn([firstSelectedMusicIndex , '_id'])
+        this.addMusicPlayer()
+        this.props.MusicPlayerActions.fetchPlayMusic({'_id' : musicId})
     }
 
     onClickAddList = (index) => {
@@ -72,10 +85,29 @@ class Top100ViewBody extends Component {
         this.props.MyMusicActions.fetchGetMyMusicLists({userId : this.props.userId})
     }
 
+    onClickListItem = (index) => {
+        const indexValue = this.state.selected.get(index)
+        let selectedItemCount = this.state.selectedItemCount
+        let showBottom = this.state.showBottom        
+        if(indexValue) {
+            selectedItemCount--
+            if(selectedItemCount === 0) {
+                showBottom = false
+            }
+        }
+        else {
+            selectedItemCount++
+            showBottom = true
+        }
+
+        this.setState({ 'selected' : this.state.selected.update(index , value=>!value) , 'selectedItemCount' : selectedItemCount , 'showBottom' : showBottom})
+    }
+
 
 
     render () {
         return (
+            <React.Fragment>
             <div className={cn('top100')}>
                 <div className={cn('top100-padding')}>
 
@@ -83,7 +115,7 @@ class Top100ViewBody extends Component {
                 <div className={cn('top100-list')}>
                     {
                         this.props.items.map((value , index) => (
-                            <div key={index} className={cn('top100-list-item')}>
+                            <div key={index} className={cn('top100-list-item' , {'top100-list-selected' : this.state.selected.get(index)} , {'top100-list-unselected' : !this.state.selected.get(index)})} onClick={(e) => { this.onClickListItem(index) }}>
                                 <div className={cn('top100-list-item-ranking')}>
                                     <p>{value.get('rank')}</p>
                                 </div>
@@ -111,19 +143,7 @@ class Top100ViewBody extends Component {
                                 </div>
                                 
                                 <div className={cn('top100-list-item-buttons')}>
-                                        <div className={cn('top100-list-item-play' , 'top100-list-button')} onClick={
-                                            (e) => {
-                                                this.play(index)
-                                            }
-                                        }><i className={cn('fas fa-play' ,'fa-2x')}></i></div>
-                                        <div className={cn('top100-list-item-add' , 'top100-list-button')} onClick={
-                                            (e) => {
-                                                this.addMusicPlayer(index)
-                                            }
-                                        }><i className={cn('fas fa-plus' , 'fa-2x')}></i></div>
-                                        <div className={cn('top100-list-item-list' , 'top100-list-button')} onClick={
-                                            (e) => { this.onClickAddList(index) }
-                                        }><i className={cn('fas fa-list' , 'fa-2x')}></i></div>
+                                        
                                 </div>
 
                             </div>
@@ -134,8 +154,27 @@ class Top100ViewBody extends Component {
                 <div className={cn('top100-padding')}>
 
                 </div>
-
             </div>
+            <div className={cn('top100-bottom' , {'top100-bottom-show' : this.state.showBottom} , {'top100-bottom-hide' : !this.state.showBottom})}>
+                <div className={cn('top100-bottom-buttons')}>
+                    <div className={cn('top100-play' , 'top100-bottom-button')} onClick={
+                                                (e) => {
+                                                    this.play()
+                                                }
+                                            }><i className={cn('fas fa-play')}></i>재생</div>
+
+                    <div className={cn('top100-add' , 'top100-bottom-button')} onClick={
+                        (e) => {
+                            this.addMusicPlayer()
+                        }
+                    }><i className={cn('fas fa-plus')}></i>플레이리스트에 추가</div>
+
+                    <div className={cn('top100-addlist' , 'top100-bottom-button')} onClick={
+                        (e) => { this.onClickAddList() }
+                    }><i className={cn('fas fa-list')}></i>내 음악리스트에 추가</div>
+                </div>
+            </div>
+            </React.Fragment>
         )
     }
 }
