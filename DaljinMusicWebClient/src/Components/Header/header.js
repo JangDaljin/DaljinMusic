@@ -5,6 +5,7 @@ import Logo from './Logo/logo'
 import Search from './Search/search'
 import Navigator from './Navigator/navigator'
 import Auth from './Auth/auth'
+import MiniMusicPlayer from './MiniMusicPlayer/miniMusicPlayer'
 
 //import MusicPlayer from '../MusicPlayer/musicPlayer'
 
@@ -38,6 +39,8 @@ class Header extends Component {
                 <Search />
 
                 <Auth />
+
+                <MiniMusicPlayer />
             </div>
         )
     }

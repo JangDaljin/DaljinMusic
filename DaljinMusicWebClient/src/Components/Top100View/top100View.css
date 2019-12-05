@@ -1,20 +1,30 @@
 .top100 {
-    flex: 9 1 auto;
-    display: flex;
+    height: calc(100% - var(--headerheight));
+    overflow-y: scroll;
 }
 
-.top100-padding {
-    flex: 2 2 auto;
-}
 
 .top100-list {
-    flex: 3 0 auto;
+    margin: 0 30%;
     display: flex;
     flex-direction: column;
     font-family: 'jua';
-    margin-top: 10px;
-    margin-bottom : 80px;
+    padding-top: 10px;
+    padding-bottom : 80px;
 }
+
+@media all and (max-width : 768px) {
+    .top100-list {
+        margin: 0 0%;
+    }
+}
+
+@media all and (max-width : 1024px) {
+    .top100-list {
+        margin: 0 15%;
+    }
+}
+
 
 .top100-list-item {
     border: 2px solid #CCC;
@@ -112,6 +122,10 @@
     transform: rotateX(360deg);
     transition: transform 0.6s 0s ease-in-out;
 }   
+
+.top100-bottom-padding {
+    height: 80px;
+}
 
 .top100-bottom {
     position: fixed;

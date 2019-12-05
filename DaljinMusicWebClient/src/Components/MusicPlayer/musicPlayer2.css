@@ -1,9 +1,9 @@
 .musicplayer-background {
     position: fixed;
     left: 0;
-    right: 0;
     top: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,10 +11,22 @@
     background-color: #30303088;
 }
 
+.musicplayer-show {
+    left: 0;
+    opacity: 1;
+    transition: opacity .5s 0s;
+}
+
+.musicplayer-hide {
+    opacity: 0;
+    left : -100%;
+    transition: opacity .5s 0s, left 0s .5s;
+}
+
 .musicplayer {
     width: 400px;
     border: 2px solid #303030;
-    box-shadow: 0px 0px 10  px 10px #303030;
+    box-shadow: 0px 0px 10px 10px #303030;
     display: flex;
     flex-direction: column;
     background-color: #303030;
@@ -28,28 +40,34 @@
 
 .controller {
     display: flex;
+    flex-direction: column;
     border: 2px solid #EEE;
+    border-bottom: none;
 }
 
-.controller > .img-wrap {
+.info {
+    display: flex;
+    border: 2px solid #303030;
+    border-bottom : 2px solid #EEE;
+}
+
+.img-wrap {
     position: relative;
     width: 101px;
     background : url('/twice2.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    border-top: 2px solid #303030;
-    border-left: 2px solid #303030;
     border-bottom: 2px solid #303030;
 }
 
-.controller > .img-wrap::after {
+.img-wrap::after {
     content: '';
     display: block;
     padding-top: 100%;
 }
 
-.controller > .img-wrap > .img {
+.img-wrap > .img {
     position: absolute;
     left: 0;
     right: 0;
@@ -57,33 +75,63 @@
     bottom: 0;
 }
 
-.controller > .info {
+.info-text {
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
 }
 
-.controller > .info > div {
+.info-text > div {
     flex: 1 0 auto;
     display: flex;
     align-items: center;
     padding : 0px 10px;
     background-color: #EEE;
     color: #303030;
+    border-bottom: 2px solid #303030;
+    border-left: 2px solid #303030;
 }
 
 .info-song {
-    border : 2px solid #303030;
-    border-bottom: none;
 }
 
 .info-singer {
-    border : 2px solid #303030;
 }
 
 .info-album {
-    border : 2px solid #303030;
-    border-top: none;
+}
+
+.progress {
+    border-bottom: 2px solid #EEE;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+}
+
+.duration {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+.progress-bar {
+    flex: 1 0 auto;
+    margin : 0px 10px;
+    border: 1px solid #EEE;
+    position: relative;
+}
+
+.progress-ball {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #EEE;
+    border-radius: 50%;
+    top: 0;
+    left: -6px;
+    transform: translate(0% , -50%);
+    cursor: pointer;
 }
 
 .buttons {
@@ -91,19 +139,82 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    border: 2px solid #EEE;
-    margin-top: -2px;
+    border-bottom: 2px solid #EEE;
 }
-.buttons > .button {
+
+.button {
     cursor: pointer;
 }
 
-.buttons > .button:hover {
+.button:hover {
     color: #069;
 }
 
 .list {
-    height: 400px;
+    max-height: 400px;
     border : 2px solid #EEE;
     border-top: none;
+}
+
+.list-items {
+    max-height: 350px;
+    border-bottom: 2px solid #EEE;
+    overflow-y: scroll;
+}
+
+.list-item {
+    margin-top: -2px;
+    border: 2px solid #303030;
+    background-color: #EEE;
+    color: #303030;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.list-item-text {
+    flex: 1 0 auto;
+    
+    padding : 5px 10px;
+}
+
+.list-item-check {
+    text-align: center;
+    padding: 5px;
+}
+
+.list-item:first-child {
+    margin-top: 0px;
+}
+
+.list-item:hover {
+    color: #069;
+}
+
+
+.list-buttons {
+    
+    opacity: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    height: 50px;
+}
+
+.list-buttons > .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 2px solid #EEE;
+    padding: 0 10px;
+}
+
+.list-buttons > .button:hover {
+    outline: 2px solid #069;
+    background-color: #EEE;
+}
+
+.button > span {
+    margin-left: 5px;
+    font-family: 'jua';
 }

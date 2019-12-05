@@ -3,6 +3,12 @@ import { List , Map, fromJS } from 'immutable'
 import { takeLatest , put} from 'redux-saga/effects'
 import { post } from './Request/request'
 
+export const SHOW = 'mp/SHOW'
+export const show = createAction(SHOW)
+
+export const HIDE = 'mp/HIDE'
+export const hide = createAction(HIDE) 
+
 export const CHANGE_CURRENT_MUSIC_INDEX = 'mp/CHANGE_CURRENT_MUSIC_INDEX'
 export const changeCurrentMusicIndex = createAction(CHANGE_CURRENT_MUSIC_INDEX)
 
@@ -14,6 +20,15 @@ export const acceptPlayMusic = createAction(ACCEPT_PLAY_MUSIC)
 
 export const ABORT_PLAY_MUSIC = 'mp/ABORT_PLAY_MUSIC'
 export const abortPlayMusic = createAction(ABORT_PLAY_MUSIC)
+
+export const FETCH_PAUSE_MUSIC = 'mp/FETCH_PAUSE_MUSIC'
+export const fetchPauseMusic = createAction(FETCH_PAUSE_MUSIC)
+
+export const ACCEPT_PAUSE_MUSIC = 'mp/ACCEPT_PAUSE_MUSIC'
+export const acceptPauseMusic = createAction(ACCEPT_PAUSE_MUSIC)
+
+export const ABORT_PAUSE_MUSIC = 'mp/ABORT_PAUSE_MUSIC'
+export const abortPauseMusic = createAction(ABORT_PAUSE_MUSIC)
 
 export const CHANGE_CHECKED = 'mp/CHANGE_CHECKED'
 export const changeChecked = createAction(CHANGE_CHECKED)
@@ -60,17 +75,31 @@ export const abortPlayListItemRemove = createAction(ABORT_PLAYLIST_ITEM_REMOVE)
 
 
 const musicPlayerInitialState = {
+    show : false,
     playList : List([]),// Map({ song : ### , album : ### , singer : ### , duration : ### , checked : ###})
     currentMusicIndex : 0,
     currentDuration : 0,
     playOption : Map({
         loop : false,
-        only : false,
+        one : false,
         random : false,
-    })
+    }),
+    isPlaying : false,
 }
 
 export const musicPlayerReducer = handleActions({
+    [SHOW] : (state , action) => {
+        const newState = { ...state }
+        newState.show = true
+        return newState
+    },
+    [HIDE] : (state , action) => {
+        const newState = { ...state }
+        newState.show = false
+        newState.playList = newState.playList.map(value => value.set('checked' , false))
+        return newState
+    },
+
     [CHANGE_CURRENT_MUSIC_INDEX] : (state , action) => {
         const newState = { ...state }
         if(typeof action.payload == 'undefined')
@@ -83,13 +112,24 @@ export const musicPlayerReducer = handleActions({
     },
     [ACCEPT_PLAY_MUSIC] : (state , action) => {
         const newState =  { ...state }
-        newState.currentMusicIndex = newState.playList.size-1
+        newState.isPlaying = true
         return newState
     },
     [ABORT_PLAY_MUSIC] : (state , action) => {
         const newState =  { ...state }
+        newState.isPlaying = false
         return newState
     },  
+    [ACCEPT_PAUSE_MUSIC] : (state , action) => {
+        const newState = { ...state }
+        newState.isPlaying = false
+        return newState
+    },
+    [ABORT_PAUSE_MUSIC] : (state , action) => {
+        const newState = { ...state }
+        newState.isPlaying = false
+        return newState
+    },
     [CHANGE_CHECKED] : (state , action) => {
         const newState = { ...state }
         const index = action.payload
@@ -111,14 +151,14 @@ export const musicPlayerReducer = handleActions({
     [CHANGE_PLAYOPTION] : (state , action) => {
         const newState = { ...state }
 
-        const { loop , random , only } = action.payload 
+        const { loop , random , one } = action.payload 
 
         if(typeof loop !== 'undefined' && typeof loop === 'boolean')
             newState.playOption = newState.playOption.set('loop' , loop)
         if(typeof random !== 'undefined' && typeof random === 'boolean')
             newState.playOption = newState.playOption.set('random' , random)
-        if(typeof only !== 'undefined' && typeof only === 'boolean')
-            newState.playOption = newState.playOption.set('only' , only)
+        if(typeof one !== 'undefined' && typeof one === 'boolean')
+            newState.playOption = newState.playOption.set('one' , one)
 
         return newState
     },
@@ -184,7 +224,10 @@ export const musicPlayerReducer = handleActions({
 
 function* fetchPlayMusicSaga(action) {
     yield post('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
-    yield put({type: CHANGE_CURRENT_MUSIC_INDEX})
+}
+
+function* fetchPauseMusicSaga(action) {
+    yield post('/mymusic/pausemusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PAUSE_MUSIC , ABORT_PAUSE_MUSIC)
 }
 
 function* fetchGetPlayListSaga(action) {
@@ -202,6 +245,7 @@ function* fetchPlayListItemRemoveSaga(action) {
 
 export function* musicPlayerSaga () {
     yield takeLatest(FETCH_PLAY_MUSIC , fetchPlayMusicSaga)
+    yield takeLatest(FETCH_PAUSE_MUSIC , fetchPauseMusicSaga)
     yield takeLatest(FETCH_GET_PLAYLIST , fetchGetPlayListSaga)
     yield takeLatest(FETCH_PLAYLIST_ITEM_ADD , fetchPlayListItemAddSaga)
     yield takeLatest(FETCH_PLAYLIST_ITEM_REMOVE , fetchPlayListItemRemoveSaga)

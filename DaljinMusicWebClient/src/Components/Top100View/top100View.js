@@ -20,19 +20,9 @@ class Top100ViewBody extends Component {
         selectedItemCount : 0,
     }
 
-    handleScroll = () => {
-        let scrollHeight = Math.max(document.documentElement.scrollHeight ,document.body.scrollHeight);
-        let scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop);
-        let clientHeight = document.documentElement.clientHeight;
-        if(parseInt(scrollTop+clientHeight) === parseInt(scrollHeight)) {
-            this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
-        }
-    }
-
     componentDidMount () {
         this.props.MyMusicActions.fetchGetMyMusicLists({'userId' : this.props.userId})
         this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true})
-        window.addEventListener('scroll' , this.handleScroll , true)
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -49,10 +39,6 @@ class Top100ViewBody extends Component {
             }
             this.props.ModalActions.modalSetContents({'body' : body})
         }
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('scroll' , this.handleScroll , true)
     }
 
     addMusicPlayer = () => {
@@ -103,16 +89,22 @@ class Top100ViewBody extends Component {
         this.setState({ 'selected' : this.state.selected.update(index , value=>!value) , 'selectedItemCount' : selectedItemCount , 'showBottom' : showBottom})
     }
 
+    onScroll = (e) => {
+        const currentScrollBottom = e.target.scrollTop + this.mainview.clientHeight
+        const viewHeight = this.listview.clientHeight
+
+        if(currentScrollBottom === viewHeight) {
+            this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
+        }
+    }
+
 
 
     render () {
         return (
             <React.Fragment>
-            <div className={cn('top100')}>
-                <div className={cn('top100-padding')}>
-
-                </div>
-                <div className={cn('top100-list')}>
+            <div className={cn('top100')} onScroll={this.onScroll} ref={ref => this.mainview = ref}>
+                <div className={cn('top100-list')} ref={ref => this.listview = ref}>
                     {
                         this.props.items.map((value , index) => (
                             <div key={index} className={cn('top100-list-item' , {'top100-list-selected' : this.state.selected.get(index)} , {'top100-list-unselected' : !this.state.selected.get(index)})} onClick={(e) => { this.onClickListItem(index) }}>
@@ -142,17 +134,10 @@ class Top100ViewBody extends Component {
                                     </div>
                                 </div>
                                 
-                                <div className={cn('top100-list-item-buttons')}>
-                                        
-                                </div>
-
                             </div>
                         ))
                         
                     }
-                </div>
-                <div className={cn('top100-padding')}>
-
                 </div>
             </div>
             <div className={cn('top100-bottom' , {'top100-bottom-show' : this.state.showBottom} , {'top100-bottom-hide' : !this.state.showBottom})}>
