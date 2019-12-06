@@ -110,6 +110,7 @@ export const musicPlayerReducer = handleActions({
             newState.currentMusicIndex = action.payload.index
         return newState
     },
+
     [ACCEPT_PLAY_MUSIC] : (state , action) => {
         const newState =  { ...state }
         newState.isPlaying = true
@@ -119,7 +120,8 @@ export const musicPlayerReducer = handleActions({
         const newState =  { ...state }
         newState.isPlaying = false
         return newState
-    },  
+    },
+
     [ACCEPT_PAUSE_MUSIC] : (state , action) => {
         const newState = { ...state }
         newState.isPlaying = false
@@ -201,11 +203,16 @@ export const musicPlayerReducer = handleActions({
         const { removeList }= action.payload
         for(let cnt = removeList.length -1 ; cnt > -1; cnt--) {
             if(removeList[cnt] === newState.currentMusicIndex) {
-                newState.currentMusicIndex = 0;
+                if(newState.currentMusicIndex === 0) {
+                    if(newState.playList.size === 0) {
+                        newState.currentMusicIndex = 0
+                    }
+                    newState.currentMusicIndex = 1
+                }
+                newState.currentMusicIndex = newState.currentMusicIndex -1 ;
             }
             newState.playList = newState.playList.splice(removeList[cnt] , 1)
         }
-        //newState.playList = newState.playList.filter(value => !(value.get('checked')))
         return newState
     },
 
@@ -223,7 +230,9 @@ export const musicPlayerReducer = handleActions({
 }, musicPlayerInitialState)
 
 function* fetchPlayMusicSaga(action) {
-    yield post('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
+    const { index , duration , _id } = action.payload
+    yield put({type : CHANGE_CURRENT_MUSIC_INDEX , payload : index})
+    yield post('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify({'_id' : _id , 'duration' : duration}) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
 }
 
 function* fetchPauseMusicSaga(action) {

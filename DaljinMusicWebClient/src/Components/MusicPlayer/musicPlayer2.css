@@ -116,22 +116,42 @@
     justify-items: center;
 }
 .progress-bar {
+    
     flex: 1 0 auto;
+    height: 100%;
     margin : 0px 10px;
-    border: 1px solid #EEE;
     position: relative;
+    cursor: pointer;
+}
+
+.progress-bar::before {
+    content: '';
+    width: 100%;
+    border: 2px solid #EEE;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
 }
 
 .progress-ball {
+    --progress-ball-left : 0px;
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
     background-color: #EEE;
     border-radius: 50%;
-    top: 0;
-    left: -6px;
+    top: 50%;
+    left: calc(var(--progress-ball-left) - 7px);
     transform: translate(0% , -50%);
+    border: 2px solid #888;
     cursor: pointer;
+}
+
+.progress-panel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 
 .buttons {
@@ -207,11 +227,10 @@
     justify-content: center;
     border-left: 2px solid #EEE;
     padding: 0 10px;
+    letter-spacing: 1px;
 }
 
 .list-buttons > .button:hover {
-    outline: 2px solid #069;
-    background-color: #EEE;
 }
 
 .button > span {
