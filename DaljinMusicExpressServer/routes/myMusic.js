@@ -162,7 +162,7 @@ router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
     }
 
     const { userId , listId , musicId } = req.body;
-
+    console.dir(musicId)
     if(userId == req.session.userId) {
         try {
             const user = await UserModel.findOne({'userId' : userId}).populate({

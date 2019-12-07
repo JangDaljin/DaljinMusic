@@ -12,10 +12,12 @@ import classNames from 'classnames/bind'
 import styles from './top100View.css'
 const cn = classNames.bind(styles)
 
+const MAX_RANK = 100
+
 class Top100ViewBody extends Component {
 
     state = {
-        selected : List(fromJS(Array(100).fill(false))),
+        selected : List(fromJS(Array(MAX_RANK).fill(false))),
         showBottom : false,
         selectedItemCount : 0,
     }
@@ -31,7 +33,14 @@ class Top100ViewBody extends Component {
             for(let i = 0 ; i < this.props.myMusicLists.size ; i++) {
                 body.push(
                 <div key={body.length} onClick={(e) => { 
-                    this.props.MyMusicActions.fetchAddMusicInList({'userId' : this.props.userId , 'listId' : this.props.myMusicLists.getIn([i , '_id']) , 'musicId' : ''})
+                    const addMusicIds = []
+                    for(let i = 0 ; i < MAX_RANK; i++) {
+                        if(this.state.selected.get(i)) {
+                            addMusicIds.push(this.props.items.getIn([i , '_id']))
+                        }
+                    }
+
+                    this.props.MyMusicActions.fetchAddMusicInList({ 'userId' : this.props.userId ,'listId' : this.props.myMusicLists.getIn([i , '_id']) , 'musicId' : addMusicIds })
                     this.props.ModalActions.modalClose()
                 }}>
                         {this.props.myMusicLists.getIn([i , 'listName'])}
