@@ -7,7 +7,7 @@
 .mymusicview-left {
     height: 100%;
     overflow-y : scroll;
-    flex: 1 0 100px;
+    flex: 1 1 100px;
     display: flex;
     flex-direction: column;
     background-color: #EEE;
@@ -56,6 +56,7 @@
     height: 50px;
     border: 3px solid #303030;
     cursor: pointer;
+    margin-top: -3px;
 }
 
 .mymusicview-listname:hover {
@@ -82,15 +83,10 @@
 }
 
 .mymusicview-center {
-    flex: 4 0 auto;
+    flex: 4 1 200px;
     height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-}
-
-
-.mymusicview-center-contents-wrap {
-    flex: 1 0 auto;
     padding: 10px;
 }
 
@@ -175,7 +171,7 @@
 
 
 .mymusicview-right {
-    flex: 1 0 100px;
+    flex: 1 1 100px;
     display: inline-flex;
     flex-direction: column;
     border-top: 3px solid black;

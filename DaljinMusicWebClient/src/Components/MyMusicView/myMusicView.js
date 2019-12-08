@@ -170,7 +170,7 @@ class MyMusicView extends Component {
                 
                 
                 <div className={cn('mymusicview-center')} ref={ref => this.center = ref}>
-                    <div className={cn('mymusicview-center-contents-wrap')}>
+
                         {this.state.currentSelectedListIndex === -1 ? <div></div> :
                         this.props.myMusicLists.getIn([this.state.currentSelectedListIndex , 'list']).size > 0?
                             <React.Fragment>
@@ -207,11 +207,10 @@ class MyMusicView extends Component {
                             </React.Fragment>
                             :
                             <div className={cn('musiclist-no-item')}>
-                            <p><i className="fas fa-exclamation-circle fa-2x"></i></p>
-                            <p> 자료가 존재하지 않습니다.</p>
+                                <p><i className="fas fa-exclamation-circle fa-2x"></i></p>
+                                <p> 자료가 존재하지 않습니다.</p>
                             </div>
                         }
-                    </div>
                 
                 </div>
 

@@ -168,7 +168,12 @@ export const musicPlayerReducer = handleActions({
     [CHANGE_CURRENT_DURATION] : (state , action) => {
         const newState = { ...state }
         const { duration } = action.payload
-        newState.currentDuration = duration
+        if(typeof duration == 'number') {
+            newState.currentDuration = duration
+        }
+        else if(typeof duration == 'undefined' && typeof action.payload == 'number'){
+            newState.currentDuration = action.payload
+        }
         return newState
     },
 
@@ -231,7 +236,10 @@ export const musicPlayerReducer = handleActions({
 
 function* fetchPlayMusicSaga(action) {
     const { index , duration , _id } = action.payload
+
     yield put({type : CHANGE_CURRENT_MUSIC_INDEX , payload : index})
+    yield put({type : CHANGE_CURRENT_DURATION , payload : duration})
+
     yield post('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify({'_id' : _id , 'duration' : duration}) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
 }
 

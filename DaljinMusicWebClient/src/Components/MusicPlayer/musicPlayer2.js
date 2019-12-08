@@ -23,12 +23,20 @@ class MusicPlayer extends Component {
     }
 
     componentDidUpdate(prevProps , prevState) {
-        if(prevProps.authMonitor && !this.props.authMonitor) {
-            if(this.props.isAuthenticated) {
-                this.props.MusicPlayerActions.fetchGetPlayList({'userId' : this.props.userId})
+        if(prevProps !== this.props) {
+            if(prevProps.authMonitor && !this.props.authMonitor) {
+                if(this.props.isAuthenticated) {
+                    this.props.MusicPlayerActions.fetchGetPlayList({'userId' : this.props.userId})
+                }
+                else {
+                    this.props.MusicPlayerActions.clearPlayList()   
+                }
             }
-            else {
-                this.props.MusicPlayerActions.clearPlayList()   
+
+            //프로그래스 위치 조정(그래픽)
+            if(prevProps.currentDuration !== this.props.currentDuration) {
+                const progressballLeft = (this.props.currentDuration / this.props.playList.getIn([this.props.currentMusicIndex , 'duration'])) * 100
+                this.progressball.style.setProperty('--progress-ball-left' , `${progressballLeft}%`)
             }
         }
     }
@@ -49,8 +57,7 @@ class MusicPlayer extends Component {
         else {
             duration = _duration
         }
-
-
+        
         this.props.MusicPlayerActions.fetchPlayMusic({'index' : index , 'duration' : duration , '_id' : this.props.playList.getIn([index , '_id'])})
     }
 
@@ -72,30 +79,55 @@ class MusicPlayer extends Component {
     }
 
     onMouseDownProgressBar = (e) => {
+        e.stopPropagation()
+        this.calcSeekTime(e.nativeEvent.offsetX)
         this.setState({progressDraging : true})    
     }
 
     onMouseUpProgressBar = (e) => {
-        this.setState({progressDraging : false})    
+        e.stopPropagation()
+        this.setState({progressDraging : false})
+        this.onClickPlay(this.props.currentMusicIndex , this.props.currentDuration)
     }
 
     onMouseMoveProgressBar = (e) => {
         e.stopPropagation()
         if(this.state.progressDraging) {
-            console.log(e.nativeEvent.offsetX)
-            this.progressball.style.setProperty('--progress-ball-left' , `${e.nativeEvent.offsetX}px`)
+            //console.log(e.nativeEvent.offsetX)
+            this.calcSeekTime(e.nativeEvent.offsetX)
         }
+    }
+
+    calcSeekTime = (x) => {
+        const width = this.progressbar.clientWidth
+        const seekTime = parseInt((x / width) * this.props.playList.getIn([this.props.currentMusicIndex , 'duration']))
+
+        //this.progressball.style.setProperty('--progress-ball-left' , `${x}px`)
+        this.props.MusicPlayerActions.changeCurrentDuration({duration : seekTime})
+    }
+
+    onClickNextMusic = () => {
+        const index = this.props.currentMusicIndex + 1 >= this.props.playList.size ? 0 : this.props.currentMusicIndex + 1
+        this.onClickPlay(index)
+    }
+
+    onClickPrevMusic = () => {
+        const index = this.props.currentMusicIndex + 1 >= this.props.playList.size ? 0 : this.props.currentMusicIndex + 1
+        this.onClickPlay(index)
     }
 
     
 
     render () {
         return (
-            <div className={cn('musicplayer-background' , {'musicplayer-show' : this.props.show} , {'musicplayer-hide' : !this.props.show} )} onClick={(e) => {this.props.MusicPlayerActions.hide()}}>
+            <div className={cn('musicplayer-background' , {'musicplayer-show' : this.props.show} , {'musicplayer-hide' : !this.props.show} )}>
+
+                <div className={cn('musicplayer-close-button')} onClick={(e) => { this.props.MusicPlayerActions.hide()}}>
+                    <i className="fas fa-times"></i>
+                </div>
 
                 <div className={cn('musicplayer')} onClick={(e) => e.stopPropagation()}>
                     <div className={cn('controller')}>
-
 
                         <div className={cn('info')}>
                             <div className={cn('img-wrap')}>
@@ -113,15 +145,13 @@ class MusicPlayer extends Component {
 
                         <div className={cn('progress')}>
                             <div className={cn('duration')}>{mmss(this.props.currentDuration)}</div>
-                            <div className={cn('progress-bar')} 
-                                
-                            >
+                            <div className={cn('progress-bar')}>
  
                                 <div className={cn('progress-ball')} ref={ref => this.progressball = ref}>
 
                                 </div>
 
-                                <div className={cn('progress-panel')} onMouseDown={this.onMouseDownProgressBar}
+                                <div className={cn('progress-panel')}  ref={ref => this.progressbar = ref} onMouseDown={this.onMouseDownProgressBar}
                                 onMouseUp={this.onMouseUpProgressBar}
                                 onMouseMove={this.onMouseMoveProgressBar}
                                 onMouseOut={this.onMouseUpProgressBar}>
@@ -132,21 +162,21 @@ class MusicPlayer extends Component {
                         </div>
 
                         <div className={cn('buttons')}>
-                                <div className={cn("button fas fa-fast-backward")}></div>
+                                <div className={cn("button fas fa-fast-backward")} onClick={(e) => this.onClickPrevMusic() }></div>
                                 {this.props.isPlaying ?
                                     <div className={cn("button fas fa-pause")} onClick={(e) => this.onClickPause() }></div>
                                     :
                                     <div className={cn("button fas fa-play")} onClick={(e) => this.onClickPlay() }></div>
                                 }
                                 
-                                <div className={cn("button fas fa-fast-forward")}></div>
+                                <div className={cn("button fas fa-fast-forward")} onClick={(e) => this.onClickNextMusic()}></div>
                                 
                         </div>
 
                         <div className={cn('buttons')}>
                             <div className={cn("button fas fa-exchange-alt")}></div>
                             <div className={cn("button fas fa-sort-numeric-down")}></div>
-                            <div className={cn("fas fa-random")}></div>
+                            <div className={cn("button fas fa-random")}></div>
                         </div>
                     </div>
 
