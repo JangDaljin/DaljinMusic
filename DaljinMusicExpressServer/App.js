@@ -9,6 +9,7 @@ const express = require('express')
 , bodyParser = require('body-parser')
 , fs = require('fs')
 , util = require('util')
+, socket = require('socket.io')
 
 //내부모듈
 const AuthRouter = require('./routes/auth')
@@ -29,7 +30,7 @@ const MongoDB = require('./Database/mongoDB')
 const { PORT , MUSIC_PATH , UPLOAD_PATH , ALBUM_IMG_PATH , ALBUM_IMG_URI } = process.env
 
 //EXPRESS 사용
-var app = express()
+const app = express()
 
 //크로스 브라우저 가능
 app.use(cors({credentials:true , origin:'http://localhost:3000'}))
@@ -97,8 +98,19 @@ const directorySetting = async () => {
 }
 
 
-http.createServer(app).listen(PORT , () => {
+const expressServer = http.createServer(app).listen(PORT , () => {
     directorySetting()
     console.log(`SERVER OPEN (PORT : ${PORT})`)
     MongoDB.connect();
+})
+
+const socketServer = socket(expressServer)
+
+socketServer.on('connection' , (clientSocket) => {
+    const ip = clientSocket.handshake.headers["x-real-ip"] || clientSocket.conn.remoteAddress
+
+    console.log(ip)
+    clientSocket.on('disconnect' , () => {
+        console.log(`user disconnect [${ip}]`)
+    })
 })

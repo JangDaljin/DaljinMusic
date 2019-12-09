@@ -22,6 +22,14 @@ class MusicPlayer extends Component {
         progressDraging : false
     }
 
+    componentDidMount () {
+        this.props.MusicPlayerActions.socketOpen()
+    }
+
+    componentWillUnmount () {
+        this.props.MusicPlayerActions.socketClose()
+    }
+
     componentDidUpdate(prevProps , prevState) {
         if(prevProps !== this.props) {
             if(prevProps.authMonitor && !this.props.authMonitor) {
@@ -130,7 +138,7 @@ class MusicPlayer extends Component {
                     <div className={cn('controller')}>
 
                         <div className={cn('info')}>
-                            <div className={cn('img-wrap')}>
+                            <div className={cn('img-wrap')} style={{backgroundImage:`url('${this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'albumImgUri'])}')`}}>
                                 <div className={cn('img')}>
 
                                 </div>
@@ -223,7 +231,7 @@ export default connect(
         currentMusicIndex : state.musicPlayer.currentMusicIndex,
         currentDuration : state.musicPlayer.currentDuration,
         isPlaying : state.musicPlayer.isPlaying,
-        show : state.musicPlayer.show
+        show : state.musicPlayer.show,
     }),
     (dispatch) => ({
         MusicPlayerActions : bindActionCreators(musicPlayerActions , dispatch)
