@@ -23,11 +23,11 @@ class MusicPlayer extends Component {
     }
 
     componentDidMount () {
-        this.props.MusicPlayerActions.socketOpen()
+        
     }
 
     componentWillUnmount () {
-        this.props.MusicPlayerActions.socketClose()
+        
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -98,6 +98,12 @@ class MusicPlayer extends Component {
         this.onClickPlay(this.props.currentMusicIndex , this.props.currentDuration)
     }
 
+    onMouseOutProgressBar = (e) => {
+        if(this.state.progressDraging) {
+            this.onMouseUpProgressBar(e)
+        }
+    }
+
     onMouseMoveProgressBar = (e) => {
         e.stopPropagation()
         if(this.state.progressDraging) {
@@ -162,7 +168,7 @@ class MusicPlayer extends Component {
                                 <div className={cn('progress-panel')}  ref={ref => this.progressbar = ref} onMouseDown={this.onMouseDownProgressBar}
                                 onMouseUp={this.onMouseUpProgressBar}
                                 onMouseMove={this.onMouseMoveProgressBar}
-                                onMouseOut={this.onMouseUpProgressBar}>
+                                onMouseOut={this.onMouseOutProgressBar}>
 
                                 </div>
                             </div>

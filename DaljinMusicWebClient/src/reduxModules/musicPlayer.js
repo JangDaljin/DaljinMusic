@@ -1,8 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
 import { List , Map, fromJS } from 'immutable'
 import { takeLatest , put} from 'redux-saga/effects'
-import { post } from './Request/request'
-import io from 'socket.io-client'
+import { post , postStream } from './Request/request'
 
 export const SHOW = 'mp/SHOW'
 export const show = createAction(SHOW)
@@ -73,13 +72,6 @@ export const acceptPlayListItemRemove = createAction(ACCEPT_PLAYLIST_ITEM_REMOVE
 export const ABORT_PLAYLIST_ITEM_REMOVE = 'mp/ABORT_PLAYLIST_ITEM_REMOVE'
 export const abortPlayListItemRemove = createAction(ABORT_PLAYLIST_ITEM_REMOVE)
 
-export const SOCKET_OPEN = 'mp/SOCKET_OPEN'
-export const socketOpen = createAction(SOCKET_OPEN)
-
-export const SOCKET_CLOSE = 'mp/SOCKET_CLOSE'
-export const socketClose = createAction(SOCKET_CLOSE)
-
-
 
 const musicPlayerInitialState = {
     show : false,
@@ -92,7 +84,6 @@ const musicPlayerInitialState = {
         random : false,
     }),
     isPlaying : false,
-    socket : io(`${process.env.REACT_APP_SERVER}`)
 }
 
 export const musicPlayerReducer = handleActions({
@@ -101,28 +92,11 @@ export const musicPlayerReducer = handleActions({
         newState.show = true
         return newState
     },
+
     [HIDE] : (state , action) => {
         const newState = { ...state }
         newState.show = false
         newState.playList = newState.playList.map(value => value.set('checked' , false))
-        return newState
-    },
-
-    [SOCKET_OPEN] : (state , action) => {
-        const newState = { ...state }
-
-        newState.socket.on('connect' ,(socket) => {
-            console.log('connect with server')
-        })
-
-        return newState
-    },
-
-    [SOCKET_CLOSE] : (state , action) => {
-        const newState = { ...state }
-        newState.socket.on('disconnect' , () => {
-            console.log('disconnect from server')
-        })
         return newState
     },
 
@@ -139,9 +113,11 @@ export const musicPlayerReducer = handleActions({
 
     [ACCEPT_PLAY_MUSIC] : (state , action) => {
         const newState =  { ...state }
+        console.log(action.payload)
         newState.isPlaying = true
         return newState
     },
+
     [ABORT_PLAY_MUSIC] : (state , action) => {
         const newState =  { ...state }
         newState.isPlaying = false
@@ -153,11 +129,13 @@ export const musicPlayerReducer = handleActions({
         newState.isPlaying = false
         return newState
     },
+
     [ABORT_PAUSE_MUSIC] : (state , action) => {
         const newState = { ...state }
         newState.isPlaying = false
         return newState
     },
+
     [CHANGE_CHECKED] : (state , action) => {
         const newState = { ...state }
         const index = action.payload
@@ -265,13 +243,12 @@ function* fetchPlayMusicSaga(action) {
 
     yield put({type : CHANGE_CURRENT_MUSIC_INDEX , payload : index})
     yield put({type : CHANGE_CURRENT_DURATION , payload : duration})
-
-    
-   // yield post('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify({'_id' : _id , 'duration' : duration}) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
+   
+    yield postStream('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify({'_id' : _id , 'duration' : duration}) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
 }
 
 function* fetchPauseMusicSaga(action) {
-    //yield post('/mymusic/pausemusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PAUSE_MUSIC , ABORT_PAUSE_MUSIC)
+    yield post('/mymusic/pausemusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PAUSE_MUSIC , ABORT_PAUSE_MUSIC)
 }
 
 function* fetchGetPlayListSaga(action) {

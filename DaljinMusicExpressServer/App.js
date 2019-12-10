@@ -9,7 +9,6 @@ const express = require('express')
 , bodyParser = require('body-parser')
 , fs = require('fs')
 , util = require('util')
-, socket = require('socket.io')
 
 //내부모듈
 const AuthRouter = require('./routes/auth')
@@ -98,19 +97,12 @@ const directorySetting = async () => {
 }
 
 
-const expressServer = http.createServer(app).listen(PORT , () => {
+http.createServer(app).listen(PORT , () => {
     directorySetting()
     console.log(`SERVER OPEN (PORT : ${PORT})`)
     MongoDB.connect();
 })
 
-const socketServer = socket(expressServer)
 
-socketServer.on('connection' , (clientSocket) => {
-    const ip = clientSocket.handshake.headers["x-real-ip"] || clientSocket.conn.remoteAddress
 
-    console.log(ip)
-    clientSocket.on('disconnect' , () => {
-        console.log(`user disconnect [${ip}]`)
-    })
-})
+

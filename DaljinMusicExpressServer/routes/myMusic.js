@@ -3,6 +3,8 @@ const router = express.Router()
 const doAsync = require('./async')
 const UserModel = require('../Database/mongoDB').userModel
 const MusicModel = require('../Database/mongoDB').musicModel
+const fs = require('fs')
+
 
 router.post('/getmusiclists' , doAsync(async (req , res , next) => {
     const { userId } = req.body
@@ -323,15 +325,27 @@ router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
 }))
 
 router.post('/playmusic' , doAsync(async (req , res , next) => {
-    const response = {
-        message : ''
+
+    const { _id , duration } = req.body
+
+    try {
+        const music = await MusicModel.findOne({ '_id' : _id })
+
+        const filePath = music.filePath
+        console.log(filePath)
+        const rs = fs.createReadStream(filePath)
+
+        rs.on('end' , ()=> {
+            console.log('end')
+        })
+
+        rs.pipe(res)
+    }
+    catch(err) {
+        console.error(err)
+        res.end()
     }
 
-    const { _id } = req.body
-
-    console.log(_id)
-
-    res.json(response)
 }))
 
 
