@@ -1,7 +1,8 @@
 import { createAction , handleActions } from 'redux-actions'
 import { List , Map, fromJS } from 'immutable'
 import { takeLatest , put} from 'redux-saga/effects'
-import { post , postStream } from './Request/request'
+import { post } from './Request/request'
+
 
 export const SHOW = 'mp/SHOW'
 export const show = createAction(SHOW)
@@ -9,26 +10,14 @@ export const show = createAction(SHOW)
 export const HIDE = 'mp/HIDE'
 export const hide = createAction(HIDE) 
 
+export const PLAY_MUSIC = 'mp/PLAY_MUSIC'
+export const playMusic = createAction(PLAY_MUSIC)
+
+export const PAUSE_MUSIC = 'mp/PAUSE_MUSIC'
+export const pauseMusic = createAction(PAUSE_MUSIC)
+
 export const CHANGE_CURRENT_MUSIC_INDEX = 'mp/CHANGE_CURRENT_MUSIC_INDEX'
 export const changeCurrentMusicIndex = createAction(CHANGE_CURRENT_MUSIC_INDEX)
-
-export const FETCH_PLAY_MUSIC = 'mp/FETCH_PLAY_MUSIC'
-export const fetchPlayMusic = createAction(FETCH_PLAY_MUSIC)
-
-export const ACCEPT_PLAY_MUSIC = 'mp/ACCEPT_PLAY_MUSIC'
-export const acceptPlayMusic = createAction(ACCEPT_PLAY_MUSIC)
-
-export const ABORT_PLAY_MUSIC = 'mp/ABORT_PLAY_MUSIC'
-export const abortPlayMusic = createAction(ABORT_PLAY_MUSIC)
-
-export const FETCH_PAUSE_MUSIC = 'mp/FETCH_PAUSE_MUSIC'
-export const fetchPauseMusic = createAction(FETCH_PAUSE_MUSIC)
-
-export const ACCEPT_PAUSE_MUSIC = 'mp/ACCEPT_PAUSE_MUSIC'
-export const acceptPauseMusic = createAction(ACCEPT_PAUSE_MUSIC)
-
-export const ABORT_PAUSE_MUSIC = 'mp/ABORT_PAUSE_MUSIC'
-export const abortPauseMusic = createAction(ABORT_PAUSE_MUSIC)
 
 export const CHANGE_CHECKED = 'mp/CHANGE_CHECKED'
 export const changeChecked = createAction(CHANGE_CHECKED)
@@ -100,6 +89,24 @@ export const musicPlayerReducer = handleActions({
         return newState
     },
 
+
+    [PLAY_MUSIC] : (state , action) => {
+        const newState = { ...state }
+        const { index , duration } = action.payload
+
+        newState.isPlaying = true
+        newState.currentMusicIndex = index
+        newState.currentDuration = duration
+
+        return newState
+    },
+
+    [PAUSE_MUSIC] : (state , action) => {
+        const newState = { ...state }
+        newState.isPlaying = false
+        return newState
+    },
+
     [CHANGE_CURRENT_MUSIC_INDEX] : (state , action) => {
         const newState = { ...state }
         if(typeof action.payload == 'undefined')
@@ -108,31 +115,6 @@ export const musicPlayerReducer = handleActions({
             newState.currentMusicIndex = action.payload
         else 
             newState.currentMusicIndex = action.payload.index
-        return newState
-    },
-
-    [ACCEPT_PLAY_MUSIC] : (state , action) => {
-        const newState =  { ...state }
-        console.log(action.payload)
-        newState.isPlaying = true
-        return newState
-    },
-
-    [ABORT_PLAY_MUSIC] : (state , action) => {
-        const newState =  { ...state }
-        newState.isPlaying = false
-        return newState
-    },
-
-    [ACCEPT_PAUSE_MUSIC] : (state , action) => {
-        const newState = { ...state }
-        newState.isPlaying = false
-        return newState
-    },
-
-    [ABORT_PAUSE_MUSIC] : (state , action) => {
-        const newState = { ...state }
-        newState.isPlaying = false
         return newState
     },
 
@@ -238,18 +220,6 @@ export const musicPlayerReducer = handleActions({
 
 }, musicPlayerInitialState)
 
-function* fetchPlayMusicSaga(action) {
-    const { index , duration , _id } = action.payload
-
-    yield put({type : CHANGE_CURRENT_MUSIC_INDEX , payload : index})
-    yield put({type : CHANGE_CURRENT_DURATION , payload : duration})
-   
-    yield postStream('/mymusic/playmusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify({'_id' : _id , 'duration' : duration}) , ACCEPT_PLAY_MUSIC , ABORT_PLAY_MUSIC)
-}
-
-function* fetchPauseMusicSaga(action) {
-    yield post('/mymusic/pausemusic' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PAUSE_MUSIC , ABORT_PAUSE_MUSIC)
-}
 
 function* fetchGetPlayListSaga(action) {
     yield post('/mymusic/getplaylist' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_PLAYLIST , ABORT_GET_PLAYLIST)
@@ -265,8 +235,6 @@ function* fetchPlayListItemRemoveSaga(action) {
 }
 
 export function* musicPlayerSaga () {
-    yield takeLatest(FETCH_PLAY_MUSIC , fetchPlayMusicSaga)
-    yield takeLatest(FETCH_PAUSE_MUSIC , fetchPauseMusicSaga)
     yield takeLatest(FETCH_GET_PLAYLIST , fetchGetPlayListSaga)
     yield takeLatest(FETCH_PLAYLIST_ITEM_ADD , fetchPlayListItemAddSaga)
     yield takeLatest(FETCH_PLAYLIST_ITEM_REMOVE , fetchPlayListItemRemoveSaga)

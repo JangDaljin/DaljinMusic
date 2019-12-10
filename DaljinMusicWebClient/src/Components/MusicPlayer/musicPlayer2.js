@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
 import { bindActionCreators } from 'redux'
 
-
+import Socket from '../../Socket/socket'
 
 import classNames from 'classnames/bind'
 import style from './musicPlayer2.css'
@@ -19,15 +19,16 @@ const mmss = (value) => {
 class MusicPlayer extends Component {
 
     state = {
-        progressDraging : false
+        progressDraging : false,
+        socket : new Socket()
     }
 
     componentDidMount () {
-        
+        this.state.socket.open()
     }
 
     componentWillUnmount () {
-        
+        this.state.socket.close()
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -65,12 +66,20 @@ class MusicPlayer extends Component {
         else {
             duration = _duration
         }
+
+        const _id = this.props.playList.getIn([index , '_id'])
         
-        this.props.MusicPlayerActions.fetchPlayMusic({'index' : index , 'duration' : duration , '_id' : this.props.playList.getIn([index , '_id'])})
+        this.props.MusicPlayerActions.playMusic(
+            {
+                'index' : index , 
+                'duration' : duration , 
+                '_id' : _id
+            })
+        this.state.socket.play(_id , duration)
     }
 
     onClickPause = () => {
-        this.props.MusicPlayerActions.fetchPauseMusic()
+        this.props.MusicPlayerActions.pauseMusic()
     }
 
     onClickListItemRemove = () => {

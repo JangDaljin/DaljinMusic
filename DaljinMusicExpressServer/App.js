@@ -21,6 +21,7 @@ const MyMusicRouter = require('./routes/myMusic')
 const TestRouter = require('./routes/test')
 const AdminRouter = require('./routes/admin')
 const SearchRouter = require('./routes/search')
+const SocketServer = require('./ServerSocket/serverSocket')
 
 //DB
 const MongoDB = require('./Database/mongoDB')
@@ -97,11 +98,14 @@ const directorySetting = async () => {
 }
 
 
-http.createServer(app).listen(PORT , () => {
+const expressServer = http.createServer(app).listen(PORT , () => {
     directorySetting()
     console.log(`SERVER OPEN (PORT : ${PORT})`)
     MongoDB.connect();
 })
+
+SocketServer(expressServer)
+
 
 
 
