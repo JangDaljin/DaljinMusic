@@ -4,7 +4,7 @@ import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
 import { bindActionCreators } from 'redux'
 
 import classNames from 'classnames/bind'
-import style from './musicPlayer2.css'
+import style from './musicPlayer.css'
 const cn = classNames.bind(style)
 
 const mmss = (value) => {
@@ -66,6 +66,23 @@ class MusicPlayer extends Component {
                 this.audio.play()
                 this.props.MusicPlayerActions.play()
             }
+
+            //외부에서 원격명령
+            if(prevProps.remote !== this.props.remote) {
+                if(this.props.remote.get('play')) 
+                    this.onClickPlay()
+                
+                if(this.props.remote.get('pause')) 
+                    this.onClickPause()
+
+                if(this.props.remote.get('next'))
+                    this.onClickNextMusic()
+
+                if(this.props.remote.get('prev'))
+                    this.onClickPrevMusic()
+                
+                this.props.MusicPlayerActions.offRemote()
+            }
         }
     }
 
@@ -74,7 +91,11 @@ class MusicPlayer extends Component {
             //아무것도 안함.
         }
         else if(this.props.currentMusicIndex === -1) {
-            this.props.MusicPlayerActions.changeCurrentMusicIndex(0)
+            let index = 0;
+            if(this.props.playOption.get('random')) {
+                index = this.props.randomPlayList.getIn([0 , 'index'])
+            }
+            this.props.MusicPlayerActions.changeCurrentMusicIndex(index)
         }
         else {
             this.audio.play()
@@ -134,12 +155,30 @@ class MusicPlayer extends Component {
     }
 
     onClickNextMusic = () => {
-        const index = this.props.currentMusicIndex + 1 >= this.props.playList.size ? 0 : this.props.currentMusicIndex + 1
+        let index;
+        if(this.props.playOption.get('random')) {
+            let randomIndex = this.props.playList.getIn([this.props.currentMusicIndex , 'randomIndex'])
+            randomIndex = randomIndex + 1 >= this.props.randomPlayList.size ? 0 : randomIndex + 1
+            index = this.props.randomPlayList.getIn([randomIndex , 'index'])
+            console.log(`next : ${index}`)
+        }
+        else {
+            index = this.props.currentMusicIndex + 1 >= this.props.playList.size ? 0 : this.props.currentMusicIndex + 1
+        }
         this.props.MusicPlayerActions.changeCurrentMusicIndex(index)
     }
 
     onClickPrevMusic = () => {
-        const index = this.props.currentMusicIndex - 1 <= -1 ? this.props.playList.size : this.props.currentMusicIndex - 1
+        let index;
+        if(this.props.playOption.get('random')) {
+            let randomIndex = this.props.playList.getIn([this.props.currentMusicIndex , 'randomIndex'])
+            randomIndex = randomIndex - 1 <= -1 ? this.props.randomPlayList.size - 1 : randomIndex - 1
+            index = this.props.randomPlayList.getIn([randomIndex , 'index'])
+            console.log(`prev : ${index}`)
+        }
+        else {
+            index = this.props.currentMusicIndex - 1 <= -1 ? this.props.playList.size - 1 : this.props.currentMusicIndex - 1
+        }
         this.props.MusicPlayerActions.changeCurrentMusicIndex(index)
     }
 
@@ -207,9 +246,9 @@ class MusicPlayer extends Component {
                         </div>
 
                         <div className={cn('buttons')}>
-                            <div className={cn("button fas fa-exchange-alt")}></div>
-                            <div className={cn("button fas fa-sort-numeric-down")}></div>
-                            <div className={cn("button fas fa-random")}></div>
+                            <div className={cn("button fas fa-exchange-alt" , { 'button-active' : this.props.playOption.get('loop') })} onClick={(e) => this.props.MusicPlayerActions.changePlayOption({'loop' : !this.props.playOption.get('loop')})}></div>
+                            <div className={cn("button fas fa-sort-numeric-down" , { 'button-active' : this.props.playOption.get('one') })} onClick={(e) => this.props.MusicPlayerActions.changePlayOption({'one' : !this.props.playOption.get('one')})}></div>
+                            <div className={cn("button fas fa-random" , { 'button-active' : this.props.playOption.get('random') })} onClick={(e) => this.props.MusicPlayerActions.changePlayOption({'random' : !this.props.playOption.get('random')})}></div>
                         </div>
                     </div>
 
@@ -256,11 +295,14 @@ export default connect(
         isAuthenticated : state.auth.isAuthenticated,
         authMonitor : state.auth.monitor,
         playList : state.musicPlayer.playList,
-        playingOption : state.musicPlayer.playingOption,
+        randomPlayList : state.musicPlayer.randomPlayList,
+        playOption : state.musicPlayer.playOption,
         currentMusicIndex : state.musicPlayer.currentMusicIndex,
         currentDuration : state.musicPlayer.currentDuration,
         isPlaying : state.musicPlayer.isPlaying,
         show : state.musicPlayer.show,
+        remote : state.musicPlayer.remote,
+        musicPlayerMonitor : state.musicPlayer.monitor,
     }),
     (dispatch) => ({
         MusicPlayerActions : bindActionCreators(musicPlayerActions , dispatch)

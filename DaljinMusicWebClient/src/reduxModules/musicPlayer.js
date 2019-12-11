@@ -39,14 +39,20 @@ export const acceptGetPlayList = createAction(ACCEPT_GET_PLAYLIST)
 export const ABORT_GET_PLAYLIST = 'mp/ABORT_GET_PLAYLIST'
 export const abortGetPlayList = createAction(ABORT_GET_PLAYLIST)
 
+export const MONITOR_OPEN = 'mp/MONITOR_OPEN'
+export const monitorOpen = createAction(MONITOR_OPEN)
+
+export const MONITOR_CLOSE = 'mp/MONITOR_CLOSE'
+export const monitorClose = createAction(MONITOR_CLOSE)
+
 export const FETCH_PLAYLIST_ITEM_ADD = 'mp/FETCH_PLAYLIST_ITEM_ADD'
 export const fetchPlayListItemAdd = createAction(FETCH_PLAYLIST_ITEM_ADD)
 
-export const ACCEPT_PLAYLIST_ITEM_ADD = 'mp/ACCEPT_PLAYLIST_ITEM_ADD'
-export const acceptPlayListItemAdd = createAction(ACCEPT_PLAYLIST_ITEM_ADD)
-
-export const ABORT_PLAYLIST_ITEM_ADD = 'mp/ABORT_PLAYLIST_ITEM_ADD'
-export const abortPlayListItemAdd = createAction(ABORT_PLAYLIST_ITEM_ADD)
+//ACCEPT_GET_PLAYLIST, ABORT_GET_PLAYLIST 와 코드가 같음
+//export const ACCEPT_PLAYLIST_ITEM_ADD = 'mp/ACCEPT_PLAYLIST_ITEM_ADD'
+//export const acceptPlayListItemAdd = createAction(ACCEPT_PLAYLIST_ITEM_ADD)
+//export const ABORT_PLAYLIST_ITEM_ADD = 'mp/ABORT_PLAYLIST_ITEM_ADD'
+//export const abortPlayListItemAdd = createAction(ABORT_PLAYLIST_ITEM_ADD)
 
 export const PLAYLIST_ITEM_REMOVE = 'mp/PLAYLIST_ITEM_REMOVE'
 export const playListItemRemove = createAction(PLAYLIST_ITEM_REMOVE)
@@ -60,10 +66,18 @@ export const acceptPlayListItemRemove = createAction(ACCEPT_PLAYLIST_ITEM_REMOVE
 export const ABORT_PLAYLIST_ITEM_REMOVE = 'mp/ABORT_PLAYLIST_ITEM_REMOVE'
 export const abortPlayListItemRemove = createAction(ABORT_PLAYLIST_ITEM_REMOVE)
 
+export const ON_REMOTE = 'mp/ON_REMOTE'
+export const onRemote = createAction(ON_REMOTE)
+
+export const OFF_REMOTE = 'mp/OFF_REMOTE'
+export const offRemote = createAction(OFF_REMOTE)
 
 const musicPlayerInitialState = {
     show : false,
+
     playList : List([]),// Map({ song : ### , album : ### , singer : ### , duration : ### , checked : ###})
+    randomPlayList : List([]),
+
     currentMusicIndex : -1,
     currentDuration : 0,
     playOption : Map({
@@ -72,7 +86,13 @@ const musicPlayerInitialState = {
         random : false,
     }),
     isPlaying : false,
-    source : '',
+    remote : Map({
+        play : false,
+        pause : false,
+        next : false,
+        prev : false,
+    }),
+    monitor : false,
 }
 
 export const musicPlayerReducer = handleActions({
@@ -135,12 +155,13 @@ export const musicPlayerReducer = handleActions({
 
         const { loop , random , one } = action.payload 
 
-        if(typeof loop !== 'undefined' && typeof loop === 'boolean')
+        if(typeof loop === 'boolean')
             newState.playOption = newState.playOption.set('loop' , loop)
-        if(typeof random !== 'undefined' && typeof random === 'boolean')
+        if(typeof random === 'boolean') 
             newState.playOption = newState.playOption.set('random' , random)
-        if(typeof one !== 'undefined' && typeof one === 'boolean')
+        if(typeof one === 'boolean')
             newState.playOption = newState.playOption.set('one' , one)
+        console.dir(`option : ${newState.playOption.get('random')}`)
 
         return newState
     },
@@ -158,27 +179,36 @@ export const musicPlayerReducer = handleActions({
     },
 
     [ACCEPT_GET_PLAYLIST] : (state , action) => {
+        //일반 리스트 생성
         const newState = { ...state }
         const { playList } = action.payload
         playList.map(value => { value.checked = false; return value})
-        newState.playList = newState.playList.clear().concat(fromJS(playList))    
+        newState.playList = newState.playList.clear().concat(fromJS(playList))
+        newState.randomPlayList = newState.randomPlayList.clear()
+
+
+        //랜덤리스트 생성
+        let indexArray = Array(newState.playList.size)
+        for(let i = 0 ; i < indexArray.length; i++) {
+            indexArray[i] = i
+        }
+        
+        for(let i = 0 ; i < newState.playList.size; i++) {
+            const random = parseInt(Math.random() * indexArray.length)
+            const randomIndex = indexArray[random]
+            indexArray.splice(random , 1)
+
+            newState.randomPlayList = newState.randomPlayList.push(newState.playList.get(randomIndex).set('index' , randomIndex))
+            newState.playList = newState.playList.setIn([randomIndex , 'randomIndex'] , newState.randomPlayList.size-1)
+        }
+
+        console.dir(newState.playList.toJS())
+        console.dir(newState.randomPlayList.toJS())
+
         return newState
     },
 
     [ABORT_GET_PLAYLIST] : (state , action) => {
-        const newState = { ...state }
-        return newState
-    },
-
-    [ACCEPT_PLAYLIST_ITEM_ADD] : (state , action) => {
-        const newState = { ...state }
-        const { playList } = action.payload
-        playList.map((value => { value.checked = false; return value; }))
-        newState.playList = newState.playList.concat(fromJS(playList))    
-        return newState
-    },
-
-    [ABORT_PLAYLIST_ITEM_ADD] : (state , action) => {
         const newState = { ...state }
         return newState
     },
@@ -203,13 +233,46 @@ export const musicPlayerReducer = handleActions({
 
     [ACCEPT_PLAYLIST_ITEM_REMOVE] : (state , action) => {
         const newState = { ...state }       
+        //할일 없음
         return newState
     },
 
     [ABORT_PLAYLIST_ITEM_REMOVE] : (state , action) => {
         const newState = { ...state }
+        //할일 없음
         return newState
     },
+
+
+    [ON_REMOTE] : (state , action) => {
+        const newState = { ...state }
+        const { play , pause , next , prev } = action.payload
+        if(typeof play == "boolean")
+            newState.remote = newState.remote.set('play' , play)
+        if(typeof pause == "boolean")
+            newState.remote = newState.remote.set('pause' , pause)
+        if(typeof next == "boolean")
+            newState.remote = newState.remote.set('next' , next)
+        if(typeof prev == "boolean")
+            newState.remote = newState.remote.set('prev' , prev)
+        return newState
+    },
+    [OFF_REMOTE] : (state , action) => {
+        const newState = { ...state }
+        newState.remote = newState.remote.set('play' , false).set('pause' , false).set('next' , false).set('prev' , false)
+        return newState
+    },
+    [MONITOR_OPEN] : (state , action) => {
+        const newState = { ...state }
+        newState.monitor = true
+        return newState
+    },
+
+    [MONITOR_CLOSE] : (state , action) => {
+        const newState = { ...state }
+        newState.monitor = false
+        return newState
+    }
 
 
 }, musicPlayerInitialState)
@@ -219,12 +282,16 @@ function* fetchGetPlayListSaga(action) {
 }
 
 function* fetchPlayListItemAddSaga(action) {
-    yield post('/mymusic/playlistitemadd' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAYLIST_ITEM_ADD , ABORT_PLAYLIST_ITEM_ADD)
+    yield put({type : MONITOR_OPEN})
+    yield post('/mymusic/playlistitemadd' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_PLAYLIST , ABORT_GET_PLAYLIST)
+    yield put({type : MONITOR_CLOSE})
 }
 
 function* fetchPlayListItemRemoveSaga(action) {
+    yield put({type : MONITOR_OPEN})
     yield put({type : PLAYLIST_ITEM_REMOVE , payload : action.payload})
     yield post('/mymusic/playlistitemremove' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAYLIST_ITEM_REMOVE , ABORT_PLAYLIST_ITEM_REMOVE)
+    yield put({type : MONITOR_CLOSE})
 }
 
 export function* musicPlayerSaga () {

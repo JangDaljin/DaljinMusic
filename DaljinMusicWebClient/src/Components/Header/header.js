@@ -5,7 +5,7 @@ import Logo from './Logo/logo'
 import Search from './Search/search'
 import Navigator from './Navigator/navigator'
 import Auth from './Auth/auth'
-
+import MusicPlayerButton from './MusicPlayer/musicPlayerButton'
 
 
 import styles from './header.css'
@@ -37,6 +37,8 @@ class Header extends Component {
                 <Search />
 
                 <Auth />
+
+                <MusicPlayerButton />
             </div>
         )
     }

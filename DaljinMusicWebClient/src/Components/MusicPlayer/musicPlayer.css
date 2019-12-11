@@ -266,3 +266,8 @@
     color: #069A;
     margin-right: 5px;
 }
+
+.button-active {
+    color: #FFF000 !important;
+}
+

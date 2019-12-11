@@ -63,10 +63,16 @@ class Top100ViewBody extends Component {
     }
 
     play = () => {
-        const firstSelectedMusicIndex = this.state.selected.findIndex(value => value)
-        const musicId = this.props.items.getIn([firstSelectedMusicIndex , '_id'])
         this.addMusicPlayer()
-        this.props.MusicPlayerActions.fetchPlayMusic({'_id' : musicId})
+
+        //서버에서 응답 받을때까지 대기하고 재생
+        const interval = setInterval(() => {
+            if(!this.props.musicPlayerMonitor) {
+                this.props.MusicPlayerActions.onRemote({'play' : true})
+                clearInterval(interval)
+            }
+        } , 1000)
+        
     }
 
     onClickAddList = (index) => {
@@ -179,7 +185,8 @@ export default connect(
         items : state.top100.items,
         isAuthenticated : state.auth.isAuthenticated,
         myMusicLists : state.myMusic.myMusicLists,
-        myMusicListsLoading : state.myMusic.loading
+        myMusicListsLoading : state.myMusic.loading,
+        musicPlayerMonitor : state.musicPlayer.monitor,
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),
