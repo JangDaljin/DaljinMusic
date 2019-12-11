@@ -10,11 +10,10 @@ export const show = createAction(SHOW)
 export const HIDE = 'mp/HIDE'
 export const hide = createAction(HIDE) 
 
-export const PLAY_MUSIC = 'mp/PLAY_MUSIC'
-export const playMusic = createAction(PLAY_MUSIC)
-
-export const PAUSE_MUSIC = 'mp/PAUSE_MUSIC'
-export const pauseMusic = createAction(PAUSE_MUSIC)
+export const PLAY = 'mp/PLAY'
+export const play = createAction(PLAY)
+export const PAUSE = 'mp/PAUSE'
+export const pause = createAction(PAUSE)
 
 export const CHANGE_CURRENT_MUSIC_INDEX = 'mp/CHANGE_CURRENT_MUSIC_INDEX'
 export const changeCurrentMusicIndex = createAction(CHANGE_CURRENT_MUSIC_INDEX)
@@ -65,7 +64,7 @@ export const abortPlayListItemRemove = createAction(ABORT_PLAYLIST_ITEM_REMOVE)
 const musicPlayerInitialState = {
     show : false,
     playList : List([]),// Map({ song : ### , album : ### , singer : ### , duration : ### , checked : ###})
-    currentMusicIndex : 0,
+    currentMusicIndex : -1,
     currentDuration : 0,
     playOption : Map({
         loop : false,
@@ -73,6 +72,7 @@ const musicPlayerInitialState = {
         random : false,
     }),
     isPlaying : false,
+    source : '',
 }
 
 export const musicPlayerReducer = handleActions({
@@ -89,19 +89,13 @@ export const musicPlayerReducer = handleActions({
         return newState
     },
 
-
-    [PLAY_MUSIC] : (state , action) => {
+    [PLAY] : (state , action) => {
         const newState = { ...state }
-        const { index , duration } = action.payload
-
         newState.isPlaying = true
-        newState.currentMusicIndex = index
-        newState.currentDuration = duration
-
         return newState
     },
 
-    [PAUSE_MUSIC] : (state , action) => {
+    [PAUSE] : (state , action) => {
         const newState = { ...state }
         newState.isPlaying = false
         return newState
@@ -219,7 +213,6 @@ export const musicPlayerReducer = handleActions({
 
 
 }, musicPlayerInitialState)
-
 
 function* fetchGetPlayListSaga(action) {
     yield post('/mymusic/getplaylist' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_PLAYLIST , ABORT_GET_PLAYLIST)

@@ -324,27 +324,31 @@ router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
 
 }))
 
-router.post('/playmusic' , doAsync(async (req , res , next) => {
+router.get('/playmusic' , doAsync(async (req , res , next) => {
 
-    const { _id , duration } = req.body
+    const { musicid } = req.query
 
+    
     try {
-        const music = await MusicModel.findOne({ '_id' : _id })
-
+        const music = await MusicModel.findOne({ '_id' : musicid })
         const filePath = music.filePath
-        console.log(filePath)
+        const fileStat = fs.statSync(filePath)
+        
+        res.writeHead(206, {
+            'Content-Type': 'audio/mpeg',
+            'Content-Length': fileStat.size,
+            'Accepts-Ranges' : 'bytes',
+            'Content-Range' : `bytes 0-1023/${fileStat.size}`
+        });
+
         const rs = fs.createReadStream(filePath)
-
-        rs.on('end' , ()=> {
-            console.log('end')
-        })
-
         rs.pipe(res)
     }
     catch(err) {
         console.error(err)
         res.end()
     }
+    
 
 }))
 

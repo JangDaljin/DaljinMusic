@@ -16,6 +16,7 @@ import TestView from './Components/TestView/test'
 import AdminView from './Components/AdminView/adminView'
 import MusicPlayer from './Components/MusicPlayer/musicPlayer2'
 import Modal from './Components/Modal/modal'
+import MessageView from './Components/MessageView/messageView'
 class Router extends Component {
 
     render () {
@@ -35,6 +36,7 @@ class Router extends Component {
                 </Switch>
                 <MusicPlayer />
                 <Modal />
+                <MessageView />
             </BrowserRouter>
         )
     }

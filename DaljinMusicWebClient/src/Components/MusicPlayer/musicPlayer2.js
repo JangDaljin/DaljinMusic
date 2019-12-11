@@ -3,15 +3,20 @@ import { connect } from 'react-redux'
 import * as musicPlayerActions from '../../ReduxModules/musicPlayer'
 import { bindActionCreators } from 'redux'
 
-import Socket from '../../Socket/socket'
-
 import classNames from 'classnames/bind'
 import style from './musicPlayer2.css'
 const cn = classNames.bind(style)
 
 const mmss = (value) => {
-    const m = parseInt(value / 60)
-    const s = Math.round(value % 60)
+    let { m , s } = 0
+    if(typeof value == 'number') {
+        m = Math.floor(value / 60)
+        s = Math.round(value % 60)
+    }
+    else {
+        m = 0;
+        s = 0;
+    }
 
     return `${m}:${s < 10 ? '0'+s : s}`
 }
@@ -20,15 +25,20 @@ class MusicPlayer extends Component {
 
     state = {
         progressDraging : false,
-        socket : new Socket()
     }
 
     componentDidMount () {
-        this.state.socket.open()
+        this.audio.ontimeupdate = () => {
+            this.props.MusicPlayerActions.changeCurrentDuration(this.audio.currentTime)
+        }
+
+        this.audio.onended = () => {
+            this.onClickNextMusic(this.props.currentMusicIndex)
+        }
     }
 
     componentWillUnmount () {
-        this.state.socket.close()
+
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -47,39 +57,34 @@ class MusicPlayer extends Component {
                 const progressballLeft = (this.props.currentDuration / this.props.playList.getIn([this.props.currentMusicIndex , 'duration'])) * 100
                 this.progressball.style.setProperty('--progress-ball-left' , `${progressballLeft}%`)
             }
+
+            //현재 재생 인덱스 변경
+            if(prevProps.currentMusicIndex !== this.props.currentMusicIndex) {
+                this.audio.pause()
+                this.source.src =  `${process.env.REACT_APP_SERVER}/mymusic/playmusic?musicid=${this.props.playList.getIn([this.props.currentMusicIndex , '_id'])}`
+                this.audio.load()
+                this.audio.play()
+                this.props.MusicPlayerActions.play()
+            }
         }
     }
 
-    onClickPlay = (_index , _duration) => {
-        let index , duration
-
-        if(typeof _index == 'undefined') {
-            index = this.props.currentMusicIndex
+    onClickPlay = () => {
+        if(this.props.playList.size === 0) {
+            //아무것도 안함.
+        }
+        else if(this.props.currentMusicIndex === -1) {
+            this.props.MusicPlayerActions.changeCurrentMusicIndex(0)
         }
         else {
-            index = _index
+            this.audio.play()
+            this.props.MusicPlayerActions.play()
         }
-
-        if(typeof _duration == 'undefined') {
-            duration = 0;
-        }
-        else {
-            duration = _duration
-        }
-
-        const _id = this.props.playList.getIn([index , '_id'])
-        
-        this.props.MusicPlayerActions.playMusic(
-            {
-                'index' : index , 
-                'duration' : duration , 
-                '_id' : _id
-            })
-        this.state.socket.play(_id , duration)
     }
 
     onClickPause = () => {
-        this.props.MusicPlayerActions.pauseMusic()
+        this.audio.pause()
+        this.props.MusicPlayerActions.pause()
     }
 
     onClickListItemRemove = () => {
@@ -104,7 +109,6 @@ class MusicPlayer extends Component {
     onMouseUpProgressBar = (e) => {
         e.stopPropagation()
         this.setState({progressDraging : false})
-        this.onClickPlay(this.props.currentMusicIndex , this.props.currentDuration)
     }
 
     onMouseOutProgressBar = (e) => {
@@ -125,18 +129,18 @@ class MusicPlayer extends Component {
         const width = this.progressbar.clientWidth
         const seekTime = parseInt((x / width) * this.props.playList.getIn([this.props.currentMusicIndex , 'duration']))
 
-        //this.progressball.style.setProperty('--progress-ball-left' , `${x}px`)
-        this.props.MusicPlayerActions.changeCurrentDuration({duration : seekTime})
+        this.props.MusicPlayerActions.changeCurrentDuration(seekTime)
+        this.audio.currentTime = seekTime
     }
 
     onClickNextMusic = () => {
         const index = this.props.currentMusicIndex + 1 >= this.props.playList.size ? 0 : this.props.currentMusicIndex + 1
-        this.onClickPlay(index)
+        this.props.MusicPlayerActions.changeCurrentMusicIndex(index)
     }
 
     onClickPrevMusic = () => {
-        const index = this.props.currentMusicIndex + 1 >= this.props.playList.size ? 0 : this.props.currentMusicIndex + 1
-        this.onClickPlay(index)
+        const index = this.props.currentMusicIndex - 1 <= -1 ? this.props.playList.size : this.props.currentMusicIndex - 1
+        this.props.MusicPlayerActions.changeCurrentMusicIndex(index)
     }
 
     
@@ -153,20 +157,26 @@ class MusicPlayer extends Component {
                     <div className={cn('controller')}>
 
                         <div className={cn('info')}>
-                            <div className={cn('img-wrap')} style={{backgroundImage:`url('${this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'albumImgUri'])}')`}}>
-                                <div className={cn('img')}>
+                            <div className={cn('img-wrap')}>
+                                {this.props.currentMusicIndex !== -1 &&
+                                    <div className={cn('img')} style={{backgroundImage:`url('${this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'albumImgUri'])}')`}}>
 
-                                </div>
+                                    </div>
+                                }
                             </div>
                             <div className={cn('info-text')}>
-                                <div className={cn('info-song')}>{this.props.playList.getIn([this.props.currentMusicIndex , 'song'])}</div>
-                                <div className={cn('info-singer')}>{this.props.playList.getIn([this.props.currentMusicIndex , 'singer' , 'name'])}</div>
-                                <div className={cn('info-album')}>{this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'name'])}</div>
+                                <div className={cn('info-song')}>{this.props.currentMusicIndex !== -1 && this.props.playList.getIn([this.props.currentMusicIndex , 'song'])}</div>
+                                <div className={cn('info-singer')}>{this.props.currentMusicIndex !== -1 && this.props.playList.getIn([this.props.currentMusicIndex , 'singer' , 'name'])}</div>
+                                <div className={cn('info-album')}>{this.props.currentMusicIndex !== -1 && this.props.playList.getIn([this.props.currentMusicIndex , 'album' , 'name'])}</div>
                             </div>
                         </div>
                     
 
                         <div className={cn('progress')}>
+                            <audio ref={ref => this.audio = ref} autoPlay>
+                                <source ref={ref => this.source = ref} src='' type="audio/mpeg" /> 
+                            </audio>
+
                             <div className={cn('duration')}>{mmss(this.props.currentDuration)}</div>
                             <div className={cn('progress-bar')}>
  
@@ -209,7 +219,10 @@ class MusicPlayer extends Component {
                             {this.props.playList.map(
                                 (value , index) => (
                                     <div key={index} className={cn('list-item')}>
-                                        <div className={cn('list-item-text')} onClick={(e) => { this.onClickPlay(index) }}>
+                                        <div className={cn('list-item-text')} onClick={(e) => { this.props.MusicPlayerActions.changeCurrentMusicIndex(index) }}>
+                                            {this.props.currentMusicIndex === index &&
+                                                <i className={cn("far fa-play-circle" , "current-music-mark")}></i>
+                                            }
                                             {value.getIn(['singer' , 'name'])} - {value.getIn(['song'])} - {value.getIn(['album' , 'name'])}
                                         </div>
                                         <div className={cn('list-item-check')}>
@@ -231,6 +244,7 @@ class MusicPlayer extends Component {
                     </div>
 
                 </div>
+
             </div>
         )
     }

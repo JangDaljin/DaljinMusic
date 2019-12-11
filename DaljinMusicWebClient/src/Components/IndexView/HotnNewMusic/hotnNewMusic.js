@@ -14,9 +14,19 @@ class HotnNewMusic extends Component {
 
     constructor(props) {
         super(props)
+
         props.HnnActions.hnnMusicFetch();
+
         this.state = {
             curAlbumImgUri : ''
+        }
+    }
+
+    componentDidUpdate (prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(prevProps.items !== this.props.items) {
+                this.setState({curAlbumImgUri : this.props.items[0].albumImgUri})
+            }
         }
     }
 

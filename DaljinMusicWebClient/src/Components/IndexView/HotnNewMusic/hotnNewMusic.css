@@ -1,6 +1,7 @@
 .hotnnewmusic {
     display: flex;
     flex-direction: column;
+    font-family: 'jua';
 }
 
 .hotnnewmusic-title {

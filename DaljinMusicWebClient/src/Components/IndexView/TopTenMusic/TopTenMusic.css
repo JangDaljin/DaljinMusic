@@ -1,6 +1,7 @@
 .toptenmusic {
     display: flex;
     flex-direction: column;
+    font-family: 'jua';
 }
 
 .toptenmusic-title {

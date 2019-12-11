@@ -74,10 +74,7 @@
 .img-wrap {
     position: relative;
     width: 101px;
-    background : url('/twice2.jpg');
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-color: #EEE;
     border-bottom: 2px solid #303030;
 }
 
@@ -93,6 +90,9 @@
     right: 0;
     top: 0;
     bottom: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .info-text {
@@ -213,6 +213,12 @@
     align-items: center;
 }
 
+.list-item:hover {
+    background-color: #303030;
+    color: #EEE;
+
+}
+
 .list-item-text {
     flex: 1 0 auto;
     
@@ -228,9 +234,6 @@
     margin-top: 0px;
 }
 
-.list-item:hover {
-    color: #069;
-}
 
 
 .list-buttons {
@@ -257,4 +260,9 @@
 .button > span {
     margin-left: 5px;
     font-family: 'jua';
+}
+
+.current-music-mark {
+    color: #069A;
+    margin-right: 5px;
 }

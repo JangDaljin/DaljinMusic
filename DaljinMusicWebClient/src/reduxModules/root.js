@@ -11,6 +11,7 @@ import { adminReducer as admin , adminSaga} from './admin'
 import { searchReducer as search , searchSaga } from './search'
 import { musicPlayerReducer as musicPlayer , musicPlayerSaga} from './musicPlayer'
 import { modalReducer as modal } from './modal'
+import { messageReducer as message , messageSaga } from './message'
 
 export const rootReducer = combineReducers({
     auth,
@@ -24,6 +25,7 @@ export const rootReducer = combineReducers({
     search,
     musicPlayer,
     modal,
+    message,
 })
 
 
@@ -38,4 +40,5 @@ export function *rootSaga() {
     yield fork(adminSaga)
     yield fork(searchSaga)
     yield fork(musicPlayerSaga)
+    yield fork(messageSaga)
 }
