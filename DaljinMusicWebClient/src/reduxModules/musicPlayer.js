@@ -78,6 +78,8 @@ const musicPlayerInitialState = {
     playList : List([]),// Map({ song : ### , album : ### , singer : ### , duration : ### , checked : ###})
     randomPlayList : List([]),
 
+    addedIndex : -1,
+
     currentMusicIndex : -1,
     currentDuration : 0,
     playOption : Map({
@@ -161,7 +163,7 @@ export const musicPlayerReducer = handleActions({
             newState.playOption = newState.playOption.set('random' , random)
         if(typeof one === 'boolean')
             newState.playOption = newState.playOption.set('one' , one)
-        console.dir(`option : ${newState.playOption.get('random')}`)
+        //console.dir(`option : ${newState.playOption.get('loop')}`)
 
         return newState
     },
@@ -181,7 +183,10 @@ export const musicPlayerReducer = handleActions({
     [ACCEPT_GET_PLAYLIST] : (state , action) => {
         //일반 리스트 생성
         const newState = { ...state }
-        const { playList } = action.payload
+        const { playList  , addedIndex } = action.payload
+
+        newState.addedIndex = addedIndex
+
         playList.map(value => { value.checked = false; return value})
         newState.playList = newState.playList.clear().concat(fromJS(playList))
         newState.randomPlayList = newState.randomPlayList.clear()
@@ -202,8 +207,8 @@ export const musicPlayerReducer = handleActions({
             newState.playList = newState.playList.setIn([randomIndex , 'randomIndex'] , newState.randomPlayList.size-1)
         }
 
-        console.dir(newState.playList.toJS())
-        console.dir(newState.randomPlayList.toJS())
+        //console.dir(newState.playList.toJS())
+        //console.dir(newState.randomPlayList.toJS())
 
         return newState
     },

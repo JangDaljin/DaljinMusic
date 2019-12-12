@@ -38,10 +38,8 @@ class TodaysMusic extends Component {
                     <div className={cn('fixed')}><p>앨범</p></div>
                     <div className={cn('nonfixed')}><p>{this.props.album}</p></div>
                 </div>
-                <div className={cn('todaymusic-info-button')}>
-                    <i className="fas fa-headphones fa-2x"></i>
-                </div>
             </div> 
+
           </div>
 
         )

@@ -20,7 +20,13 @@ class TopTenMusic extends Component {
 
     play = (index) => {
         this.addMusicPlayer(index)
-        this.props.MusicPlayerActions.fetchPlayMusic({'_id' : this.props.top10.getIn([index , '_id'])})
+        //서버에서 응답 받을때까지 대기하고 재생
+        const interval = setInterval(() => {
+            if(!this.props.musicPlayerMonitor) {
+                this.props.MusicPlayerActions.onRemote({'play' : true})
+                clearInterval(interval)
+            }
+        } , 1000)
     }
 
     render () {
@@ -72,6 +78,7 @@ export default connect(
         top10 : state.top100.items.slice(0,10),
         isAuthenticated : state.auth.isAuthenticated,
         userId : state.auth.userId,
+        musicPlayerMonitor : state.musicPlayer.monitor
     }),
     (dispatch) => ({
         top100Actions : bindActionCreators(Top100Actions , dispatch),

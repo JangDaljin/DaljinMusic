@@ -5,7 +5,8 @@ import {
     Switch
 } from 'react-router-dom'
 import IndexView from './Components/IndexView/indexView'
-import AuthView from './Components/AuthView/authView'
+import AuthView from './Components/AuthView/authView2'
+//import AuthView from './Components/AuthView/authView'
 import Top100View from './Components/Top100View/top100View'
 import MyMusicView from './Components/MyMusicView/myMusicView'
 import SearchView from './Components/SearchView/searchView'
@@ -16,7 +17,7 @@ import TestView from './Components/TestView/test'
 import AdminView from './Components/AdminView/adminView'
 import MusicPlayer from './Components/MusicPlayer/musicPlayer'
 import Modal from './Components/Modal/modal'
-import MessageView from './Components/MessageView/messageView'
+//import MessageView from './Components/MessageView/messageView'
 class Router extends Component {
 
     render () {
@@ -36,7 +37,6 @@ class Router extends Component {
                 </Switch>
                 <MusicPlayer />
                 <Modal />
-                <MessageView />
             </BrowserRouter>
         )
     }

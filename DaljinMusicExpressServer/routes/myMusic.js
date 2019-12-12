@@ -264,22 +264,29 @@ router.post('/getplaylist' , doAsync(async (req , res , next) => {
 router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
     const response = {
         message : '',
-        addedPlayList : []
+        playList : [],
+        addedIndex : 0,
     }
     const { userId , addList } = req.body
 
     try {
-        const foundMusics = await MusicModel.find({'_id' : { $in : addList }}).populate('singer album').lean()
-        response.playList = foundMusics
-
+        const foundMusics = await MusicModel.find({'_id' : { $in : addList }}).lean()
 
         if(userId == req.session.userId) {
             
             const user = await UserModel.findOne({'userId' : userId})
-            for(const foundMusic of foundMusics) {
+            
+            //추가된 아이템 시작 인덱스
+            response.addedIndex = user.playList.length
+
+            for(foundMusic of foundMusics) {
                 user.playList.push(foundMusic._id)
             }
-            await user.save()
+
+            const doc = await user.save()
+
+            const savedUser = await UserModel.findOne(doc).populate({path : 'playList' , populate : 'singer album'})
+            response.playList = savedUser.playList
         }
         else {
             console.log('아이디 검증 실패')
@@ -291,6 +298,7 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
         console.message += '저장 실패'
     }
 
+    console.dir(response)
     
     res.json(response)
 }))

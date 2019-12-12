@@ -4,6 +4,7 @@
     font-family: 'jua';
 }
 
+
 .suggest-title {
     font-weight: bold;
     font-size: 1.5rem;
@@ -30,6 +31,12 @@
     border-radius: 1rem;
     background-color: #EFEFEF;
     box-shadow: 0px 0px 3px 3px #CCC;
+}
+
+.suggest-music-list-item:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: transform .3s 0s;
 }
 
 .suggest-music-list-album-img-wrap {
