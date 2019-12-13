@@ -48,11 +48,11 @@ export const monitorClose = createAction(MONITOR_CLOSE)
 export const FETCH_PLAYLIST_ITEM_ADD = 'mp/FETCH_PLAYLIST_ITEM_ADD'
 export const fetchPlayListItemAdd = createAction(FETCH_PLAYLIST_ITEM_ADD)
 
-//ACCEPT_GET_PLAYLIST, ABORT_GET_PLAYLIST 와 코드가 같음
-//export const ACCEPT_PLAYLIST_ITEM_ADD = 'mp/ACCEPT_PLAYLIST_ITEM_ADD'
-//export const acceptPlayListItemAdd = createAction(ACCEPT_PLAYLIST_ITEM_ADD)
-//export const ABORT_PLAYLIST_ITEM_ADD = 'mp/ABORT_PLAYLIST_ITEM_ADD'
-//export const abortPlayListItemAdd = createAction(ABORT_PLAYLIST_ITEM_ADD)
+export const ACCEPT_PLAYLIST_ITEM_ADD = 'mp/ACCEPT_PLAYLIST_ITEM_ADD'
+export const acceptPlayListItemAdd = createAction(ACCEPT_PLAYLIST_ITEM_ADD)
+
+export const ABORT_PLAYLIST_ITEM_ADD = 'mp/ABORT_PLAYLIST_ITEM_ADD'
+export const abortPlayListItemAdd = createAction(ABORT_PLAYLIST_ITEM_ADD)
 
 export const PLAYLIST_ITEM_REMOVE = 'mp/PLAYLIST_ITEM_REMOVE'
 export const playListItemRemove = createAction(PLAYLIST_ITEM_REMOVE)
@@ -218,6 +218,43 @@ export const musicPlayerReducer = handleActions({
         return newState
     },
 
+    [ACCEPT_PLAYLIST_ITEM_ADD] : (state , action) => {
+        //일반 리스트 생성
+        const newState = { ...state }
+        const { addedPlayList } = action.payload
+
+        newState.addedIndex = newState.playList.size
+
+        addedPlayList.map(value => { value.checked = false; return value})
+        newState.playList = newState.playList.concat(fromJS(addedPlayList))
+        newState.randomPlayList = newState.randomPlayList.clear()
+
+
+        //랜덤리스트 생성
+        let indexArray = Array(newState.playList.size)
+        for(let i = 0 ; i < indexArray.length; i++) {
+            indexArray[i] = i
+        }
+        
+        for(let i = 0 ; i < newState.playList.size; i++) {
+            const random = parseInt(Math.random() * indexArray.length)
+            const randomIndex = indexArray[random]
+            indexArray.splice(random , 1)
+
+            newState.randomPlayList = newState.randomPlayList.push(newState.playList.get(randomIndex).set('index' , randomIndex))
+            newState.playList = newState.playList.setIn([randomIndex , 'randomIndex'] , newState.randomPlayList.size-1)
+        }
+
+        //console.dir(newState.playList.toJS())
+        //console.dir(newState.randomPlayList.toJS())
+
+        return newState
+    },
+
+    [ABORT_PLAYLIST_ITEM_ADD] : (state , action) => {
+
+    },
+
     [PLAYLIST_ITEM_REMOVE] : (state , action) => {
         const newState = { ...state }
         const { removeList }= action.payload
@@ -288,7 +325,7 @@ function* fetchGetPlayListSaga(action) {
 
 function* fetchPlayListItemAddSaga(action) {
     yield put({type : MONITOR_OPEN})
-    yield post('/mymusic/playlistitemadd' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_PLAYLIST , ABORT_GET_PLAYLIST)
+    yield post('/mymusic/playlistitemadd' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAYLIST_ITEM_ADD , ABORT_GET_PLAYLIST)
     yield put({type : MONITOR_CLOSE})
 }
 

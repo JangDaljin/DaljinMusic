@@ -48,13 +48,6 @@ class Auth extends Component {
                                 <p className={cn('loginout-text')}><i className="fas fa-sign-in-alt"></i><span> 로그인</span></p>  
                             </div>
                     </Link>
-
-                    <Link to="/signup" className={cn('auth-loginout-button-wrap')}>
-                        <div className={cn('auth-loginout-button')}>
-                            
-                            <p className={cn('loginout-text')}><i className="far fa-address-card"></i><span> 회원가입</span></p>
-                        </div>
-                    </Link>
                 </div>
             }
             </div>

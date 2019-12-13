@@ -264,14 +264,13 @@ router.post('/getplaylist' , doAsync(async (req , res , next) => {
 router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
     const response = {
         message : '',
-        playList : [],
-        addedIndex : 0,
+        addedPlayList : [],
     }
     const { userId , addList } = req.body
 
     try {
-        const foundMusics = await MusicModel.find({'_id' : { $in : addList }}).lean()
-
+        const foundMusics = await MusicModel.find({'_id' : { $in : addList }}).populate('singer album').lean()
+        response.addedPlayList = foundMusics
         if(userId == req.session.userId) {
             
             const user = await UserModel.findOne({'userId' : userId})
@@ -283,10 +282,7 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
                 user.playList.push(foundMusic._id)
             }
 
-            const doc = await user.save()
-
-            const savedUser = await UserModel.findOne(doc).populate({path : 'playList' , populate : 'singer album'})
-            response.playList = savedUser.playList
+            await user.save()
         }
         else {
             console.log('아이디 검증 실패')

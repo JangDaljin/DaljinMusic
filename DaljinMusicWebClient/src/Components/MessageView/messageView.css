@@ -7,6 +7,14 @@
     padding: 10px;
 }
 
+.minimerize {
+    visibility: hidden;
+}
+
+.normalize {
+    visibility: visible;
+}
+
 .message-item {
     font-family: 'jua';
     padding: 5px;

@@ -48,7 +48,8 @@ class MusicPlayer extends Component {
                     this.props.MusicPlayerActions.fetchGetPlayList({'userId' : this.props.userId})
                 }
                 else {
-                    this.props.MusicPlayerActions.clearPlayList()   
+                    this.props.MusicPlayerActions.clearPlayList()
+                    //this.props.MusicPlayerActions.changeCurrentMusicIndex(-1)
                 }
             }
 
