@@ -26,4 +26,21 @@
     margin-top: 25px;
     word-wrap: break-word;
     position: relative;
+    animation: inout-animation 5s 0s forwards;
 }
+
+
+@keyframes inout-animation {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+

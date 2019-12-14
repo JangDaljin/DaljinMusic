@@ -35,10 +35,32 @@ class MusicPlayer extends Component {
         this.audio.onended = () => {
             this.onClickNextMusic(this.props.currentMusicIndex)
         }
+
+        document.addEventListener('keydown' , this.onKeyPress)
     }
 
     componentWillUnmount () {
+        document.removeEventListener('keydown' , this.onKeyPress)
+    }
 
+    onKeyPress = (e) => {
+        //ESC press
+        switch(e.keyCode) {
+            //ESC
+            case 27 : 
+                this.props.MusicPlayerActions.hide()
+                break;
+            //SPACE
+            case 32 :
+                if(this.props.isPlaying)
+                    this.onClickPause()
+                else {
+                    this.onClickPlay()
+                }
+                break;
+            default :
+                break;
+        }
     }
 
     componentDidUpdate(prevProps , prevState) {

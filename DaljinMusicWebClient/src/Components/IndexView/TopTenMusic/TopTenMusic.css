@@ -27,6 +27,7 @@
     flex: 1 0 30px;
     display: flex;
     justify-content: center;
+    color: #303030;
 }
 
 .toptenmusic-list-item > div {
@@ -37,15 +38,37 @@
 
 
 .toptenmusic-list-item:hover {
-    background-color: #EEE;
     color: #069;
+    cursor: pointer;
+}
+
+.toptenmusic-list-item-selected {
+    background-color: #303030;
+    color: #EEE;
+    transition: all .5s 0s;
+    border-top: 2px solid #EEE;
+    border-bottom: 2px solid #EEE;
+}
+
+.toptenmusic-list-item-unselected {
+    background-color: transparent;
+    color: #303030;
+    border-top: none;
+    border-bottom: none;
+    transition: all .5s 0s;
 }
 
 
 .toptenmusic-list-rank {
-    width : 10%;
+    width : 20%;
     font-weight: bold;
     text-align: center;
+}
+
+.toptenmusic-list-rank > p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .rank1 {
@@ -77,24 +100,39 @@
 
 
 .toptenmusic-list-song {
-    width : 35%;
+    width : 40%;
     text-align: center;
 }
 
 .toptenmusic-list-singer {
-    width : 35%;
+    width : 40%;
     text-align: center;
 }
 
-.toptenmusic-list-buttons {
-    width : 20%;
+.toptenmusic-buttons {
+    display: flex;
+    flex-wrap: nowrap;
 }
 
-.toptenmusic-list-button {
-    display: inline-block;
-    margin-left: 10px;
-    margin-right: 10px;
+.toptenmusic-buttons > div {
+    flex: 1 0 auto;
     text-align: center;
+    border: 2px solid #CCC;
+    background-color: #303030;
+    color: #EEE;
+    padding: 5px;
+    font-size: 0.8rem;
+}
+
+.toptenmusic-buttons > div:first-child {
+    border-right: none;
+}
+
+.toptenmusic-buttons > div:last-child {
+    border-left: none;
+}
+
+.toptenmusic-buttons > div:hover {
+    color: #069;
     cursor: pointer;
 }
-

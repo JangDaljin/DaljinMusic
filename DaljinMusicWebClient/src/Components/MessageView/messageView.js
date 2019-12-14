@@ -7,15 +7,16 @@ import style from './messageView.css'
 const cn = classNames.bind(style)
 
 
-
-
 class MessageView extends Component {
 
     componentDidMount () {
+        /*
         let count = 0;
         setInterval( () => {
             this.props.MessageActions.addMessage(count++)
+            if(count % 5 === 0) this.props.MessageActions.removeMessageAll()
         } , 1000)
+        */
     }
 
     componentDidUpdate (prevProps , prevState) {
@@ -34,8 +35,8 @@ class MessageView extends Component {
             <div className={cn('message-view')}>
                 {
                     this.props.messageQueue.map((value , index) => (
-                        <div className={cn('message-item')} key={index} onClick={(e) => { this.props.MessageActions.removeMessage(index) }}>
-                            {value}
+                        <div className={cn('message-item')} key={index} onClick={(e) => { this.props.MessageActions.removeMessageByIndex(index) }}>
+                            {value.get('content')}
                         </div>
                     ))
                 }

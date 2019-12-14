@@ -1,5 +1,5 @@
 import { createAction , handleActions } from 'redux-actions'
-import { List } from 'immutable'
+import { List , fromJS } from 'immutable'
 import { takeEvery , put , delay } from 'redux-saga/effects'
 
 export const MINIMIZE = 'msg/MINIMIZE'
@@ -15,8 +15,14 @@ export const addMessage = createAction(ADD_MESSAGE)
 export const APPLY_MESSAGE = 'msg/APPLY_MESSAGE'
 export const applyMessage = createAction(APPLY_MESSAGE)
 
-export const REMOVE_MESSAGE = 'msg/REMOVE_MESSAGE'
-export const removeMessage = createAction(REMOVE_MESSAGE)
+export const REMOVE_MESSAGE_BY_KEY = 'msg/REMOVE_MESSAGE_BY_KEY'
+export const removeMessageByKey = createAction(REMOVE_MESSAGE_BY_KEY)
+
+export const REMOVE_MESSAGE_BY_INDEX = 'msg/REMOVE_MESSAGE_BY_INDEX'
+export const removeMessageByIndex = createAction(REMOVE_MESSAGE_BY_INDEX)
+
+export const REMOVE_MESSAGE_ALL = 'msg/REMOVE_MESSAGE_ALL'
+export const removeMessageAll = createAction(REMOVE_MESSAGE_ALL)
 
 
 
@@ -41,27 +47,41 @@ export const messageReducer = handleActions({
 
     [APPLY_MESSAGE] : (state , action) => {
         const newState = { ...state }
-        newState.queue = newState.queue.push(action.payload)
+        newState.queue = newState.queue.push(fromJS(action.payload))
         return newState
     },
 
-    [REMOVE_MESSAGE] : (state , action) => {
+    [REMOVE_MESSAGE_BY_KEY] : (state , action) => {
         const newState = { ...state }
-        const index = action.payload
-        if(typeof index == 'number') {
+        const key = action.payload
+        const index = newState.queue.findIndex(value => value.get('key') === key)
+        if(index !== -1) {
             newState.queue = newState.queue.splice(index , 1)
-        }
-        else {
-            newState.queue = newState.queue.shift()
         }
         return newState
     },
+
+    [REMOVE_MESSAGE_BY_INDEX] : (state , action) => {
+        const newState = { ...state }
+        const index = action.payload
+        newState.queue = newState.queue.splice(index , 1)
+        return newState
+    },
+
+    [REMOVE_MESSAGE_ALL] : (state , aciton) => {
+        const newState = { ...state }
+        newState.queue = newState.queue.clear()
+        return newState
+    }
 } , messageInitialState)
 
 function* addMessageSaga(action) {
-    yield put({type : APPLY_MESSAGE , payload : action.payload})
+    const content = action.payload
+    const key = Date.now() + parseInt(Math.random() * 1000) // 랜덤값 생성
+
+    yield put({type : APPLY_MESSAGE , payload : { 'key' : key , 'content' : content }})
     yield delay(5000)
-    yield put({type : REMOVE_MESSAGE})
+    yield put({ type : REMOVE_MESSAGE_BY_KEY , payload : key })
 }
 
 export function* messageSaga() {

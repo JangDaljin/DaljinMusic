@@ -170,7 +170,14 @@ class Top100ViewBody extends Component {
                     }><i className={cn('fas fa-plus')}></i>플레이리스트에 추가</div>
 
                     <div className={cn('top100-addlist' , 'top100-bottom-button')} onClick={
-                        (e) => { this.onClickAddList() }
+                        (e) => { if(this.props.isAuthenticated) {
+                            this.onClickAddList()
+                        }
+                        else {
+                            if(window.confirm('로그인이 필요합니다. 로그인하시겠습니까?')) {
+                                this.props.history.push('auth')
+                            }
+                        } }
                     }><i className={cn('fas fa-list')}></i>내 음악리스트에 추가</div>
                 </div>
             </div>
