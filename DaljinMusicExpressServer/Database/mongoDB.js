@@ -50,6 +50,7 @@ const Music = new Schema({
     duration : { type : Number, required : true } ,
     uploadDate : { type : Date, required : true } ,
     totalPlayCount : { type : Number, default : 0 },
+    monthPlayCount : { type : Number , default : 0 },
     weekPlayCount : { type : Number, default : 0 },
     dayPlayCount : { type : Number, default : 0 },
 })

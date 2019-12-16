@@ -12,7 +12,6 @@
 
 .top100-mode-buttons > div {
     border-right: 2px solid #303030;
-    border-left: 2px solid #303030;
     padding: 0px 10px;
     font-family: 'jua';
     font-size: 1.2rem;
@@ -28,13 +27,13 @@
 }
 
 .top100-mode-buttons > div:first-child {
-    border-right: none;
+    border-left: 2px solid #303030;
 }
 
-.top100-mode-buttons > div:last-child {
-    border-left: none;
+.top100-mode-checked {
+    color: #069;
+    font-weight: bold;
 }
-
 
 
 

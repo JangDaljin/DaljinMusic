@@ -337,6 +337,7 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
         const music = await MusicModel.findOne({ '_id' : musicid })
 
         music.totalPlayCount++;
+        music.monthPlayCount++;
         music.weekPlayCount++;
         music.dayPlayCount++;
 

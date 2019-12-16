@@ -20,11 +20,12 @@ class Top100ViewBody extends Component {
         selected : List(fromJS(Array(MAX_RANK).fill(false))),
         showBottom : false,
         selectedItemCount : 0,
+        top100Mode : 'total',
     }
 
     componentDidMount () {
         this.props.MyMusicActions.fetchGetMyMusicLists({'userId' : this.props.userId})
-        this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true})
+        this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true , 'mode' : this.state.top100Mode})
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -109,7 +110,7 @@ class Top100ViewBody extends Component {
         const viewHeight = this.listview.clientHeight + this.modeview.clientHeight
 
         if(currentScrollBottom === viewHeight) {
-            this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
+            this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10 , 'mode' : this.state.top100Mode})
         }
     }
 
@@ -120,14 +121,17 @@ class Top100ViewBody extends Component {
             <React.Fragment>
             <div className={cn('top100')} onScroll={this.onScroll} ref={ref => this.mainview = ref}>
                 <div className={cn('top100-mode-buttons')} ref={ref => this.modeview = ref}>
-                    <div>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'total'})}>
                         종합
                     </div>
-                    <div>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'month'})}>
+                        월간
+                    </div>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'week'})}>
                         주간
                     </div>
-                    <div>
-                        오늘
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'day'})}>
+                        일일
                     </div>
                 </div>
 
