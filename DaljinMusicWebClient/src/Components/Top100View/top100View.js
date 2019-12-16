@@ -106,7 +106,7 @@ class Top100ViewBody extends Component {
 
     onScroll = (e) => {
         const currentScrollBottom = e.target.scrollTop + this.mainview.clientHeight
-        const viewHeight = this.listview.clientHeight
+        const viewHeight = this.listview.clientHeight + this.modeview.clientHeight
 
         if(currentScrollBottom === viewHeight) {
             this.props.Top100Actions.fetchTop100({'from' : this.props.items.size+1  , 'to' : this.props.items.size+10})
@@ -119,6 +119,19 @@ class Top100ViewBody extends Component {
         return (
             <React.Fragment>
             <div className={cn('top100')} onScroll={this.onScroll} ref={ref => this.mainview = ref}>
+                <div className={cn('top100-mode-buttons')} ref={ref => this.modeview = ref}>
+                    <div>
+                        종합
+                    </div>
+                    <div>
+                        주간
+                    </div>
+                    <div>
+                        오늘
+                    </div>
+                </div>
+
+
                 <div className={cn('top100-list')} ref={ref => this.listview = ref}>
                     {
                         this.props.items.map((value , index) => (

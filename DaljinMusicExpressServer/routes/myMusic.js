@@ -335,7 +335,14 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
     
     try {
         const music = await MusicModel.findOne({ '_id' : musicid })
+
+        music.totalPlayCount++;
+        music.weekPlayCount++;
+        music.dayPlayCount++;
+
         const filePath = music.filePath
+        await music.save()
+
         const fileStat = fs.statSync(filePath)
         
         res.writeHead(206, {

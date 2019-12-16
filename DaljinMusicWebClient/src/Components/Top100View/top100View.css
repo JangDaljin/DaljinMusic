@@ -3,6 +3,40 @@
     overflow-y: scroll;
 }
 
+.top100-mode-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.top100-mode-buttons > div {
+    border-right: 2px solid #303030;
+    border-left: 2px solid #303030;
+    padding: 0px 10px;
+    font-family: 'jua';
+    font-size: 1.2rem;
+    vertical-align: bottom;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top100-mode-buttons > div:hover {
+    cursor: pointer;
+
+}
+
+.top100-mode-buttons > div:first-child {
+    border-right: none;
+}
+
+.top100-mode-buttons > div:last-child {
+    border-left: none;
+}
+
+
+
 
 .top100-list {
     margin: 0 30%;
