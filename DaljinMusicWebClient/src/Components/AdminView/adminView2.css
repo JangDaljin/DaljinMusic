@@ -179,11 +179,31 @@
     align-items: center;
 }
 
-.hotandnew-select {
+.hotandnew-menu {
     flex: 0 0 100px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+}
+
+.hotandnew-delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 2px solid #303030;
+    width: 25px;
+    height:25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.hotandnew-delete:hover {
+    color: #EEE;
+    cursor: pointer;
+    background-color: #303030;
 }
 
 
@@ -259,16 +279,39 @@
     overflow-y: scroll;
 }
 
-.right-item {
+.right-list-header {
+    display: flex;
+    align-items: stretch;
+    padding: 0px 10px;
+    height: 40px;
+    background-color: #303030;
+    color: #EEE;
+}
+
+.right-list-header > div {
+    flex: 1 0 auto;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+.right-item {
+    display: flex;
+    align-items: stretch;
     height: 40px;
-    padding: 0px 10px;
     color: #303030;
 }
 
+.right-item > div {
+    border-right: 2px solid #303030;
+}
+
+.right-item > div:last-child {
+    border-right: none;
+}
+
 .right-item:hover {
-    background-color: #303030;
+    background-color: #777;
     color: #EEE;
     cursor: pointer;
 }
@@ -280,4 +323,12 @@
 .right-item-even {
     background-color: #EEE;
 }
+
+.right-list-column {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+}
+
 

@@ -23,7 +23,6 @@ const SEARCH_MODE = {
     ALBUM : 2,
 }
 
-
 class AdminView extends Component {
 
     state = {
@@ -67,7 +66,11 @@ class AdminView extends Component {
 
             case MENU_MODE.HOTANDNEW :
                 this.setState({
-                    'hotandnew' : this.state.hotandnew.push(this.props.musicList.get(index))
+                    'hotandnew' : this.state.hotandnew.push(Map({
+                        hot : false,
+                        new : false,
+                        music : this.props.musicList.get(index)
+                    }))
                 })
             break;
 
@@ -87,6 +90,53 @@ class AdminView extends Component {
                 this.fetchGetAllMusics()
             }
         }
+    }
+
+    onClickSearch = (searchText) => {
+        switch(this.state.searchMode) {
+            case SEARCH_MODE.SONG :
+
+            break;
+
+            case SEARCH_MODE.SINGER :
+
+            break;
+
+            case SEARCH_MODE.ALBUM :
+
+            break;
+
+            default :
+
+            break;
+        }
+    }
+
+    onSelectHotAndNew = (index , value) => {
+        if(value === 'HOT') {
+            this.setState({'hotandnew' : this.state.hotandnew.setIn([index , 'hot'] , true).setIn([index , 'new'] , false)})
+        }
+        else if(value === 'NEW') {
+            this.setState({'hotandnew' : this.state.hotandnew.setIn([index , 'hot'] , false).setIn([index , 'new'] , true)})
+        }
+        else if(value === 'BOTH') {
+            this.setState({'hotandnew' : this.state.hotandnew.setIn([index , 'hot'] , true).setIn([index , 'new'] , true)})
+        }
+        else {
+            this.setState({'hotandnew' : this.state.hotandnew.setIn([index , 'hot'] , false).setIn([index , 'new'] , false)})
+        }
+
+    }
+
+    fetchSetHotAndNew = () => {
+        const list = this.state.hotandnew.map(value => ({'hot' : value.get('hot') , 'new' : value.get('new') , 'musicId' : value.getIn(['music' , '_id'])})).toJS()
+        for(let i = 0 ; i < list.length; i++) {
+            if(!list[i].hot && !list[i].new) {
+                window.alert(`${i+1}번째 HOT/NEW/BOTH 선택 안됨`)
+                return
+            }
+        }
+        this.props.AdminActions.fetchSetHotAndNew({'adminKey' : this.props.adminKey , 'list' : list})
     }
 
     render () {
@@ -142,26 +192,32 @@ class AdminView extends Component {
                                     <div key={index} className={cn('hotandnew-item')}>
 
                                         <div className={cn('hotandnew-album-img-wrap')}>
-                                            <div className={cn('hotandnew-album-img')} style={{backgroundImage:`url('${value.getIn(['album' , 'albumImgUri'])}')`}}></div>
+                                            <div className={cn('hotandnew-album-img')} style={{backgroundImage:`url('${value.getIn(['music' , 'album' , 'albumImgUri'])}')`}}></div>
                                         </div>
 
                                         <div className={cn('hotandnew-info')}>
-                                                <div>제목 : {value.get('song')}</div>
-                                                <div>가수 : {value.getIn(['singer' , 'name'])}</div>
-                                                <div>앨범 : {value.getIn(['album' , 'name'])}</div>
+                                                <div>제목 : {value.getIn(['music' ,'song'])}</div>
+                                                <div>가수 : {value.getIn(['music' , 'singer' , 'name'])}</div>
+                                                <div>앨범 : {value.getIn(['music' , 'album' , 'name'])}</div>
                                         </div>
                                         
-                                        <div className={cn('hotandnew-select')}>
-                                            <select>
+                                        <div className={cn('hotandnew-menu')}>
+                                            <select onChange={(e) => {this.onSelectHotAndNew(index , e.target.value)}}>
+                                                <option value="">선택</option>
                                                 <option value="HOT">HOT</option>
                                                 <option value="NEW">NEW</option>
+                                                <option value="BOTH">BOTH</option>
                                             </select>
+
+                                            <div className={cn('hotandnew-delete')}>
+                                                X
+                                            </div>
                                         </div>
                                     </div>
                                 )
                             )
                         }
-                        <div className={cn('save-button')}>
+                        <div className={cn('save-button')} onClick={(e) => { this.fetchSetHotAndNew() }}>
                             저장
                         </div>
                     </div>
@@ -187,16 +243,28 @@ class AdminView extends Component {
                         <input type="text" />
                         <div className={cn('search-button' , 'fas fa-search')}></div>
                     </div>
+
+                    <div className={cn('right-list-header')}>
+                            <div className={cn('right-list-column')}>가수</div>
+                            <div className={cn('right-list-column')}>제목</div>
+                            <div className={cn('right-list-column')}>앨범</div>
+                        </div>
+
                     <div className={cn('right-list')}>
+
                     {
                         this.props.musicList.map(
                             (value , index) => (
                                 <div className={cn('right-item' , { 'right-item-odd' : index % 2 === 1} , {'right-item-even' : index % 2 === 0})} key={index} onClick={(e)=>{ this.onClickRightListItem(index) }}>
-                                    {value.getIn(['singer' , 'name'])} 
-                                    {` - `}
-                                    {value.get('song')}
-                                    {` - `}
-                                    {value.getIn(['album' , 'name'])}
+                                    <div className={cn('right-list-column')}>
+                                        {value.getIn(['singer' , 'name'])}
+                                    </div>
+                                    <div className={cn('right-list-column')}>
+                                        {value.get('song')}
+                                    </div>
+                                    <div className={cn('right-list-column')}>
+                                        {value.getIn(['album' , 'name'])}
+                                    </div>
                                 </div>
                             )
                         )

@@ -16,6 +16,7 @@ const { getAudioDurationInSeconds } = require('get-audio-duration')
 const MusicModel = require('../Database/mongoDB').musicModel
 const SingerModel = require('../Database/mongoDB').singerModel
 const AlbumModel = require('../Database/mongoDB').albumModel
+const IndexModel = require('../Database/mongoDB').indexModel
 
 const { getTime  , isNUW} = require('../util')
 
@@ -40,7 +41,6 @@ router.post('/validate' , doAsync(async(req , res , next) => {
 
 router.post('/getallmusics' , doAsync(async(req , res , next) => {
     const { adminKey } = req.body
-    console.log(adminKey)
     const response = {
         message : '',
         musicList : [],
@@ -59,9 +59,39 @@ router.post('/getallmusics' , doAsync(async(req , res , next) => {
     else {
         response.message = "관리자이외 접근불가"
     }
+    res.json(response)
+}))
+
+router.post('/sethotandnew' , doAsync(async(req , res , next) => {
+    const { adminKey , list} = req.body;
+    const response = {
+        message : '',
+        ok : false,
+    }
+    console.log(list)
+    if(adminKey === ADMIN_KEY) {
+        try {
+            const index = await IndexModel.findOne({})
+            for(item of list) {
+                index.hotAndNew.push({'music' : item.musicId , 'hot' : item.hot , 'new' : item.new})
+            }
+
+            await index.save()
+            response.message = '저장 완료'
+            response.ok = true
+        }
+        catch(e) {
+            console.error(e)
+            response.message = '데이터베이스 에러'
+        }
+    }
+    else {
+        response.message = '관리자외 설정 불가'
+    }
     console.log(response)
     res.json(response)
 }))
+
 
 const upload = multer({
     storage : multer.diskStorage({

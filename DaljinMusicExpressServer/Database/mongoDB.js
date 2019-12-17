@@ -20,6 +20,18 @@ function tryConnect () {
         }
         else {
             console.dir('DB CONNECT COMPLETE')
+            module.exports.indexModel.countDocuments({} ,
+            (err , count) => {
+                if(err) {
+                    console.error(err)
+                }
+                if(count === 0 ) {
+                    new module.exports.indexModel({
+
+                    }).save()
+                }
+                console.dir(`INDEX MODEL INITIALIZE COMPLETE`)
+            })
         }
     })
 }
@@ -53,8 +65,8 @@ const Music = new Schema({
     monthPlayCount : { type : Number , default : 0 },
     weekPlayCount : { type : Number, default : 0 },
     dayPlayCount : { type : Number, default : 0 },
+    category : [{ type : Schema.Types.ObjectId , ref : 'category'}]
 })
-
 
 const User = new Schema({
     userId : { type : String, required : true , unique : true , trim : true },
@@ -91,27 +103,14 @@ User.virtual('password').set(function(plainPw) {
     return this._plainPw
 })
 
-
-
-
-//테스트용
-const Test = new Schema({
-    identity : { type : String , unique : true },
-    refdata : [{type : Schema.Types.ObjectId , ref : 'reftest'}]
+const Index = new Schema({
+    todaysLive : { type : Schema.Types.ObjectId , ref : 'music' , default : null},
+    hotAndNew : [{
+        music : { type : Schema.Types.ObjectId , ref : 'music' },
+        hot : { type : Boolean , require : true },
+        new : {type : Boolean , require : true}
+    }]
 })
-
-//테스트용
-const RefTest = new Schema({
-    identity : { type : String , unique : true },
-    item1 : String,
-    item2 : String,
-    item3 : String,
-})
-
-
-
-
-
 
 module.exports.connect = connect
 module.exports.singerModel = mongoose.model('singer' , Singer)
@@ -119,5 +118,4 @@ module.exports.categoryModel = mongoose.model('category' , Category)
 module.exports.albumModel = mongoose.model('album' , Album)
 module.exports.musicModel = mongoose.model('music' , Music)
 module.exports.userModel = mongoose.model('user' , User)
-module.exports.testModel = mongoose.model('test' , Test)
-module.exports.refTestModel = mongoose.model('reftest' , RefTest)
+module.exports.indexModel = mongoose.model('index' , Index)

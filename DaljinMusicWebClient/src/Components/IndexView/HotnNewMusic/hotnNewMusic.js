@@ -2,7 +2,7 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
-import * as hnnActions from '../../../ReduxModules/hotnNewMusic'
+import * as HotAndNewActions from '../../../ReduxModules/hotnNewMusic'
 
 import classNames from 'classnames/bind'
 import styles from './hotnNewMusic.css'
@@ -10,52 +10,55 @@ const cn = classNames.bind(styles)
 
 
 
-class HotnNewMusic extends Component {
+class HotAndNewMusic extends Component {
 
     constructor(props) {
         super(props)
 
-        props.HnnActions.hnnMusicFetch();
+        
 
         this.state = {
-            curAlbumImgUri : ''
+            currentIndex : 0
         }
     }
 
-    componentDidUpdate (prevProps , prevState) {
-        if(prevProps !== this.props) {
-            if(prevProps.items !== this.props.items) {
-                this.setState({curAlbumImgUri : this.props.items[0].albumImgUri})
-            }
-        }
+    componentDidMount() {
+        this.props.HotAndNewActions.fetchHotAndNew();
     }
 
     render () {
         return (
-            <div className={cn('hotnnewmusic')}>
-                <div className={cn('hotnnewmusic-title')}>
+            <div className={cn('hotandnew')}>
+                <div className={cn('hotandnew-title')}>
                     <span style={{color:'#FF5A5A'}}>HOT</span><span style={{color:'#9887b9'}}>&nbsp;&&nbsp;</span><span style={{color:'#069'}}>NEW</span>
                 </div>
 
-                <div className={cn('hotnnewmusic-content')}>
-                    <div className={cn('hotnnewmusic-left')}>
-                        <div className={cn('hotnnewmusic-album-img')} style={{backgroundImage: `url('${this.state.curAlbumImgUri}')`}}>
-
-                        </div>
+                <div className={cn('hotandnew-content')}>
+                    <div className={cn('hotandnew-img-wrap')}>
+                        <div className={cn('hotandnew-img')} style={{backgroundImage:`url('${this.props.list.getIn([this.state.currentIndex , 'music' , 'album' , 'albumImgUri'])}')`}}></div>
                     </div>
+                    <div className={cn('hotandnew-list')}>
+                        {this.props.list.map(
+                            (value , index) => (
 
-                    <div className={cn('hotnnewmusic-right')}>
+                                <div className={cn('hotandnew-list-item')} key={index} onMouseOver={(e) => { this.setState({'currentIndex' : index})}}>
+                                    <div className={cn('hotandnew-list-item-info')}>
+                                        <div>{value.getIn(['music' , 'singer' , 'name'])}</div>
+                                        <div>{value.getIn(['music' , 'song'])}</div>
+                                    </div>
+                                    <div className={cn('hotandnew-hotnew')}>
+                                        {value.get('hot')&&
+                                        <div className={cn('hot')}>HOT</div>
+                                        }
+                                        {value.get('new')&&
+                                        <div className={cn('new')}>NEW</div>
+                                        }
+                                    </div>
+                                </div>
 
-                            {
-                                this.props.items.map(
-                                    (value , index) => (
-                                        <div className={cn('hotnnewmusic-list-item' , { 'hot' : !value.isNew } , { 'new' : value.isNew })} key={index} onMouseOver={() => { this.setState({curAlbumImgUri : value.albumImgUri}) }}>
-                                            <div className={cn('hotnnewmusic-list-item-singer')}>{value.singer}</div>
-                                            <div className={cn('hotnnewmusic-list-item-song')}>{value.song}</div>
-                                        </div> 
-                                    )
-                                )
-                            }
+                            )
+                        )
+                        }
                     </div>
                 </div>
             </div>
@@ -66,9 +69,9 @@ class HotnNewMusic extends Component {
 
 export default connect(
     (state) => ({
-        items : state.hnnMusic.items
+        list : state.hotAndNew.list
     }),
     (dispatch) => ({
-        HnnActions : bindActionCreators(hnnActions , dispatch)
+        HotAndNewActions : bindActionCreators(HotAndNewActions , dispatch)
     })
-)(withRouter(HotnNewMusic))
+)(withRouter(HotAndNewMusic))

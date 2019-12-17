@@ -1,37 +1,31 @@
 const express = require('express')
 const router = express.Router()
 
-
-router.get('/' , (req , res) => {
-
-    const response = [
-        { 
-            singer : "SINGER A" ,
-            song : "SONG A" ,
-            album : "ALBUM A",
-            albumImgUri : '/twice2.jpg',
-            isNew : true,
-        },
-        { 
-            singer : "SINGER B" ,
-            song : "SONG B" ,
-            album : "ALBUM B",
-            albumImgUri : '/twice1.jpg',
-            isNew : true,
-        },
-        { 
-            singer : "SINGER C" ,
-            song : "SONG B" ,
-            album : "ALBUM B",
-            albumImgUri : '/twice2.jpg',
-            isNew : false,
-        }
-    ]
-
+const IndexModel = require('../Database/mongoDB').indexModel
+const doAsync = require('./async')
+const ADMIN_KEY = process.env.ADMIN_KEY
+router.get('/' , doAsync(async(req , res , next) => {
+    
+    const response = {
+        message : '',
+        list : []
+    }
+    try {
+        const index = await IndexModel.findOne({}).populate(
+            {
+                path : 'hotAndNew.music' , 
+                populate : 'singer album'
+            }).lean()
+        response.list = index.hotAndNew
+    }
+    catch(e) {
+        console.error(e)
+        response.message = '조회 오류'
+    }
+    
+    console.log(response)
     res.json(response)
-})
-
-
+}))
 
 
 module.exports = router;
