@@ -1,3 +1,29 @@
+.adminview-menubuttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5px;
+}
+
+.adminview-menubuttons > div {
+    border: 2px solid #303030;
+    border-left: none;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.adminview-menubuttons > div:hover {
+    cursor: pointer;
+    color: #EEE;
+    background-color: #303030;
+}
+
+.adminview-menubuttons > div:first-child {
+    border-left: 2px solid #303030;
+}
+
+
+
 .adminview .upload-wrap {
     display: flex;
 }

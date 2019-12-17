@@ -230,10 +230,6 @@ class MyMusicView extends Component {
                     </div>
 
                     <div className={cn('right-buttons')}>
-                        <p><i className={cn('fas fa-stream')}></i>&nbsp;가져오기</p>
-                    </div> 
-
-                    <div className={cn('right-buttons')}>
                         <p><i className={cn('fas fa-cloud-download-alt')}></i>&nbsp;다운로드</p>
                     </div>
                 </div>

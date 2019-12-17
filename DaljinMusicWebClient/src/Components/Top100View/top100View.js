@@ -49,6 +49,10 @@ class Top100ViewBody extends Component {
             }
             this.props.ModalActions.modalSetContents({'body' : body})
         }
+
+        if(prevState.top100Mode !== this.state.top100Mode) {
+            this.props.Top100Actions.fetchTop100({'from' : 1  , 'to' : 10 , 'init' : true , 'mode' : this.state.top100Mode})
+        }
     }
 
     addMusicPlayer = () => {
@@ -121,16 +125,16 @@ class Top100ViewBody extends Component {
             <React.Fragment>
             <div className={cn('top100')} onScroll={this.onScroll} ref={ref => this.mainview = ref}>
                 <div className={cn('top100-mode-buttons')} ref={ref => this.modeview = ref}>
-                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'total'})}>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'total'})} onClick={(e)=>{ this.setState({ 'top100Mode' : 'total' })}}>
                         종합
                     </div>
-                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'month'})}>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'month'})} onClick={(e)=>{ this.setState({ 'top100Mode' : 'month' })}}>
                         월간
                     </div>
-                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'week'})}>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'week'})} onClick={(e)=>{ this.setState({ 'top100Mode' : 'week' })}}>
                         주간
                     </div>
-                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'day'})}>
+                    <div className={cn({'top100-mode-checked' : this.state.top100Mode === 'day'})} onClick={(e)=>{ this.setState({ 'top100Mode' : 'day' })}}>
                         일일
                     </div>
                 </div>

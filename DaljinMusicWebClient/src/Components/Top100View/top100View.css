@@ -11,7 +11,11 @@
 }
 
 .top100-mode-buttons > div {
+    width: 80px;
+    height: 40px;
     border-right: 2px solid #303030;
+    border-top: 2px solid #303030;
+    border-bottom: 2px solid #303030;
     padding: 0px 10px;
     font-family: 'jua';
     font-size: 1.2rem;
@@ -31,8 +35,8 @@
 }
 
 .top100-mode-checked {
-    color: #069;
-    font-weight: bold;
+    background-color: #303030;
+    color: #EEE;
 }
 
 
@@ -42,7 +46,6 @@
     display: flex;
     flex-direction: column;
     font-family: 'jua';
-    padding-top: 10px;
     padding-bottom : 80px;
 }
 

@@ -23,6 +23,13 @@ const fileSizeChanger = (fileSize , offset = 0) => {
     }
 }
 
+const MENU_MODE = {
+    ADDMUSIC : 0,
+    TODAYSLIVE : 1,
+    HOTANDNEW : 2,
+    ADDMUSIC2 : 4,
+}
+
 class adminView extends Component {
    
    constructor(props) {
@@ -48,6 +55,8 @@ class adminView extends Component {
                 width : 0,
                 index : -1,
             }),
+
+            menuMode : MENU_MODE.TODAYSLIVE,
         }
         
         
@@ -114,10 +123,28 @@ class adminView extends Component {
         }
     }
 
+    onClickShowMenu = (_menuMode) => {
+        this.setState({ menuMode : _menuMode })
+    }
+
     render() {
         return (
             <React.Fragment>
             <div className={cn('adminview')}>
+
+                <div className={cn('adminview-menubuttons')}>
+                    <div onClick={(e) => this.onClickShowMenu(MENU_MODE.TODAYSLIVE)}>오늘의 라이브 설정</div>
+                    <div onClick={(e) => this.onClickShowMenu(MENU_MODE.HOTANDNEW)}>핫앤뉴 설정</div>
+                    <div onClick={(e) => this.onClickShowMenu(MENU_MODE.ADDMUSIC)}>새 음악 추가</div>
+                </div>
+
+
+                {this.state.menuMode === MENU_MODE.TODAYSLIVE &&
+                    <input className={cn('searchMusicId')} placeholder="PRESS THE ENTER" />
+                }
+
+                {this.state.menuMode === MENU_MODE.ADDMUSIC &&
+                <React.Fragment>
                 <div className={cn('upload-wrap')}>
                     <input className={cn('upload-files')} type="file" onChange={this.onFileSelect} accept="audio/*" multiple />
                     <input className={cn('upload-button')} type="button" value="업로드" onClick={this.onFileUpload} />
@@ -188,7 +215,9 @@ class adminView extends Component {
                         )
                     }
                 </div>
+                </React.Fragment>}
             </div>
+            
 
             <div className="searchbox" style={
                 {
