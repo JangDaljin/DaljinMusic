@@ -19,15 +19,15 @@
 
 .second-first {
     padding: 10px;
-    flex: 1 1 300px;
+    flex: 1 0 100px;
 }
 
 .second-second {
     padding: 10px;
-    flex: 1 1 300px;
+    flex: 1 1 100px;
 }
 
 .second-third {
     padding: 10px;
-    flex: 1 1 300px;
+    flex: 1 0 100px;
 }
