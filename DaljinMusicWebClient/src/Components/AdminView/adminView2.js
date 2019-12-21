@@ -129,7 +129,7 @@ class AdminView extends Component {
     }
 
     fetchSetTodaysLive = () => {
-        const musicId = this.state.todayslive._id
+        const musicId = this.state.todayslive.get('_id')
         this.props.AdminActions.fetchSetTodaysLive({'adminKey' : this.props.adminKey , 'musicId' : musicId})
     }
 

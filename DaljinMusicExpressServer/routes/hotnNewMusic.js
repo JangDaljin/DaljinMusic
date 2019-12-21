@@ -22,7 +22,7 @@ router.get('/' , doAsync(async(req , res , next) => {
         response.message = '조회 오류'
     }
     
-    console.log(response)
+    //console.log(response)
     res.json(response)
 }))
 

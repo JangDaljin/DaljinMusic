@@ -267,7 +267,7 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
         addedPlayList : [],
     }
     const { userId , addList } = req.body
-
+    console.log(addList)
     try {
         const foundMusics = await MusicModel.find({'_id' : { $in : addList }}).populate('singer album').lean()
         response.addedPlayList = foundMusics
@@ -291,10 +291,10 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
     }
     catch (err) {
         console.error(err)
-        console.message += '저장 실패'
+        response.message = '저장 실패'
     }
 
-    console.dir(response)
+    //console.dir(response)
     
     res.json(response)
 }))

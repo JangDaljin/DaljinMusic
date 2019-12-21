@@ -64,14 +64,17 @@ router.post('/getallmusics' , doAsync(async(req , res , next) => {
 
 router.post('/settodayslive' , doAsync(async(req , res , next) => {
     const { adminKey , musicId } = req.body
+    console.log(`musicId : ${musicId}`)
     const response = {
         message : ''
     }
     if(adminKey === ADMIN_KEY) {
         try {
             const index = await IndexModel.findOne({})
+            console.log(index)
             index.todaysLive = musicId
-            await index.save()
+            const temp = await index.save()
+            console.log(temp)
             response.message = "저장 완료"
         }
         catch(e) {

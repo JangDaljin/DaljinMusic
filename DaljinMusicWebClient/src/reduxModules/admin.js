@@ -92,7 +92,8 @@ export const adminReducer = handleActions({
 
     [ACCEPT_SET_TODAYSLIVE] : (state , action) => {
         const newState = { ...state }
-        //할일없음
+        const { message } = action.payload
+        window.alert(message)
         return newState
     },
 
@@ -136,6 +137,7 @@ function* fetchGetAllMusicsSaga(action) {
 }
 
 function* fetchSetTodaysLiveSaga(action) {
+    console.dir(action.payload)
     yield post('/admin/settodayslive' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_TODAYSLIVE , ABORT_SET_TODAYSLIVE)
 }
 

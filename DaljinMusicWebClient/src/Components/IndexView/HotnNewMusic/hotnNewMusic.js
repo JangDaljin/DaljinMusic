@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import * as HotAndNewActions from '../../../ReduxModules/hotnNewMusic'
-
+import * as MusicPlayerActions from '../../../ReduxModules/musicPlayer'
 import classNames from 'classnames/bind'
 import styles from './hotnNewMusic.css'
 const cn = classNames.bind(styles)
@@ -46,6 +46,16 @@ class HotAndNewMusic extends Component {
         this.setState({'imageShow' : false})
     }
 
+    onClickMusicPlay = (index) => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.list.getIn([index , 'music' , '_id'])] })
+        const interval = setInterval(() => {
+            if(!this.props.musicPlayerMonitor) {
+                this.props.MusicPlayerActions.onRemote({'play' : true})
+                clearInterval(interval)
+            }
+        } , 1000)
+    }
+
     render () {
         return (
             <React.Fragment>
@@ -59,7 +69,8 @@ class HotAndNewMusic extends Component {
                         {this.props.list.map(
                             (value , index) => (
 
-                                <div className={cn('hotandnew-list-item')} key={index} onMouseOver={(e) => this.imageShow(e , index)} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
+                                <div className={cn('hotandnew-list-item')} key={index} onClick={(e) => this.onClickMusicPlay(index)}
+                                onMouseOver={(e) => this.imageShow(e , index)} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
                                     <div className={cn('hotandnew-list-item-info')}>
                                         <div>{value.getIn(['music' , 'singer' , 'name'])}</div>
                                         <div>{value.getIn(['music' , 'song'])}</div>
@@ -103,9 +114,12 @@ class HotAndNewMusic extends Component {
 
 export default connect(
     (state) => ({
-        list : state.hotAndNew.list
+        userId : state.auth.userId,
+        list : state.hotAndNew.list,
+        musicPlayerMonitor : state.musicPlayer.monitor,
     }),
     (dispatch) => ({
-        HotAndNewActions : bindActionCreators(HotAndNewActions , dispatch)
+        HotAndNewActions : bindActionCreators(HotAndNewActions , dispatch),
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch)
     })
 )(withRouter(HotAndNewMusic))

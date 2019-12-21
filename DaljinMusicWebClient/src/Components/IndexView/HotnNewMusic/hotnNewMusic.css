@@ -43,6 +43,7 @@
     border-left: 2px solid #069;
     border-bottom: 2px solid #FF5A5A;
     border-right: 2px solid #FF5A5A;
+    cursor: pointer;
 }
 
 .hotandnew-list-item::before {
