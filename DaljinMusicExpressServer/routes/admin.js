@@ -62,6 +62,30 @@ router.post('/getallmusics' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
+router.post('/settodayslive' , doAsync(async(req , res , next) => {
+    const { adminKey , musicId } = req.body
+    const response = {
+        message : ''
+    }
+    if(adminKey === ADMIN_KEY) {
+        try {
+            const index = await IndexModel.findOne({})
+            index.todaysLive = musicId
+            await index.save()
+            response.message = "저장 완료"
+        }
+        catch(e) {
+            console.error(e)
+            response.message = "저장 에러"
+        }
+    }
+    else {
+        response.message = "관리자외 실행불가"
+    }
+
+    res.json(response)
+}))
+
 router.post('/sethotandnew' , doAsync(async(req , res , next) => {
     const { adminKey , list} = req.body;
     const response = {

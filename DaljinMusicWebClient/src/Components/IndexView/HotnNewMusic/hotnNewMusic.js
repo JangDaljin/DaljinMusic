@@ -21,7 +21,7 @@ class HotAndNewMusic extends Component {
             currentIndex : 0,
             imageShow : false,
             image_X : 0,
-            imgae_Y : 0,
+            imgae_Y : 0, 
         }
     }
 
@@ -29,12 +29,16 @@ class HotAndNewMusic extends Component {
         this.props.HotAndNewActions.fetchHotAndNew();
     }
 
-    imageShow = (e) => {
-        this.setState({'imageShow' : true})
+    componentWillUnmount() {
+        this.setState({'imageShow' : false})
+    }
+
+    imageShow = (e , index) => {
+        this.setState({'imageShow' : true , 'currentIndex' : index})
     }
 
     imageMove = (e) => {
-        console.log(`X : ${e.nativeEvent.x} , Y : ${e.nativeEvent.y}`)
+        //console.log(`X : ${e.nativeEvent.x} , Y : ${e.nativeEvent.y}`)
         this.setState({'image_X' : e.nativeEvent.x , 'image_Y' : e.nativeEvent.y})
     }
 
@@ -55,7 +59,7 @@ class HotAndNewMusic extends Component {
                         {this.props.list.map(
                             (value , index) => (
 
-                                <div className={cn('hotandnew-list-item')} key={index} onMouseOver={this.imageShow} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
+                                <div className={cn('hotandnew-list-item')} key={index} onMouseOver={(e) => this.imageShow(e , index)} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
                                     <div className={cn('hotandnew-list-item-info')}>
                                         <div>{value.getIn(['music' , 'singer' , 'name'])}</div>
                                         <div>{value.getIn(['music' , 'song'])}</div>
@@ -77,14 +81,18 @@ class HotAndNewMusic extends Component {
                 </div>
             </div>
 
-            <div className={cn('hotandnew-img-wrap')}>
-                <div className={cn('hotandnew-img')} style={
+
+            <div className={cn('hotandnew-img-wrap')} onMouseOver={(e) => {
+                console.log(document.getElementById('root').getBoundingClientRect().bottom)
+            }} style={
                     {
-                        backgroundImage:`url('${this.props.list.getIn([this.state.currentIndex , 'music' , 'album' , 'albumImgUri'])}')`,
-                        top : this.state.image_Y,
-                        left : this.state.image_X,
-                        visibility : this.state.imageShow ? 'true' : 'false',
+                        top :  document.getElementById('root').getBoundingClientRect().bottom < this.state.image_Y + 200 ? this.state.image_Y - 200 + 'px' : this.state.image_Y + 'px',
+                        left : this.state.image_X + 12,
+                        visibility : this.state.imageShow ? 'visible' : 'hidden',
                     }}>
+                <div className={cn('hotandnew-img')} style={{
+                    backgroundImage:`url('${this.props.list.getIn([this.state.currentIndex , 'music' , 'album' , 'albumImgUri'])}')`,
+                }}>
                 </div>
             </div>
             </React.Fragment>

@@ -21,6 +21,15 @@ export const acceptGetAllMusics = createAction(ACCEPT_GET_ALL_MUSICS)
 export const ABORT_GET_ALL_MUSICS = 'admin/ABORT_GET_ALL_MUSICS'
 export const abortGetAllMusics = createAction(ABORT_GET_ALL_MUSICS)
 
+export const FETCH_SET_TODAYSLIVE = 'admin/FETCH_SET_TODAYSLIVE'
+export const fetchSetTodaysLive = createAction(FETCH_SET_TODAYSLIVE)
+
+export const ACCEPT_SET_TODAYSLIVE = 'admin/ACCEPT_SET_TODAYSLIVE'
+export const acceptSetTodaysLive = createAction(ACCEPT_SET_TODAYSLIVE)
+
+export const ABORT_SET_TODAYSLIVE = 'admin/ABORT_SET_TODAYSLIVE'
+export const abortSetTodaysLive = createAction(ABORT_SET_TODAYSLIVE)
+
 export const FETCH_SET_HOTANDNEW = 'admin/FETCH_SET_HOTANDNEW'
 export const fetchSetHotAndNew = createAction(FETCH_SET_HOTANDNEW)
 
@@ -29,7 +38,6 @@ export const acceptSetHotAndNew = createAction(ACCEPT_SET_HOTANDNEW)
 
 export const ABORT_SET_HOTANDNEW = 'admin/ABORT_SET_HOTANDNEW'
 export const abortSetHotAndNew = createAction(ABORT_SET_HOTANDNEW)
-
 
 
 export const FETCH_MUSIC_UPLOAD = 'admin/FETCH_MUSIC_UPLOAD'
@@ -82,6 +90,18 @@ export const adminReducer = handleActions({
         return newState
     },
 
+    [ACCEPT_SET_TODAYSLIVE] : (state , action) => {
+        const newState = { ...state }
+        //할일없음
+        return newState
+    },
+
+    [ABORT_SET_TODAYSLIVE] : (state , action) => {
+        const newState = { ...state }
+        //할일 없음
+        return newState
+    },
+
     [ACCEPT_SET_HOTANDNEW] : (state , action) => {
         const newState = { ...state }
         const { message } = action.payload
@@ -111,9 +131,12 @@ function* fetchValidatePasswordSaga(action) {
     yield post('/admin/validate' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_VALIDATE_PASSWORD , ABORT_VALIDATE_PASSWORD)
 }
 
-
 function* fetchGetAllMusicsSaga(action) {
     yield post('/admin/getallmusics' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_ALL_MUSICS , ABORT_GET_ALL_MUSICS)
+}
+
+function* fetchSetTodaysLiveSaga(action) {
+    yield post('/admin/settodayslive' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_TODAYSLIVE , ABORT_SET_TODAYSLIVE)
 }
 
 function* fetchSetHotAndNewSaga(action) {
@@ -142,6 +165,7 @@ function* fetchMusicUploadSaga(action) {
 export function* adminSaga() {
     yield takeLatest(FETCH_VALIDATE_PASSWORD , fetchValidatePasswordSaga)
     yield takeLatest(FETCH_GET_ALL_MUSICS , fetchGetAllMusicsSaga)
+    yield takeLatest(FETCH_SET_TODAYSLIVE , fetchSetTodaysLiveSaga)
     yield takeLatest(FETCH_SET_HOTANDNEW , fetchSetHotAndNewSaga)
     yield takeLatest(FETCH_MUSIC_UPLOAD , fetchMusicUploadSaga)
 }

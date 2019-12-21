@@ -25,18 +25,18 @@ class TodaysMusic extends Component {
                 <p>#오늘의 라이브</p>
             </div>
             
-            <div className={cn('todaymusic-img')} style={{backgroundImage : `url(${this.props.albumImgUri})`}}>
+            <div className={cn('todaymusic-img')} style={{backgroundImage : `url('${this.props.music.getIn(['album' , 'albumImgUri'])}')`}}>
 
             </div>
 
             <div className={cn('todaymusic-info')}>
                 <div className={cn('todaymusic-info-text')}>
                     <div className={cn('fixed')}><p>가수</p></div>
-                    <div className={cn('nonfixed')}><p>{this.props.singer}</p></div>
+                    <div className={cn('nonfixed')}><p>{this.props.music.getIn('singer' , 'name')}</p></div>
                     <div className={cn('fixed')}><p>제목</p></div>
-                    <div className={cn('nonfixed')}><p>{this.props.song}</p></div>
+                    <div className={cn('nonfixed')}><p>{this.props.music.get('song')}</p></div>
                     <div className={cn('fixed')}><p>앨범</p></div>
-                    <div className={cn('nonfixed')}><p>{this.props.album}</p></div>
+                    <div className={cn('nonfixed')}><p>{this.props.album.getIn('album' , 'name')}</p></div>
                 </div>
             </div> 
 
@@ -48,10 +48,7 @@ class TodaysMusic extends Component {
 
 export default connect(
     (state) => ({
-        song : state.todaysMusic.song,
-        singer : state.todaysMusic.singer,
-        album : state.todaysMusic.album,
-        albumImgUri : state.todaysMusic.albumImgUri
+        music : state.todaysMusic.music,
     }),
     (dispatch) => ({
         TodaysMusicActions : bindActionCreators(todaysMusicActions , dispatch)

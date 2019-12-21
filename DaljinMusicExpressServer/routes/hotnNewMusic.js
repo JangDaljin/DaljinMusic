@@ -3,7 +3,6 @@ const router = express.Router()
 
 const IndexModel = require('../Database/mongoDB').indexModel
 const doAsync = require('./async')
-const ADMIN_KEY = process.env.ADMIN_KEY
 router.get('/' , doAsync(async(req , res , next) => {
     
     const response = {

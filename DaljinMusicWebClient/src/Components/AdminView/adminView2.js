@@ -128,6 +128,11 @@ class AdminView extends Component {
 
     }
 
+    fetchSetTodaysLive = () => {
+        const musicId = this.state.todayslive._id
+        this.props.AdminActions.fetchSetTodaysLive({'adminKey' : this.props.adminKey , 'musicId' : musicId})
+    }
+
     fetchSetHotAndNew = () => {
         const list = this.state.hotandnew.map(value => ({'hot' : value.get('hot') , 'new' : value.get('new') , 'musicId' : value.getIn(['music' , '_id'])})).toJS()
         for(let i = 0 ; i < list.length; i++) {
@@ -180,7 +185,7 @@ class AdminView extends Component {
                         </div>
                     </div>
 
-                    <div className={cn('save-button')}>저장</div>
+                    <div className={cn('save-button')} onClick={(e) => { this.fetchSetTodaysLive() }}>저장</div>
                     </React.Fragment>
                     }
 

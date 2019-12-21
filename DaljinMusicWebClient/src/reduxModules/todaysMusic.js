@@ -1,6 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest} from 'redux-saga/effects'
 import { get } from './Request/request'
+import { Map , fromJS } from 'immutable'
 
 export const FETCH_TODAYSMUSIC = 'todaysmusic/FETCH'
 export const fetchTodaysMusic = createAction(FETCH_TODAYSMUSIC)
@@ -12,22 +13,15 @@ export const ABORT_TODAYSMUSIC = 'todaysmusic/ABORT'
 export const abortTodaysMusic = createAction(ABORT_TODAYSMUSIC)
 
 const todaysmusicState = {
-    song : '',
-    singer : '',
-    album : '',
-    albumImgUri : '',
+    music : Map()
 }
 
 export const todaysMusicReducer = handleActions({
     [ACCEPT_TODAYSMUSIC] : (state , action) => {
         const newState = { ...state }
 
-        const { song , singer , album , albumImgUri } = action.payload
-
-        newState.song = song
-        newState.singer = singer
-        newState.album = album
-        newState.albumImgUri = albumImgUri
+        const { music } = action.payload
+        newState.music = fromJS(music)
 
         return newState
     },
