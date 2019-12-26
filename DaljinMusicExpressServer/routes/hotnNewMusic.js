@@ -23,7 +23,11 @@ router.get('/' , doAsync(async(req , res , next) => {
         response.message = '조회 오류'
     }
     
+<<<<<<< HEAD
     console.log(response.message)
+=======
+    //console.log(response)
+>>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
     res.json(response)
 }))
 

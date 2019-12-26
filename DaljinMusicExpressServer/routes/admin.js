@@ -66,6 +66,7 @@ router.post('/getallmusics' , doAsync(async(req , res , next) => {
 
 router.post('/settodayslive' , doAsync(async(req , res , next) => {
     const { adminKey , musicId } = req.body
+    console.log(`musicId : ${musicId}`)
     const response = {
         message : ''
     }
@@ -73,9 +74,16 @@ router.post('/settodayslive' , doAsync(async(req , res , next) => {
     if(adminKey === ADMIN_KEY) {
         try {
             const index = await IndexModel.findOne({})
+            console.log(index)
             index.todaysLive = musicId
+<<<<<<< HEAD
             await index.save()
             response.message = "[오늘의 라이브]저장 완료"
+=======
+            const temp = await index.save()
+            console.log(temp)
+            response.message = "저장 완료"
+>>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
         }
         catch(e) {
             Dlogger.error(e)

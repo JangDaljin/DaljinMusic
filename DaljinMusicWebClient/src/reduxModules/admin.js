@@ -204,6 +204,7 @@ function* fetchGetAllMusicsSaga(action) {
 }
 
 function* fetchSetTodaysLiveSaga(action) {
+    console.dir(action.payload)
     yield post('/admin/settodayslive' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_TODAYSLIVE , ABORT_SET_TODAYSLIVE)
 }
 
