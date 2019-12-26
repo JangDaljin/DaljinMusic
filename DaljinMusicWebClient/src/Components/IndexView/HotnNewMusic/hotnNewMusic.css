@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'jua';
+    min-width: 300px;
 }
 
 .hotandnew-title {
@@ -27,10 +28,12 @@
 
 
 .hotandnew-list {
+    width: 100%;
     flex: 1 0 100px;
     display: flex;
     flex-wrap: wrap;
     background-color: #EEE;
+    
 }
 
 .hotandnew-list-item {
@@ -43,7 +46,15 @@
     border-left: 2px solid #069;
     border-bottom: 2px solid #FF5A5A;
     border-right: 2px solid #FF5A5A;
+    cursor: pointer;
 }
+
+
+.hotandnew-list-item:hover {
+    background-color: #303030;
+    color: #EEE;
+}
+
 
 .hotandnew-list-item::before {
     content: '';

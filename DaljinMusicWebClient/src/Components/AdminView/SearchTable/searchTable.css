@@ -1,0 +1,90 @@
+.search-bar {
+    height: 30px;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.search-bar > * {
+    border: 2px solid #303030;
+}
+
+.search-bar > select {
+    flex: 1 0 auto;
+}
+
+.search-bar > input[type="text"] {
+    flex: 3 0 auto;
+    padding: 0px 5px;
+}
+
+.search-bar > .search-button {
+    flex : 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.search-list {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.search-list-header {
+    display: flex;
+    align-items: stretch;
+    height: 40px;
+    background-color: #303030;
+    color: #EEE;
+    padding-right: 10px;
+}
+
+.search-list-header > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-list-header > div {
+    border-right: 2px solid #EEE;
+}
+
+.search-list-header > div:last-child {
+    border-right: none;
+}
+
+.search-item {
+    display: flex;
+    align-items: stretch;
+    height: 40px;
+    color: #303030;
+}
+
+.search-item > div {
+    border-right: 2px solid #303030;
+}
+
+.search-item > div:last-child {
+    border-right: none;
+}
+
+.search-item:hover {
+    background-color: #777;
+    color: #EEE;
+    cursor: pointer;
+}
+
+.search-item-odd {
+    background-color: #CCC;
+}
+
+.search-item-even {
+    background-color: #EEE;
+}
+
+.search-list-column {
+    width: 33.3%;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+}

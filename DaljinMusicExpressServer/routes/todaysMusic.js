@@ -15,8 +15,8 @@ router.get('/' , doAsync(async (req , res , next) => {
 
 
     try {
-        const index = IndexModel.findOne({}).populate('todaysLive').populate('todaysLive.singer todaysLive.album').lean()
-        console.log(index)
+        const index = await IndexModel.findOne({}).populate({path : 'todaysLive' , populate : 'singer album'}).lean()
+        //console.log(index)
         response.music = index.todaysLive
         response.message = '조회 성공'
     }
@@ -26,7 +26,7 @@ router.get('/' , doAsync(async (req , res , next) => {
     }
 
 
-
+    console.log(response.message)
     res.json(response)
 }))
 

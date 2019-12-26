@@ -294,8 +294,7 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
         console.message += '저장 실패'
     }
 
-    console.dir(response)
-    
+    console.log(response.message)
     res.json(response)
 }))
 
@@ -305,7 +304,7 @@ router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
     }
 
     const { userId , removeList } = req.body
-    console.log(removeList)
+    //console.log(removeList)
     if(userId == req.session.userId) {
         try {
             const user = await UserModel.findOne({'userId' : userId})

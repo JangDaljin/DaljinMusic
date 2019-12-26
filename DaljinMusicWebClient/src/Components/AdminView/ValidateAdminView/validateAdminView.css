@@ -1,0 +1,49 @@
+.valiedate-admin-view {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.valiedate-admin-view > * {
+    height: 50px;
+}
+
+.valiedate-admin-view > .lock-icon {
+    color: #EEE;
+    border: 4px solid #303030;
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #303030;
+}
+
+.valiedate-admin-view > input[type="password"] {
+    width: 250px;
+    height: 50px;
+    font-size: 1.4rem;
+    font-family: 'jua';
+    text-align: center;
+    border-top: 4px solid #303030;
+    border-bottom: 4px solid #303030;
+    border-left: none;
+    border-right: none;
+    outline: none;
+}
+
+
+.valiedate-admin-view > .admin-enter {
+    color: #EEE;
+    border: 4px solid #303030;
+    border-top-right-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #303030;
+    cursor: pointer;
+}

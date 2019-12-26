@@ -26,7 +26,7 @@ export const todaysMusicReducer = handleActions({
         return newState
     },
     [ABORT_TODAYSMUSIC] : (state , aciton) => {
-        const newState = { ...todaysmusicState }
+        const newState = { ...state }
         return newState
     },
 } , todaysmusicState)

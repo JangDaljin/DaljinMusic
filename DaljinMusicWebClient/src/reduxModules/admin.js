@@ -1,7 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
-import { takeLatest } from 'redux-saga/effects'
+import { takeLatest , select , put } from 'redux-saga/effects'
 import { post } from './Request/request'
-import { List , fromJS } from 'immutable'
+import { Map , List , fromJS } from 'immutable'
 
 export const FETCH_VALIDATE_PASSWORD = 'admin/FETCH_VALIDATE_PASSWORD'
 export const fetchValidatePassword = createAction(FETCH_VALIDATE_PASSWORD)
@@ -39,7 +39,6 @@ export const acceptSetHotAndNew = createAction(ACCEPT_SET_HOTANDNEW)
 export const ABORT_SET_HOTANDNEW = 'admin/ABORT_SET_HOTANDNEW'
 export const abortSetHotAndNew = createAction(ABORT_SET_HOTANDNEW)
 
-
 export const FETCH_MUSIC_UPLOAD = 'admin/FETCH_MUSIC_UPLOAD'
 export const fetchMusicUpload = createAction(FETCH_MUSIC_UPLOAD)
 
@@ -49,10 +48,37 @@ export const acceptMusicUpload = createAction(ACCEPT_MUSIC_UPLOAD)
 export const ABORT_MUSIC_UPLOAD = 'admin/ABORT_MUSIC_UPLOAD'
 export const abortMusicUpload = createAction(ABORT_MUSIC_UPLOAD)
 
+export const MENU_MODE = {
+    NOTTHING : -1,
+    TODAYSLIVE : 0,
+    HOTANDNEW : 1,
+    NEWMUSIC : 2,
+}
+
+export const CHANGE_MENU_MODE = 'admin/CHANGE_MENU_MODE'
+export const changeMenuMode = createAction(CHANGE_MENU_MODE)
+
+export const CHOICE_ITEM = 'admin/CHOICE_ITEM'
+export const choiceItem = createAction(CHOICE_ITEM)
+
+export const SET_HOTANDNEWMUSIC = 'admin/SETTING_HOTANDNEWMUSIC'
+export const setHotAndNewMusic = createAction(SET_HOTANDNEWMUSIC)
+
+export const DELETE_HOTANDNEWMUSIC = 'admin/DELETE_HOTANDNEWMUSIC'
+export const deleteHotAndNewMusic = createAction(DELETE_HOTANDNEWMUSIC)
+
+export const FETCH_SAVE = 'admin/FETCH_SAVE'
+export const fetchSave = createAction(FETCH_SAVE)
+
 const initialAdminState = {
     isAdmin : false,
     adminKey : null,
-    musicList : List()
+
+    menuMode : MENU_MODE.NOTTHING,
+
+    searchList : List(),
+    chosenTodaysLive : Map(),
+    chosenHotAndNewMusics : List(),
 }
 
 export const adminReducer = handleActions({
@@ -77,22 +103,64 @@ export const adminReducer = handleActions({
         return newState
     },
 
+    [CHANGE_MENU_MODE] : (state , action) => {
+        const newState = { ...state }
+        newState.menuMode = action.payload
+        return newState
+    },
+
+    [CHOICE_ITEM] : (state , action) => {
+        const newState = { ...state }
+        const chosenItem = action.payload
+        switch(newState.menuMode) {
+            case MENU_MODE.TODAYSLIVE :
+                newState.chosenTodaysLive = chosenItem
+                break;
+            case MENU_MODE.HOTANDNEW : 
+                newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.push(
+                    Map({
+                        'music' : fromJS(chosenItem),
+                        'hot' : false,
+                        'new' : false,
+                    }))
+                break;
+            default : 
+
+                break;
+        }
+        return newState
+    },
+
+    [SET_HOTANDNEWMUSIC] : (state , action) => {
+        const newState = { ...state }
+        const { index  , hotValue , newValue } = action.payload
+        newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.setIn([index , 'hot'] , hotValue).setIn([index , 'new'] , newValue)
+        return newState
+    },
+
+    [DELETE_HOTANDNEWMUSIC] : (state , action) => {
+        const newState = { ...state }
+        newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.splice(action.payload , 1)
+        return newState
+    },
+
     [ACCEPT_GET_ALL_MUSICS] : (state , action) => {
         const newState = { ...state }
-        const { musicList } = action.payload
-        newState.musicList = newState.musicList.concat(fromJS(musicList))
+        const { searchList } = action.payload
+        newState.searchList = newState.searchList.concat(fromJS(searchList))
         return newState
     },
 
     [ABORT_GET_ALL_MUSICS] : (state , aciton) => {
         const newState = { ...state }
-        newState.musicList = newState.musicList.clear()
+        newState.searchList = newState.searchList.clear()
         return newState
     },
 
     [ACCEPT_SET_TODAYSLIVE] : (state , action) => {
         const newState = { ...state }
-        //할일없음
+        const { message } = action.payload
+        window.alert(message)
         return newState
     },
 
@@ -162,10 +230,31 @@ function* fetchMusicUploadSaga(action) {
     yield post(`/admin/musicupload` , {} , formData , ACCEPT_MUSIC_UPLOAD , ABORT_MUSIC_UPLOAD)
 }
 
+function* fetchSaveSaga(action) {
+    const state = yield select(state => state.admin)
+    const adminKey = action.payload
+
+    switch(state.menuMode) {
+        case MENU_MODE.TODAYSLIVE :
+            const musicId = state.chosenTodaysLive.get('_id')
+            yield put({'type' : FETCH_SET_TODAYSLIVE , 'payload' : { 'adminKey' :  adminKey , 'musicId' : musicId } })
+            break;
+        case MENU_MODE.HOTANDNEW :
+            const list = state.chosenHotAndNewMusics.toJS()
+            yield put({'type' : FETCH_SET_HOTANDNEW , 'payload' : { 'adminKey' : adminKey , 'list' : list}})
+            break;
+        default : 
+            console.log(`비정상적 작동`)
+            break;
+    }
+
+}
+
 export function* adminSaga() {
     yield takeLatest(FETCH_VALIDATE_PASSWORD , fetchValidatePasswordSaga)
     yield takeLatest(FETCH_GET_ALL_MUSICS , fetchGetAllMusicsSaga)
     yield takeLatest(FETCH_SET_TODAYSLIVE , fetchSetTodaysLiveSaga)
     yield takeLatest(FETCH_SET_HOTANDNEW , fetchSetHotAndNewSaga)
     yield takeLatest(FETCH_MUSIC_UPLOAD , fetchMusicUploadSaga)
+    yield takeLatest(FETCH_SAVE , fetchSaveSaga)
 }

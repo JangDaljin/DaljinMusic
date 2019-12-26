@@ -252,7 +252,9 @@ export const musicPlayerReducer = handleActions({
     },
 
     [ABORT_PLAYLIST_ITEM_ADD] : (state , action) => {
+        const newState = { ...state }
 
+        return newState
     },
 
     [PLAYLIST_ITEM_REMOVE] : (state , action) => {

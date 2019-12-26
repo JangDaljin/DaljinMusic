@@ -8,7 +8,6 @@ const doAsync = require('./async')
 
 const multer = require('multer')
 
-
 const fs = require('fs')
 const { UPLOAD_PATH , ALBUM_IMG_PATH , MUSIC_PATH , ALBUM_IMG_URI } = process.env
 const { getAudioDurationInSeconds } = require('get-audio-duration')
@@ -19,6 +18,7 @@ const AlbumModel = require('../Database/mongoDB').albumModel
 const IndexModel = require('../Database/mongoDB').indexModel
 
 const { getTime  , isNUW} = require('../util')
+const Dlogger = require('../Dlogger')
 
 router.post('/validate' , doAsync(async(req , res , next) => {
     const { password } = req.body
@@ -29,13 +29,14 @@ router.post('/validate' , doAsync(async(req , res , next) => {
     }
 
     if(password == '1234') {
-        response.message = '검증 완료'
+        response.message = 'Admin 검증 완료'
         response.adminKey = ADMIN_KEY
         response.isAdmin = true
     }
     else {
-        response.message = '검증 실패'
+        response.message = 'Admin 검증 실패'
     }
+    Dlogger.info(response.message)
     res.json(response)
 }))
 
@@ -43,22 +44,23 @@ router.post('/getallmusics' , doAsync(async(req , res , next) => {
     const { adminKey } = req.body
     const response = {
         message : '',
-        musicList : [],
+        searchList : [],
     }
 
     if(adminKey === ADMIN_KEY) {
         try {
-            response.musicList = await MusicModel.find().populate('singer album').lean()
-            response.message = '조회 완료'
+            response.searchList = await MusicModel.find().populate('singer album').lean()
+            response.message = '[전체 음악]조회 완료'
         }
         catch(e) {
-            console.error(e)
-            response.message = '데이터베이스 오류'
+            Dlogger.error(e)
+            response.message = '[전체 음악]데이터베이스 오류'
         }
     }
     else {
-        response.message = "관리자이외 접근불가"
+        response.message = "[전체음악] 관리자이외 접근불가"
     }
+    Dlogger.info(response.message)
     res.json(response)
 }))
 
@@ -67,22 +69,23 @@ router.post('/settodayslive' , doAsync(async(req , res , next) => {
     const response = {
         message : ''
     }
+
     if(adminKey === ADMIN_KEY) {
         try {
             const index = await IndexModel.findOne({})
             index.todaysLive = musicId
             await index.save()
-            response.message = "저장 완료"
+            response.message = "[오늘의 라이브]저장 완료"
         }
         catch(e) {
-            console.error(e)
-            response.message = "저장 에러"
+            Dlogger.error(e)
+            response.message = "[오늘의 라이브]저장 에러"
         }
     }
     else {
-        response.message = "관리자외 실행불가"
+        response.message = "[오늘의 라이브] 관리자외 실행불가"
     }
-
+    Dlogger.info(response.message)
     res.json(response)
 }))
 
@@ -92,7 +95,7 @@ router.post('/sethotandnew' , doAsync(async(req , res , next) => {
         message : '',
         ok : false,
     }
-    console.log(list)
+    //console.log(list)
     if(adminKey === ADMIN_KEY) {
         try {
             const index = await IndexModel.findOne({})
@@ -101,18 +104,18 @@ router.post('/sethotandnew' , doAsync(async(req , res , next) => {
             }
 
             await index.save()
-            response.message = '저장 완료'
+            response.message = '[HOT AND NEW]저장 완료'
             response.ok = true
         }
         catch(e) {
-            console.error(e)
-            response.message = '데이터베이스 에러'
+            Dlogger.error(e)
+            response.message = '[HOT AND NEW]데이터베이스 에러'
         }
     }
     else {
-        response.message = '관리자외 설정 불가'
+        response.message = '[HOT AND NEW]관리자외 설정 불가'
     }
-    console.log(response)
+    Dlogger.info(response.message)
     res.json(response)
 }))
 

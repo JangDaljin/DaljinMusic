@@ -16,13 +16,14 @@ router.get('/' , doAsync(async(req , res , next) => {
                 populate : 'singer album'
             }).lean()
         response.list = index.hotAndNew
+        response.message = '조회 완료'
     }
     catch(e) {
         console.error(e)
         response.message = '조회 오류'
     }
     
-    console.log(response)
+    console.log(response.message)
     res.json(response)
 }))
 
