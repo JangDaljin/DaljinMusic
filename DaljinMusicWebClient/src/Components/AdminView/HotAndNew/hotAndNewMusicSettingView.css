@@ -1,8 +1,22 @@
-
 .hotandnew {
     display: flex;
     flex-direction: column;
 }
+
+.current-hotandnew {
+    margin: 5px 0px;
+}
+
+.chosen-hotandnew {
+    margin: 5px 0px;
+}
+
+.header-text {
+    font-size: 1.2rem;
+    border-top: 2px solid #303030;
+    border-bottom: 4px double #303030;
+}
+
 
 .hotandnew-item {
     margin-top: -2px;

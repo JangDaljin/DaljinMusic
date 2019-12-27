@@ -61,14 +61,30 @@ export const changeMenuMode = createAction(CHANGE_MENU_MODE)
 export const CHOICE_ITEM = 'admin/CHOICE_ITEM'
 export const choiceItem = createAction(CHOICE_ITEM)
 
+export const CLEAR_CHOOSE_ITEM = 'admin/CLEAR_CHOOSE_ITEM'
+export const clearChooseItem = createAction(CLEAR_CHOOSE_ITEM)
+
 export const SET_HOTANDNEWMUSIC = 'admin/SETTING_HOTANDNEWMUSIC'
 export const setHotAndNewMusic = createAction(SET_HOTANDNEWMUSIC)
 
-export const DELETE_HOTANDNEWMUSIC = 'admin/DELETE_HOTANDNEWMUSIC'
-export const deleteHotAndNewMusic = createAction(DELETE_HOTANDNEWMUSIC)
+export const DELETE_CHOSEN_HOTANDNEWMUSIC = 'admin/DELETE_CHOSEN_HOTANDNEWMUSIC'
+export const deleteChosenHotAndNewMusic = createAction(DELETE_CHOSEN_HOTANDNEWMUSIC)
+
+export const FETCH_DELETE_SAVED_HOTANDNEWMUSIC = 'admin/FETCH_DELETE_SAVED_HOTANDNEWMUSIC'
+export const fetchDeleteSavedHotAndNew = createAction(FETCH_DELETE_SAVED_HOTANDNEWMUSIC)
+
+export const ACCEPT_DELETE_SAVED_HOTANDNEWMUSIC = 'admin/ACCEPT_DELETE_SAVED_HOTANDNEWMUSIC'
+export const acceptDeleteSavedHotAndNew = createAction(ACCEPT_DELETE_SAVED_HOTANDNEWMUSIC)
+
+export const ABORT_DELETE_SAVED_HOTANDNEWMUSIC = 'admin/ABORT_DELETE_SAVED_HOTANDNEWMUSIC'
+export const abortDeleteSavedHotAndNew = createAction(ABORT_DELETE_SAVED_HOTANDNEWMUSIC)
+
 
 export const FETCH_SAVE = 'admin/FETCH_SAVE'
 export const fetchSave = createAction(FETCH_SAVE)
+
+export const RERENDER_END = 'admin/RERENDER_END'
+export const reRenderEnd = createAction(RERENDER_END)
 
 const initialAdminState = {
     isAdmin : false,
@@ -79,6 +95,8 @@ const initialAdminState = {
     searchList : List(),
     chosenTodaysLive : Map(),
     chosenHotAndNewMusics : List(),
+
+    reRender : false,
 }
 
 export const adminReducer = handleActions({
@@ -109,6 +127,8 @@ export const adminReducer = handleActions({
         return newState
     },
 
+    
+
     [CHOICE_ITEM] : (state , action) => {
         const newState = { ...state }
         const chosenItem = action.payload
@@ -131,6 +151,13 @@ export const adminReducer = handleActions({
         return newState
     },
 
+    [CLEAR_CHOOSE_ITEM] : (state , action) => {
+        const newState = { ...state }
+        newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.clear()
+        newState.chosenTodaysLive = newState.chosenTodaysLive.clear()
+        return newState
+    },
+
     [SET_HOTANDNEWMUSIC] : (state , action) => {
         const newState = { ...state }
         const { index  , hotValue , newValue } = action.payload
@@ -138,9 +165,24 @@ export const adminReducer = handleActions({
         return newState
     },
 
-    [DELETE_HOTANDNEWMUSIC] : (state , action) => {
+    [DELETE_CHOSEN_HOTANDNEWMUSIC] : (state , action) => {
         const newState = { ...state }
         newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.splice(action.payload , 1)
+        return newState
+    },
+
+    [ACCEPT_DELETE_SAVED_HOTANDNEWMUSIC] : (state , action) => {
+        const newState = { ...state }
+        const { message } = action.payload
+        window.alert(message)
+        newState.reRender = true
+        return newState
+    },
+
+    [ABORT_DELETE_SAVED_HOTANDNEWMUSIC] : (state , action) => {
+        const newState = { ...state }
+        const { message } = action.payload
+        window.alert(message)
         return newState
     },
 
@@ -161,6 +203,7 @@ export const adminReducer = handleActions({
         const newState = { ...state }
         const { message } = action.payload
         window.alert(message)
+        newState.reRender = true
         return newState
     },
 
@@ -174,6 +217,7 @@ export const adminReducer = handleActions({
         const newState = { ...state }
         const { message } = action.payload
         window.alert(message)
+        newState.reRender = true
         return newState
     },
     [ABORT_SET_HOTANDNEW] : (state , action) => {
@@ -192,7 +236,14 @@ export const adminReducer = handleActions({
     [ABORT_MUSIC_UPLOAD] : (state , action) => {
         const newState = { ...initialAdminState }
         return newState
-    }
+    },
+
+    [RERENDER_END] : (state , action) => {
+        const newState = {...state}
+        newState.reRender = false
+        return newState
+    },
+
 } , initialAdminState)
 
 function* fetchValidatePasswordSaga(action) {
@@ -204,12 +255,15 @@ function* fetchGetAllMusicsSaga(action) {
 }
 
 function* fetchSetTodaysLiveSaga(action) {
-    console.dir(action.payload)
     yield post('/admin/settodayslive' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_TODAYSLIVE , ABORT_SET_TODAYSLIVE)
 }
 
 function* fetchSetHotAndNewSaga(action) {
     yield post('/admin/sethotandnew' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_HOTANDNEW , ABORT_SET_HOTANDNEW)
+}
+
+function* fetchDeleteSavedHotAndNewSaga(action) {
+    yield post('/admin/deletesavedhotandnew' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_DELETE_SAVED_HOTANDNEWMUSIC , ABORT_DELETE_SAVED_HOTANDNEWMUSIC)
 }
 
 function* fetchMusicUploadSaga(action) {
@@ -241,8 +295,8 @@ function* fetchSaveSaga(action) {
             yield put({'type' : FETCH_SET_TODAYSLIVE , 'payload' : { 'adminKey' :  adminKey , 'musicId' : musicId } })
             break;
         case MENU_MODE.HOTANDNEW :
-            const list = state.chosenHotAndNewMusics.toJS()
-            yield put({'type' : FETCH_SET_HOTANDNEW , 'payload' : { 'adminKey' : adminKey , 'list' : list}})
+            const saveList = state.chosenHotAndNewMusics.toJS()
+            yield put({'type' : FETCH_SET_HOTANDNEW , 'payload' : { 'adminKey' : adminKey , 'saveList' : saveList}})
             break;
         default : 
             console.log(`비정상적 작동`)
@@ -255,7 +309,10 @@ export function* adminSaga() {
     yield takeLatest(FETCH_VALIDATE_PASSWORD , fetchValidatePasswordSaga)
     yield takeLatest(FETCH_GET_ALL_MUSICS , fetchGetAllMusicsSaga)
     yield takeLatest(FETCH_SET_TODAYSLIVE , fetchSetTodaysLiveSaga)
+
     yield takeLatest(FETCH_SET_HOTANDNEW , fetchSetHotAndNewSaga)
+    yield takeLatest(FETCH_DELETE_SAVED_HOTANDNEWMUSIC , fetchDeleteSavedHotAndNewSaga)
+
     yield takeLatest(FETCH_MUSIC_UPLOAD , fetchMusicUploadSaga)
     yield takeLatest(FETCH_SAVE , fetchSaveSaga)
 }

@@ -4,6 +4,7 @@ import ValidateAdminView from './ValidateAdminView/validateAdminView'
 import TodaysLiveSettingView from './TodaysLive/todaysLiveSettingView'
 import HotAndNewMusicSettingView from './HotAndNew/hotAndNewMusicSettingView'
 import SearchTable from './SearchTable/searchTable'
+import MusicManagerView from './MusicManager/musicManagerView'
 
 import * as AdminActions from '../../ReduxModules/admin'
 import { connect } from 'react-redux'
@@ -22,7 +23,46 @@ class AdminView extends Component {
     }
 
     onClickSave = () => {
-        this.props.AdminActions.fetchSave(this.props.adminKey)
+        let finalProcess = false
+        switch(this.props.menuMode) {
+            case AdminActions.MENU_MODE.NOTTHING :
+                window.alert('메뉴를 선택해주세요.')
+            break;
+            
+            case AdminActions.MENU_MODE.TODAYSLIVE :
+                finalProcess = true
+            break;
+
+            case AdminActions.MENU_MODE.HOTANDNEW :
+                //검증
+                let error = -1
+                this.props.chosenHotAndNewMusics.forEach((value , index) => {
+                    if(!(value.get('hot') || value.get('new'))) {
+                        error = index
+                        return false
+                    }
+                })
+                if(error > -1) {
+                    window.alert(`${error + 1}번째 설정 오류`)
+                    finalProcess = false
+                }
+                else {
+                    finalProcess = true
+                }
+            break;
+
+            case AdminActions.MENU_MODE.NEWMUSIC:
+                finalProcess = true
+            break;
+
+            default :
+
+            break;
+        }
+        if(finalProcess) {
+            this.props.AdminActions.fetchSave(this.props.adminKey)
+            this.props.AdminActions.clearChooseItem()
+        }
     }
 
 
@@ -59,7 +99,7 @@ class AdminView extends Component {
 
                     {this.props.menuMode === AdminActions.MENU_MODE.NEWMUSIC &&
                     <div>
-
+                        <MusicManagerView />
                     </div>
                     }
                 </div>
@@ -83,6 +123,8 @@ export default connect(
         isAdmin : state.admin.isAdmin,
         adminKey : state.admin.adminKey,
         menuMode : state.admin.menuMode,
+        chosenTodaysLive : state.admin.chosenTodaysLive,
+        chosenHotAndNewMusics : state.admin.chosenHotAndNewMusics,
     }),
     (dispatch) => ({
         AdminActions : bindActionCreators(AdminActions , dispatch)

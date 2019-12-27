@@ -29,17 +29,17 @@ module.exports = {
     error : (msg) => {
         
         console.log('\x1b[31m%s\x1b[0m' , `[ERROR] ${msg}`)
-        return `[ERROR] ${msg}`
+        return `${msg}`
     },
     
     info : (msg) => { 
         console.log('\x1b[36m%s\x1b[0m' , `[INFO] ${msg}`)
-        return `[INFO] ${msg}`
+        return `${msg}`
     },
     
     debug : (msg) => {
         console.log('\x1b[35m%s\x1b[0m' , `[DEBUG] ${msg}`)
-        return `[DEBUG] ${msg}`
+        return `${msg}`
     },
 }
 

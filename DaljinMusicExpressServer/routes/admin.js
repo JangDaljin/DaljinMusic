@@ -92,7 +92,7 @@ router.post('/settodayslive' , doAsync(async(req , res , next) => {
 }))
 
 router.post('/sethotandnew' , doAsync(async(req , res , next) => {
-    const { adminKey , list} = req.body;
+    const { adminKey , saveList} = req.body;
     const response = {
         message : '',
         ok : false,
@@ -101,8 +101,8 @@ router.post('/sethotandnew' , doAsync(async(req , res , next) => {
     if(adminKey === ADMIN_KEY) {
         try {
             const index = await IndexModel.findOne({})
-            for(item of list) {
-                index.hotAndNew.push({'music' : item.musicId , 'hot' : item.hot , 'new' : item.new})
+            for(item of saveList) {
+                index.hotAndNew.push({'music' : item.music._id , 'hot' : item.hot , 'new' : item.new})
             }
 
             await index.save()
@@ -118,6 +118,28 @@ router.post('/sethotandnew' , doAsync(async(req , res , next) => {
         response.message = '[HOT AND NEW]관리자외 설정 불가'
     }
     Dlogger.info(response.message)
+    res.json(response)
+}))
+
+router.post('/deletesavedhotandnew' , doAsync(async(req , res , next) => {
+    const { adminKey , index } = req.body;
+    const response = {
+        message : '',
+    }
+    if(adminKey === ADMIN_KEY) {
+        try {
+            const indexDocument = await IndexModel.findOne({})
+            indexDocument.hotAndNew.splice(index , 1)
+            await indexDocument.save()
+            response.message = Dlogger.info('[HOT AND NEW DELETE] 삭제 완료')
+        }
+        catch(e) {
+            response.message = Dlogger.error('[HOT AND NEW DELETE] 데이터베이스 에러')
+        }
+    }
+    else {
+        response.message = Dlogger.info('[HOT AND NEW DELETE] 관리자외 설정 불가')
+    }
     res.json(response)
 }))
 
