@@ -25,24 +25,6 @@ class AdminView extends Component {
         this.props.AdminActions.fetchSave(this.props.adminKey)
     }
 
-<<<<<<< HEAD
-=======
-    fetchSetTodaysLive = () => {
-        const musicId = this.state.todayslive.get('_id')
-        this.props.AdminActions.fetchSetTodaysLive({'adminKey' : this.props.adminKey , 'musicId' : musicId})
-    }
-
-    fetchSetHotAndNew = () => {
-        const list = this.state.hotandnew.map(value => ({'hot' : value.get('hot') , 'new' : value.get('new') , 'musicId' : value.getIn(['music' , '_id'])})).toJS()
-        for(let i = 0 ; i < list.length; i++) {
-            if(!list[i].hot && !list[i].new) {
-                window.alert(`${i+1}번째 HOT/NEW/BOTH 선택 안됨`)
-                return
-            }
-        }
-        this.props.AdminActions.fetchSetHotAndNew({'adminKey' : this.props.adminKey , 'list' : list})
-    }
->>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
 
     render () {
         return (

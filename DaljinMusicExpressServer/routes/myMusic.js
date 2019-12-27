@@ -4,7 +4,7 @@ const doAsync = require('./async')
 const UserModel = require('../Database/mongoDB').userModel
 const MusicModel = require('../Database/mongoDB').musicModel
 const fs = require('fs')
-
+const Dlogger = require('../Dlogger')
 
 router.post('/getmusiclists' , doAsync(async (req , res , next) => {
     const { userId } = req.body
@@ -294,12 +294,7 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
         response.message = '저장 실패'
     }
 
-<<<<<<< HEAD
-    console.log(response.message)
-=======
-    //console.dir(response)
-    
->>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
+    Dlogger.info(response.message)
     res.json(response)
 }))
 

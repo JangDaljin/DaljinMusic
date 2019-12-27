@@ -46,15 +46,10 @@ class HotAndNewMusic extends Component {
         this.setState({'imageShow' : false})
     }
 
-<<<<<<< HEAD
     play = (index) => {
         this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.list.getIn([index , 'music', '_id'])] })
 
         //서버에서 응답 받을때까지 대기하고 재생
-=======
-    onClickMusicPlay = (index) => {
-        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.list.getIn([index , 'music' , '_id'])] })
->>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
         const interval = setInterval(() => {
             if(!this.props.musicPlayerMonitor) {
                 this.props.MusicPlayerActions.onRemote({'play' : true})
@@ -76,12 +71,8 @@ class HotAndNewMusic extends Component {
                         {this.props.list.map(
                             (value , index) => (
 
-<<<<<<< HEAD
                                 <div className={cn('hotandnew-list-item')} key={index} 
                                 onClick={(e) => { this.play(index) }}
-=======
-                                <div className={cn('hotandnew-list-item')} key={index} onClick={(e) => this.onClickMusicPlay(index)}
->>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
                                 onMouseOver={(e) => this.imageShow(e , index)} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
                                     <div className={cn('hotandnew-list-item-info')}>
                                         <div>{value.getIn(['music' , 'singer' , 'name'])}</div>
@@ -130,10 +121,6 @@ export default connect(
     }),
     (dispatch) => ({
         HotAndNewActions : bindActionCreators(HotAndNewActions , dispatch),
-<<<<<<< HEAD
         MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch),
-=======
-        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch)
->>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
     })
 )(withRouter(HotAndNewMusic))

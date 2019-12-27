@@ -1,6 +1,6 @@
 import React , { Component } from 'react'
 
-import TodayMusic from './TodayMusic/todayMusic'
+import TodaysMusic from './TodaysMusic/todaysMusic'
 import SuggestMusic from './SuggestMusic/suggestMusic'
 import HotnNewMusic from './HotnNewMusic/hotnNewMusic'
 import TopTenMusic from './TopTenMusic/TopTenMusic'
@@ -16,7 +16,7 @@ class IndexBody extends Component {
             <div className={cn('indexbody')}>
                 
                 <div className={cn('first')}>
-                    <TodayMusic />
+                    <TodaysMusic />
                 </div>
                 
                 <div className={cn('second')}>

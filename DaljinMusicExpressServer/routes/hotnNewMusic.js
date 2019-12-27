@@ -3,6 +3,8 @@ const router = express.Router()
 
 const IndexModel = require('../Database/mongoDB').indexModel
 const doAsync = require('./async')
+
+const Dlogger = require('../Dlogger')
 router.get('/' , doAsync(async(req , res , next) => {
     
     const response = {
@@ -23,11 +25,7 @@ router.get('/' , doAsync(async(req , res , next) => {
         response.message = '조회 오류'
     }
     
-<<<<<<< HEAD
-    console.log(response.message)
-=======
-    //console.log(response)
->>>>>>> dc31ca52ed49bd437c290b12b53199d30bbc7abc
+    Dlogger.info(response.message)
     res.json(response)
 }))
 
