@@ -4,7 +4,7 @@ const doAsync = require('./async')
 const UserModel = require('../Database/mongoDB').userModel
 const MusicModel = require('../Database/mongoDB').musicModel
 const fs = require('fs')
-
+const Dlogger = require('../Dlogger')
 
 router.post('/getmusiclists' , doAsync(async (req , res , next) => {
     const { userId } = req.body
@@ -294,8 +294,7 @@ router.post('/playlistitemadd' , doAsync(async (req , res , next) => {
         response.message = '저장 실패'
     }
 
-    //console.dir(response)
-    
+    Dlogger.info(response.message)
     res.json(response)
 }))
 
@@ -305,7 +304,7 @@ router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
     }
 
     const { userId , removeList } = req.body
-    console.log(removeList)
+    //console.log(removeList)
     if(userId == req.session.userId) {
         try {
             const user = await UserModel.findOne({'userId' : userId})

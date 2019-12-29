@@ -215,7 +215,6 @@ export default connect(
         myMusicLists : state.myMusic.myMusicLists,
         myMusicListsLoading : state.myMusic.loading,
         musicPlayerMonitor : state.musicPlayer.monitor,
-        addedIndex : state.musicPlayer.addedIndex,
     }),
     (dispatch) => ({
         Top100Actions : bindActionCreators(top100Actions , dispatch),

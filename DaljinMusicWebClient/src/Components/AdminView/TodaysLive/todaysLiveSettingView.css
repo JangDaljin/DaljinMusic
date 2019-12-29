@@ -1,0 +1,42 @@
+.todayslive {
+    display: flex;
+    align-items: stretch;
+    
+    border: 2px solid #303030;
+}
+
+.todayslive-img-wrap {
+    flex: 0 0 200px;
+    position: relative;
+}
+
+.todayslive-img-wrap::after {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.todayslive-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.todayslive-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1.2rem;
+    padding : 0px 10px;
+}
+
+.todayslive-info > div {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,41 @@
+.musicmanager {
+    display: flex;
+    height: 100%;
+    border: 2px solid blue;
+}
+
+.table-row {
+    display: flex;
+    flex: 1 0 auto;
+}
+
+.table-column {
+    display: flex;
+}
+
+.tc1 {
+    width: 10%;
+}
+
+.tc2 {
+    width: 20%;
+}
+
+.tc3 {
+    width: 20%;
+}
+
+.tc4 {
+    width: 20%;
+}
+
+.tc5 {
+    width : 30%;
+}
+
+
+.table-column > input[type="text"] {
+    border: none;
+    background: none;
+    outline: none;
+}

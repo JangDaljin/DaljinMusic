@@ -3,6 +3,8 @@ const router = express.Router()
 
 const IndexModel = require('../Database/mongoDB').indexModel
 const doAsync = require('./async')
+
+const Dlogger = require('../Dlogger')
 router.get('/' , doAsync(async(req , res , next) => {
     
     const response = {
@@ -16,13 +18,14 @@ router.get('/' , doAsync(async(req , res , next) => {
                 populate : 'singer album'
             }).lean()
         response.list = index.hotAndNew
+        response.message = '조회 완료'
     }
     catch(e) {
         console.error(e)
         response.message = '조회 오류'
     }
     
-    //console.log(response)
+    Dlogger.info(response.message)
     res.json(response)
 }))
 

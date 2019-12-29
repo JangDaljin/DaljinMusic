@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     font-family: 'jua';
+    min-width: 300px;
 }
 
 .toptenmusic-title {
@@ -28,6 +29,8 @@
     display: flex;
     justify-content: center;
     color: #303030;
+    padding: 3px;
+    min-height: 35px;
 }
 
 .toptenmusic-list-item > div {
@@ -45,17 +48,18 @@
 .toptenmusic-list-item-selected {
     background-color: #303030;
     color: #EEE;
-    transition: all .5s 0s;
-    border-top: 2px solid #EEE;
-    border-bottom: 2px solid #EEE;
+    border-radius: 1rem;
+    border: 1px solid #EEE;
+    
+    transition: all .4s 0s;
 }
 
 .toptenmusic-list-item-unselected {
     background-color: transparent;
     color: #303030;
-    border-top: none;
-    border-bottom: none;
-    transition: all .5s 0s;
+
+    border: none;
+    transition: all .4s 0s;
 }
 
 

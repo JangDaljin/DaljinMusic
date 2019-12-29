@@ -2,7 +2,7 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
-import * as HotAndNewActions from '../../../ReduxModules/hotnNewMusic'
+import * as HotAndNewActions from '../../../ReduxModules/hotAndNewMusic'
 import * as MusicPlayerActions from '../../../ReduxModules/musicPlayer'
 import classNames from 'classnames/bind'
 import styles from './hotnNewMusic.css'
@@ -46,8 +46,10 @@ class HotAndNewMusic extends Component {
         this.setState({'imageShow' : false})
     }
 
-    onClickMusicPlay = (index) => {
-        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.list.getIn([index , 'music' , '_id'])] })
+    play = (index) => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({'userId' : this.props.userId , 'addList' : [this.props.list.getIn([index , 'music', '_id'])] })
+
+        //서버에서 응답 받을때까지 대기하고 재생
         const interval = setInterval(() => {
             if(!this.props.musicPlayerMonitor) {
                 this.props.MusicPlayerActions.onRemote({'play' : true})
@@ -69,7 +71,8 @@ class HotAndNewMusic extends Component {
                         {this.props.list.map(
                             (value , index) => (
 
-                                <div className={cn('hotandnew-list-item')} key={index} onClick={(e) => this.onClickMusicPlay(index)}
+                                <div className={cn('hotandnew-list-item')} key={index} 
+                                onClick={(e) => { this.play(index) }}
                                 onMouseOver={(e) => this.imageShow(e , index)} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
                                     <div className={cn('hotandnew-list-item-info')}>
                                         <div>{value.getIn(['music' , 'singer' , 'name'])}</div>
@@ -93,9 +96,7 @@ class HotAndNewMusic extends Component {
             </div>
 
 
-            <div className={cn('hotandnew-img-wrap')} onMouseOver={(e) => {
-                console.log(document.getElementById('root').getBoundingClientRect().bottom)
-            }} style={
+            <div className={cn('hotandnew-img-wrap')} style={
                     {
                         top :  document.getElementById('root').getBoundingClientRect().bottom < this.state.image_Y + 200 ? this.state.image_Y - 200 + 'px' : this.state.image_Y + 'px',
                         left : this.state.image_X + 12,
@@ -120,6 +121,6 @@ export default connect(
     }),
     (dispatch) => ({
         HotAndNewActions : bindActionCreators(HotAndNewActions , dispatch),
-        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch)
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch),
     })
 )(withRouter(HotAndNewMusic))
