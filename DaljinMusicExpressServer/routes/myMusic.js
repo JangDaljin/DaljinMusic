@@ -330,7 +330,7 @@ router.post('/playlistitemremove' , doAsync(async (req , res , next) => {
 
 router.get('/playmusic' , doAsync(async (req , res , next) => {
 
-    const { musicid } = req.query
+    const { musicid , userid } = req.query
 
     
     try {
@@ -340,6 +340,14 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
         music.monthPlayCount++;
         music.weekPlayCount++;
         music.dayPlayCount++;
+
+        if(typeof userid !== 'undefined') {
+            //최근 들은 음악리스트에 추가
+            const user = await UserModel.findOne({ 'userId' : userid })
+            user.recentlyPlayList.push(userid)
+            if(user.recentlyPlayList)
+            //선호도 카운터 증가
+        }
 
         const filePath = music.filePath
         await music.save()

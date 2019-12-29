@@ -80,7 +80,13 @@ const User = new Schema({
         list : [ {type : Schema.Types.ObjectId , ref : 'music'}]
     }],
     playList : [{ type : Schema.Types.ObjectId , ref : 'music' }],
-    recentPlayList : [{ type : Schema.Types.ObjectId , ref : 'music' }],
+    recentlyPlayList : [{ type : Schema.Types.ObjectId , ref : 'music' }],
+    preferCategoryCounter : [
+        {
+            categoryId : {type : Schema.Types.ObjectId , ref : 'category' },
+            count : {type : Number , default : 0}
+        }
+    ]
 })
 
 User.method('makeSalt' , function() {

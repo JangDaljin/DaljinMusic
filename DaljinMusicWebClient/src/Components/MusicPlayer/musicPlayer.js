@@ -90,7 +90,7 @@ class MusicPlayer extends Component {
                     this.props.MusicPlayerActions.pause()
                 }
                 else {
-                    this.source.src =  `${process.env.REACT_APP_SERVER}/mymusic/playmusic?musicid=${this.props.playList.getIn([this.props.currentMusicIndex , '_id'])}`
+                    this.source.src =  `${process.env.REACT_APP_SERVER}/mymusic/playmusic?musicid=${this.props.playList.getIn([this.props.currentMusicIndex , '_id'])}&userid=${this.props.userId}`
                     this.audio.load()
                     this.audio.play()
                     this.props.MusicPlayerActions.play()
