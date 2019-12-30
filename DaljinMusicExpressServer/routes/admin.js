@@ -167,6 +167,28 @@ router.post('/getcategories' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
+router.post('/addcategory' , doAsync(async(req , res , next) => {
+    const { adminKey , newCategoryName } = req.body
+    const response = {
+        message : ''
+    }
+    if(adminKey === ADMIN_KEY) {
+        try {
+            await new CategoryModel({
+                name : newCategoryName
+            }).save()
+            response.message = Dlogger.info(`[ADD CATEGORY] 새 카테고리 추가 성공`)
+        }
+        catch(e) {
+            response.message = Dlogger.error(`[ADD CATEGORY] 새 카테고리 추가 실패`)
+        }
+    }
+    else {
+        response.message = Dlogger.info(`[ADD CATEGORY] 관리자외 사용 불가`)
+    }
+    res.json(response)
+}))
+
 
 const upload = multer({
     storage : multer.diskStorage({

@@ -57,6 +57,15 @@ export const acceptGetCategories = createAction(ACCEPT_GET_CATEGORIES)
 export const ABORT_GET_CATEGORIES = 'admin/ABORT_GET_CATEGORIES'
 export const abortGetCategories = createAction(ABORT_GET_CATEGORIES)
 
+export const FETCH_ADD_CATEGORY = 'admin/FETCH_ADD_CATEGORY'
+export const fetchAddCategory = createAction(FETCH_ADD_CATEGORY)
+
+export const ACCEPT_ADD_CATEGORY = 'admin/ACCEPT_ADD_CATEGORY'
+export const acceptAddCategory = createAction(ACCEPT_ADD_CATEGORY)
+
+export const ABORT_ADD_CATEGORY = 'admin/ABORT_ADD_CATEGORY'
+export const abortAddCategory = createAction(ABORT_ADD_CATEGORY)
+
 export const MENU_MODE = {
     NOTTHING : -1,
     TODAYSLIVE : 0,
@@ -210,13 +219,26 @@ export const adminReducer = handleActions({
     [ACCEPT_GET_CATEGORIES] : (state , action) => {
         const newState = { ...state }
         const { categories } = action.payload
-        console.log(categories)
         newState.musicCategories = newState.musicCategories.clear().concat(fromJS(categories))
         return newState
     },
 
     [ABORT_GET_CATEGORIES] : (state , aciton) => {
         const newState = { ...state }
+        return newState
+    },
+
+    [ACCEPT_ADD_CATEGORY] : (state , action) => {
+        const newState = { ...state }
+        const { message } = action.payload
+        window.alert(message)
+        return newState
+    },
+    
+    [ABORT_ADD_CATEGORY] : (state , action) => {
+        const newState = { ...state }
+        const { message } = action.payload
+        window.alert(message)
         return newState
     },
 
@@ -330,10 +352,17 @@ function* fetchGetCategoriesSaga (action) {
     yield post('/admin/getcategories' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_CATEGORIES , ABORT_GET_CATEGORIES)
 }
 
+function * fetchAddCategorySaga (action) {
+    yield post('/admin/addcategory' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_ADD_CATEGORY , ABORT_ADD_CATEGORY)
+}
+
 export function* adminSaga() {
     yield takeLatest(FETCH_VALIDATE_PASSWORD , fetchValidatePasswordSaga)
     yield takeLatest(FETCH_GET_ALL_MUSICS , fetchGetAllMusicsSaga)
+
     yield takeLatest(FETCH_GET_CATEGORIES , fetchGetCategoriesSaga)
+    yield takeLatest(FETCH_ADD_CATEGORY , fetchAddCategorySaga)
+
     yield takeLatest(FETCH_SET_TODAYSLIVE , fetchSetTodaysLiveSaga)
 
     yield takeLatest(FETCH_SET_HOTANDNEW , fetchSetHotAndNewSaga)

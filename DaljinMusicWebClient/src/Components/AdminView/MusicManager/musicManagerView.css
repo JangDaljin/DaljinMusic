@@ -32,12 +32,16 @@
     padding : 5px;
 }
 
+.musicmanager-table {
+    border: 2px solid #303030;
+}
 
 .table-row {
     display: flex;
     flex: 1 0 auto;
-    border-left: 4px solid #303030;
-    border-right: 4px solid #303030;
+    min-height: 45px;
+    font-family: Arial;
+    font-size: 0.8rem;
 }
 
 .table-row-odd {
@@ -45,23 +49,13 @@
 }
 
 .table-row-even {
-    background-color: #CCC;
+    background-color: white;
 }
 
 .table-column {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-right: 1px solid #303030;
-    border-left: 1px solid #303030;
-}
-
-.table-column:first-child {
-    border-left: none;
-}
-
-.table-column:last-child {
-    border-right: none;
 }
 
 .tc1 {
@@ -69,14 +63,17 @@
 }
 
 .tc2 {
+    justify-content: flex-start;
     width: 20%;
 }
 
 .tc3 {
+    justify-content: flex-start;
     width: 20%;
 }
 
 .tc4 {
+    justify-content: flex-start;
     width: 20%;
 }
 
@@ -86,18 +83,27 @@
 
 .tc6 {
     width: 15%;
+    flex-direction: column;
 }
 
 .tc7 {
     width: 10%;
+    justify-content: flex-end;
 }
 
 
+.table-column > div {
+    flex: 1 0 auto;
+}
 
 .table-column > input[type="text"] {
     border: none;
     background: none;
     outline: none;
+}
+
+.table-column > select {
+    width: 100%;
 }
 
 
@@ -115,6 +121,7 @@
 
 .musicmanager-button-text {
     padding-left: 5px;
+    font-family: 'jua';
 }
 
 .musicmanager-button:hover {
