@@ -16,6 +16,7 @@ const MusicModel = require('../Database/mongoDB').musicModel
 const SingerModel = require('../Database/mongoDB').singerModel
 const AlbumModel = require('../Database/mongoDB').albumModel
 const IndexModel = require('../Database/mongoDB').indexModel
+const CategoryModel = require('../Database/mongoDB').categoryModel
 
 const { getTime  , isNUW} = require('../util')
 const Dlogger = require('../Dlogger')
@@ -139,6 +140,29 @@ router.post('/deletesavedhotandnew' , doAsync(async(req , res , next) => {
     }
     else {
         response.message = Dlogger.info('[HOT AND NEW DELETE] 관리자외 설정 불가')
+    }
+    res.json(response)
+}))
+
+router.post('/getcategories' , doAsync(async(req , res , next) => {
+    const { adminKey } = req.body;
+    const response = {
+        message : '',
+        categories : []
+    }
+
+    if(adminKey === ADMIN_KEY) {
+        try {
+            const categories = await CategoryModel.find({}).lean()
+            response.categories = categories
+            response.message = Dlogger.info('[GET CATEGORIES] 조회 완료')
+        }
+        catch(e) {
+            response.message = Dlogger.error('[GET CATEGORIES] 조회 오류')
+        }
+    }
+    else {
+        response.message = Dlogger.info('[GET CATEGORIES] 관리자외 사용 불가')
     }
     res.json(response)
 }))

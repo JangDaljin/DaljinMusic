@@ -1,20 +1,71 @@
 .musicmanager {
     display: flex;
+    flex-direction: column;
     height: 100%;
-    border: 2px solid blue;
+    padding-top: 5px;
 }
+
+.table-menu {
+    margin-bottom: 5px;
+}
+
+.table-menu-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 15px;
+    border: 4px solid #303030;
+    border-right: none;
+}
+
+.table-menu-item:last-child {
+    border-right: 4px solid #303030;
+}
+
+.table-menu-item:hover {
+    color: #069;
+    cursor: pointer;
+    background-color: #303030;
+}
+
+.table-menu-item-text {
+    padding : 5px;
+}
+
 
 .table-row {
     display: flex;
     flex: 1 0 auto;
+    border-left: 4px solid #303030;
+    border-right: 4px solid #303030;
+}
+
+.table-row-odd {
+    background-color: #EEE;
+}
+
+.table-row-even {
+    background-color: #CCC;
 }
 
 .table-column {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #303030;
+    border-left: 1px solid #303030;
+}
+
+.table-column:first-child {
+    border-left: none;
+}
+
+.table-column:last-child {
+    border-right: none;
 }
 
 .tc1 {
-    width: 10%;
+    width: 5%;
 }
 
 .tc2 {
@@ -30,12 +81,43 @@
 }
 
 .tc5 {
-    width : 30%;
+    width : 10%;
 }
+
+.tc6 {
+    width: 15%;
+}
+
+.tc7 {
+    width: 10%;
+}
+
 
 
 .table-column > input[type="text"] {
     border: none;
     background: none;
     outline: none;
+}
+
+
+.musicmanager-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 5px;
+    border: 2px solid #303030;
+    border-radius: .5rem;
+    margin: 0px 5px;
+    
+    font-size: 0.9rem;
+}
+
+.musicmanager-button-text {
+    padding-left: 5px;
+}
+
+.musicmanager-button:hover {
+    color: #069;
+    cursor: pointer;
 }

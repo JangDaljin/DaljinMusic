@@ -333,26 +333,49 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
 
     
     try {
-        const music = await MusicModel.findOne({ '_id' : musicid })
+        const music = await MusicModel.findOne({ '_id' : musicid }).populate('song album category')
 
         music.totalPlayCount++;
         music.monthPlayCount++;
         music.weekPlayCount++;
         music.dayPlayCount++;
 
-        if(typeof userid !== 'undefined') {
-            //최근 들은 음악리스트에 추가
+        if(typeof userid !== 'undefined' && userid.trim() !== '') {
+
             const user = await UserModel.findOne({ 'userId' : userid })
+            
+            //최근 들은 음악리스트에 추가(100개 까지 저장)
+            if(user.recentlyPlayList.length > 100) {
+                user.recentlyPlayList.shift()
+            }
             user.recentlyPlayList.push(userid)
-            if(user.recentlyPlayList)
+
+
             //선호도 카운터 증가
+            let loopFlag = false
+            for(let i = 0 ; i < music.category.length ; i++) {
+                for(let j = 0 ; j < user.preferCategoryCounter.length ; j++) {
+                    if(user.preferCategoryCounter[j].categoryId === music.category[i]) {
+                        user.preferCategoryCounter[j].count += 1
+                        loopFlag = true
+                        break;
+                    }
+                }
+            }
+
+            if(!loopFlag) {
+                user.preferCategoryCounter.push({ 'categoryId' : music.category[i]._id , 'count' : 1})
+            }
+
+            await user.save()
         }
 
-        const filePath = music.filePath
-        await music.save()
-
-        const fileStat = fs.statSync(filePath)
         
+
+        const filePath = music.filePath
+        const fileStat = fs.statSync(filePath)
+
+        await music.save()
         res.writeHead(206, {
             'Content-Type': 'audio/mpeg',
             'Content-Length': fileStat.size,

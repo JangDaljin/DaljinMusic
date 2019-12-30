@@ -48,6 +48,15 @@ export const acceptMusicUpload = createAction(ACCEPT_MUSIC_UPLOAD)
 export const ABORT_MUSIC_UPLOAD = 'admin/ABORT_MUSIC_UPLOAD'
 export const abortMusicUpload = createAction(ABORT_MUSIC_UPLOAD)
 
+export const FETCH_GET_CATEGORIES = 'admin/FETCH_GET_CATEGORIES'
+export const fetchGetCategories = createAction(FETCH_GET_CATEGORIES)
+
+export const ACCEPT_GET_CATEGORIES = 'admin/ACCEPT_GET_CATEGORIES'
+export const acceptGetCategories = createAction(ACCEPT_GET_CATEGORIES)
+
+export const ABORT_GET_CATEGORIES = 'admin/ABORT_GET_CATEGORIES'
+export const abortGetCategories = createAction(ABORT_GET_CATEGORIES)
+
 export const MENU_MODE = {
     NOTTHING : -1,
     TODAYSLIVE : 0,
@@ -79,7 +88,6 @@ export const acceptDeleteSavedHotAndNew = createAction(ACCEPT_DELETE_SAVED_HOTAN
 export const ABORT_DELETE_SAVED_HOTANDNEWMUSIC = 'admin/ABORT_DELETE_SAVED_HOTANDNEWMUSIC'
 export const abortDeleteSavedHotAndNew = createAction(ABORT_DELETE_SAVED_HOTANDNEWMUSIC)
 
-
 export const FETCH_SAVE = 'admin/FETCH_SAVE'
 export const fetchSave = createAction(FETCH_SAVE)
 
@@ -95,6 +103,8 @@ const initialAdminState = {
     searchList : List(),
     chosenTodaysLive : Map(),
     chosenHotAndNewMusics : List(),
+
+    musicCategories : List(),
 
     reRender : false,
 }
@@ -126,8 +136,6 @@ export const adminReducer = handleActions({
         newState.menuMode = action.payload
         return newState
     },
-
-    
 
     [CHOICE_ITEM] : (state , action) => {
         const newState = { ...state }
@@ -196,6 +204,19 @@ export const adminReducer = handleActions({
     [ABORT_GET_ALL_MUSICS] : (state , aciton) => {
         const newState = { ...state }
         newState.searchList = newState.searchList.clear()
+        return newState
+    },
+
+    [ACCEPT_GET_CATEGORIES] : (state , action) => {
+        const newState = { ...state }
+        const { categories } = action.payload
+        console.log(categories)
+        newState.musicCategories = newState.musicCategories.clear().concat(fromJS(categories))
+        return newState
+    },
+
+    [ABORT_GET_CATEGORIES] : (state , aciton) => {
+        const newState = { ...state }
         return newState
     },
 
@@ -305,9 +326,14 @@ function* fetchSaveSaga(action) {
 
 }
 
+function* fetchGetCategoriesSaga (action) {
+    yield post('/admin/getcategories' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_CATEGORIES , ABORT_GET_CATEGORIES)
+}
+
 export function* adminSaga() {
     yield takeLatest(FETCH_VALIDATE_PASSWORD , fetchValidatePasswordSaga)
     yield takeLatest(FETCH_GET_ALL_MUSICS , fetchGetAllMusicsSaga)
+    yield takeLatest(FETCH_GET_CATEGORIES , fetchGetCategoriesSaga)
     yield takeLatest(FETCH_SET_TODAYSLIVE , fetchSetTodaysLiveSaga)
 
     yield takeLatest(FETCH_SET_HOTANDNEW , fetchSetHotAndNewSaga)

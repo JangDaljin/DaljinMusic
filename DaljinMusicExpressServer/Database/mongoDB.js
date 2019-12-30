@@ -84,7 +84,7 @@ const User = new Schema({
     preferCategoryCounter : [
         {
             categoryId : {type : Schema.Types.ObjectId , ref : 'category' },
-            count : {type : Number , default : 0}
+            count : {type : Number , default : 1}
         }
     ]
 })
