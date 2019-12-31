@@ -81,25 +81,50 @@
     width : 10%;
 }
 
+.tc5 > div {
+    justify-content: flex-end;
+}
+
 .tc6 {
-    width: 15%;
+    width: 10%;
     flex-direction: column;
 }
 
 .tc7 {
-    width: 10%;
-    justify-content: flex-end;
+    width: 15%;
+}
+
+.album-image-file-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+}
+
+.album-image-file-delete {
+    cursor: pointer;
+}
+
+.album-image-file-delete:hover {
+    color: #FF5A5A;
+}
+
+.album-image-load-button {
+    cursor: pointer;
+    display: flex;
+}
+
+.album-image-load-button:hover {
+    color: #069;
 }
 
 
-.table-column > div {
-    flex: 1 0 auto;
-}
 
 .table-column > input[type="text"] {
     border: none;
     background: none;
     outline: none;
+    height: 1rem;
 }
 
 .table-column > select {

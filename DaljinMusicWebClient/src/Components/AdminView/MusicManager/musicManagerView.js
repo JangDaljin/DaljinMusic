@@ -36,11 +36,11 @@ class MusicManagerView extends Component {
         }
     }
 
-    onClickFileLoadButton = (e) => {
-        this.fileInput.click()
+    onClickMusicFilesLoadButton = (e) => {
+        this.musicFilesInput.click()
     }
 
-    onFileLoad = (e) => {
+    onMusicFilesLoad = (e) => {
         const newMusicData = []
 
         //수정 가능하게 복사
@@ -48,7 +48,11 @@ class MusicManagerView extends Component {
         Array.prototype.push.apply(mutableFiles , e.target.files)
 
         for(const file of mutableFiles) {
-            const splitFileName = file.name.substr(0 , file.name.lastIndexOf('.')).split('-')
+            const fileName = file.name.substr(0 , file.name.lastIndexOf('.'))
+            const fileExtention = file.name.substr(file.name.lastIndexOf('.')+1 , file.name.length)
+            const splitFileName = fileName.split('-')
+
+
 
             const singer = (splitFileName[0] === null || splitFileName[0] ===  '' || splitFileName[0] === undefined)? '' : splitFileName[0].trim()
             const song = (splitFileName[1] === null || splitFileName[1] ===  '' || splitFileName[1] === undefined)? '' : splitFileName[1].trim()
@@ -57,17 +61,43 @@ class MusicManagerView extends Component {
             newMusicData.push({
                 'checked' : false,
                 'musicFile' : file,
+                'musicFileName' : fileName,
+                'musicFileExtention' : fileExtention,
                 'fileSize' : fileSizeChanger(file.size),
                 'singer' : singer,
                 'song' : song,
                 'album' : album,
-                'albumImg' : null,
+                'albumImgFile' : null,
                 'withAlbumImg' : false,
-                'albumImgIndex' : -1,
                 'categories' : []
             })
         }
         this.setState({'newMusicData' : this.state.newMusicData.concat(fromJS(newMusicData))})
+    }
+
+    onClickImageFilesLoadButton = (e) => {
+        this.imageFilesInput.click()
+    }
+
+    onImageFilesLoad = (e) => {
+        const mutableFiles = []
+        Array.prototype.push.apply(mutableFiles , e.target.files)
+    
+        let newMusicData = List().concat(this.state.newMusicData)
+
+        for(const file of mutableFiles) {
+
+            const fileName = file.name.substr(0 , file.name.lastIndexOf('.'))
+            //const fileExtention = file.name.substr(file.name.lastIndexOf('.')+1 , file.name.length)
+
+            const findIndex = this.state.newMusicData.findIndex(value => (value.get('musicFileName') === fileName))
+            if(findIndex !== -1) {
+                newMusicData = newMusicData.setIn([findIndex , 'albumImgFile'] , file)
+                .setIn([findIndex , 'withAlbumImg'] , true)
+            }
+        }
+
+        this.setState({'newMusicData' : newMusicData})
     }
 
 
@@ -84,8 +114,8 @@ class MusicManagerView extends Component {
         this.props.ModalActions.modalClose()
     }
 
-    onClickItemDelete = (index) => {
-        this.setState({'newMusicData' : this.state.newMusicData.splice(index , 1)})
+    onClickItemDelete = () => {
+        this.setState({'newMusicData' : this.state.newMusicData.filter(value => !value.get('checked'))})
     }
 
     onChangeText = (e) => {
@@ -108,30 +138,50 @@ class MusicManagerView extends Component {
         return (
             <div className={cn('musicmanager')}>
                 <div className={cn('table-menu')}>
-                    <div className={cn('table-menu-item')} onClick={this.onClickFileLoadButton}>
+                    <div className={cn('table-menu-item')} onClick={this.onClickMusicFilesLoadButton}>
                         <i className="fas fa-upload"></i>
                         <span className={cn('table-menu-item-text')}>
                             불러오기
                         </span>
                         
-                        
+                        <input type="file" ref={ref => this.musicFilesInput = ref} 
+                        onChange={this.onMusicFilesLoad}
+                        hidden="hidden" accept="audio/*" multiple />
                     </div>
 
-                    <input type="file" ref={ref => this.fileInput = ref} 
-                    onChange={this.onFileLoad}
-                    hidden="hidden" accept="audio/*" multiple />
 
-                    <div className={cn('table-menu-item')}>
+
+                    <div className={cn('table-menu-item')} onClick={this.onClickImageFilesLoadButton}>
                         <i className="far fa-images"></i>
                         <span className={cn('table-menu-item-text')}>
                             이미지추가
                         </span>
+
+                        <input type="file" ref={ref => this.imageFilesInput = ref}
+                        onChange={this.onImageFilesLoad}
+                        hidden="hidden" accept="image/*" multiple />
                     </div>
+
+
 
                     <div className={cn('table-menu-item')} onClick={e => { this.onClickAddCategory() }}>
                         <i className="fas fa-sitemap"></i>
                         <span className={cn('table-menu-item-text')}>
                             카테고리추가
+                        </span>
+                    </div>
+
+                    <div className={cn('table-menu-item')} onClick={e => { this.onClickItemDelete() }}>
+                        <i className="fas fa-trash"></i>
+                        <span className={cn('table-menu-item-text')}>
+                            선택삭제
+                        </span>
+                    </div>
+
+                    <div className={cn('table-menu-item')} onClick={e => {  }}>
+                        <i className="fas fa-save"></i>
+                        <span className={cn('table-menu-item-text')}>
+                            저장
                         </span>
                     </div>
 
@@ -182,14 +232,20 @@ class MusicManagerView extends Component {
                                 </div>
 
                                 <div className={cn('table-column' , 'tc7')}>
-                                    <div className={cn('musicmanager-button')} onClick={e => { this.onClickItemDelete(index) }}>
-                                        <i className={cn("fas fa-trash" , 'musicmanager-button-img')}></i>
-                                        <span className={cn('musicmanager-button-text')}>
-                                            삭제
-                                        </span>
-                                    </div>
+                                        {value.get('withAlbumImg') ?
+                                            <span className={cn('album-image-file-text')}>
+                                                <p>{value.get('albumImgFile').name}</p>
+                                                
+                                                <i className={cn("far fa-times-circle" , "album-image-file-delete")}></i>
+                                            </span>
+                                            :
+                                            <span className={cn('album-image-load-button')}>
+                                                <i className="far fa-file-image fa-2x"></i>
+                                            </span>
+                                            
+                                        }
+                                        <input type="file" hidden="hidden" accept="image/*" />
                                 </div>
-
                             </div>
                         )
                     )
