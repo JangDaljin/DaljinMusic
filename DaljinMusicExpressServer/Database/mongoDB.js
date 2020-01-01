@@ -42,7 +42,7 @@ function connect () {
 }
 
 const Singer = new Schema({
-    name : { type : String, required : true },    
+    name : { type : String, required : true , unique : true},    
 })
 
 const Category = new Schema({
@@ -51,21 +51,22 @@ const Category = new Schema({
 
 const Album = new Schema({
     name : { type : String, required : true },
-    albumImgUri : { type : String, default : `${process.env.ALBUM_IMG_URI}/noimage.png` }
+    albumImgUri : { type : String, default : `${process.env.ALBUM_IMG_URI}/noimage.png` },
+    singer : { type : Schema.Types.ObjectId , ref : 'singer' , require : true}
 })
 
 const Music = new Schema({
     filePath : { type : String , required : true },
     song : { type : String, required : true } ,
     singer : { type : Schema.Types.ObjectId, ref : 'singer' , required : true},
-    album : { type : Schema.Types.ObjectId, ref : 'album' },
+    album : { type : Schema.Types.ObjectId, ref : 'album' , default : null},
     duration : { type : Number, required : true } ,
     uploadDate : { type : Date, required : true } ,
     totalPlayCount : { type : Number, default : 0 },
     monthPlayCount : { type : Number , default : 0 },
     weekPlayCount : { type : Number, default : 0 },
     dayPlayCount : { type : Number, default : 0 },
-    category : [{ type : Schema.Types.ObjectId , ref : 'category'}]
+    category : { type : Schema.Types.ObjectId , ref : 'category'}
 })
 
 const User = new Schema({

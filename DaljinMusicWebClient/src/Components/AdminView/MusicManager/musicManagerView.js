@@ -22,8 +22,9 @@ const fileSizeChanger = (fileSize , offset = 0) => {
 class MusicManagerView extends Component {
     
     state = {
-        newMusicData : List(),
-        changeTextBuffer : null,
+        changeTextBuffer : null, //텍스트 변경용 버퍼
+
+        imageLoadIndex : -1, //개별 이미지 불러올때 저장용 인덱스
     }
 
     componentDidMount () {
@@ -65,14 +66,17 @@ class MusicManagerView extends Component {
                 'musicFileExtention' : fileExtention,
                 'fileSize' : fileSizeChanger(file.size),
                 'singer' : singer,
+                'singerDatabaseId' : null,
                 'song' : song,
                 'album' : album,
+                'albumDatabaseId' : null,
                 'albumImgFile' : null,
                 'withAlbumImg' : false,
-                'categories' : []
+                'category' : '',
+                'validate' : false,
             })
         }
-        this.setState({'newMusicData' : this.state.newMusicData.concat(fromJS(newMusicData))})
+        this.props.AdminActions.setNewMusicData(this.props.newMusicData.concat(fromJS(newMusicData)))
     }
 
     onClickImageFilesLoadButton = (e) => {
@@ -80,26 +84,41 @@ class MusicManagerView extends Component {
     }
 
     onImageFilesLoad = (e) => {
+
         const mutableFiles = []
         Array.prototype.push.apply(mutableFiles , e.target.files)
     
-        let newMusicData = List().concat(this.state.newMusicData)
+        let newMusicData = List().concat(this.props.newMusicData)
 
         for(const file of mutableFiles) {
 
             const fileName = file.name.substr(0 , file.name.lastIndexOf('.'))
             //const fileExtention = file.name.substr(file.name.lastIndexOf('.')+1 , file.name.length)
 
-            const findIndex = this.state.newMusicData.findIndex(value => (value.get('musicFileName') === fileName))
+            const findIndex = this.props.newMusicData.findIndex(value => (value.get('musicFileName') === fileName))
+            
             if(findIndex !== -1) {
                 newMusicData = newMusicData.setIn([findIndex , 'albumImgFile'] , file)
                 .setIn([findIndex , 'withAlbumImg'] , true)
             }
         }
 
-        this.setState({'newMusicData' : newMusicData})
+        this.props.AdminActions.setNewMusicData(newMusicData)
     }
 
+    onClickImageFileLoadButton = (index) => {
+        this.setState({'imageLoadIndex' : index})
+        this.imageFileInput.click()
+    }
+
+    onImageFileLoad = (e) => {
+        const mutableFile = e.target.files[0]
+        this.props.AdminActions.setNewMusicData(
+            this.props.newMusicData.setIn([this.state.imageLoadIndex , 'albumImgFile'] , mutableFile)
+                                .setIn([this.state.imageLoadIndex , 'withAlbumImg'] , true)
+        )
+        this.setState({ 'imageLoadIndex' : -1 })
+    }
 
     onClickAddCategory = () => {
         const modalTitle = '카테고리 추가'
@@ -114,8 +133,12 @@ class MusicManagerView extends Component {
         this.props.ModalActions.modalClose()
     }
 
+    onClickCheckbox = (index) => {
+        this.props.AdminActions.setNewMusicData(this.props.newMusicData.updateIn([index , 'checked'] , value => !value))
+    }
+
     onClickItemDelete = () => {
-        this.setState({'newMusicData' : this.state.newMusicData.filter(value => !value.get('checked'))})
+        this.props.AdminActions.setNewMusicData(this.props.newMusicData.filter(value => !value.get('checked')))
     }
 
     onChangeText = (e) => {
@@ -124,14 +147,26 @@ class MusicManagerView extends Component {
     
     onSaveText = (e , index , field) => {
         if(e.key === 'Enter') {
-            this.setState({'newMusicData' : this.state.newMusicData.setIn([index , field] ,this.state.changeTextBuffer)}); 
+            this.props.AdminActions.setNewMusicData(this.props.newMusicData.setIn([index , field] ,this.state.changeTextBuffer))
             e.currentTarget.blur();
         }
     }
 
     onBlurText = (e , index , field) => {
-        e.target.value = this.state.newMusicData.getIn([index , field]);
+        e.target.value = this.props.newMusicData.getIn([index , field]);
         this.setState({'changeTextBuffer' : null});
+    }
+
+    onClickImageFileDelete = (index) => {
+        this.props.AdminActions.setNewMusicData(this.props.newMusicData.setIn([index , 'albumImgFile'] , null).setIn([index , 'withAlbumImg'] , false))
+    }
+
+    onClickSave = () => {
+        this.props.AdminActions.fetchMusicUpload({'adminKey' : this.props.adminKey , 'newMusicData' : this.props.newMusicData})
+    }
+
+    onChangeCategory = (index , category) => {
+        this.props.AdminActions.setNewMusicData(this.props.newMusicData.setIn([index , 'category'] , category))
     }
 
     render () {
@@ -141,12 +176,10 @@ class MusicManagerView extends Component {
                     <div className={cn('table-menu-item')} onClick={this.onClickMusicFilesLoadButton}>
                         <i className="fas fa-upload"></i>
                         <span className={cn('table-menu-item-text')}>
-                            불러오기
+                            음악불러오기
                         </span>
                         
-                        <input type="file" ref={ref => this.musicFilesInput = ref} 
-                        onChange={this.onMusicFilesLoad}
-                        hidden="hidden" accept="audio/*" multiple />
+
                     </div>
 
 
@@ -154,15 +187,10 @@ class MusicManagerView extends Component {
                     <div className={cn('table-menu-item')} onClick={this.onClickImageFilesLoadButton}>
                         <i className="far fa-images"></i>
                         <span className={cn('table-menu-item-text')}>
-                            이미지추가
+                            자동이미지추가
                         </span>
 
-                        <input type="file" ref={ref => this.imageFilesInput = ref}
-                        onChange={this.onImageFilesLoad}
-                        hidden="hidden" accept="image/*" multiple />
                     </div>
-
-
 
                     <div className={cn('table-menu-item')} onClick={e => { this.onClickAddCategory() }}>
                         <i className="fas fa-sitemap"></i>
@@ -178,7 +206,7 @@ class MusicManagerView extends Component {
                         </span>
                     </div>
 
-                    <div className={cn('table-menu-item')} onClick={e => {  }}>
+                    <div className={cn('table-menu-item')} onClick={e => { this.onClickSave()  }}>
                         <i className="fas fa-save"></i>
                         <span className={cn('table-menu-item-text')}>
                             저장
@@ -186,13 +214,32 @@ class MusicManagerView extends Component {
                     </div>
 
                 </div>
+
+                {/* 파일인풋 모음 */}
+                <div style={{display : 'none'}}>
+                    {/*음악 불러오기*/}
+                    <input type="file" ref={ref => this.musicFilesInput = ref} 
+                        onChange={this.onMusicFilesLoad}
+                        hidden="hidden" accept="audio/*" multiple />
+
+                    {/*이미지 자동추가*/}
+                    <input type="file" ref={ref => this.imageFilesInput = ref}
+                        onChange={this.onImageFilesLoad}
+                        hidden="hidden" accept="image/*" multiple />
+
+                    {/*개별 이미지 추가*/}
+                    <input type="file" ref={ref => this.imageFileInput = ref}
+                        onChange={this.onImageFileLoad}
+                        hidden="hidden" accept="image/*" />
+                </div>
+
                 <div className={cn('musicmanager-table')}>
                 {
-                    this.state.newMusicData.map(
+                    this.props.newMusicData.map(
                         (value , index) => (
                             <div key={value} className={cn('table-row' , {'table-row-odd' : index % 2 === 1} , {'table-row-even' : index % 2 === 0})}>
                                 <div className={cn('table-column' , 'tc1')}>
-                                    <input type="checkbox" />
+                                    <input type="checkbox" checked={this.props.newMusicData.getIn([index , 'checked'])} onChange={e => this.onClickCheckbox(index)} />
                                 </div>
                                 <div className={cn('table-column' , 'tc2')}>
                                     <input type="text" defaultValue={value.get('singer')} 
@@ -200,6 +247,9 @@ class MusicManagerView extends Component {
                                     onKeyPress={e => { this.onSaveText(e , index , 'singer') }}
                                     onBlur={e => { this.onBlurText(e , index , 'singer') }}
                                     />
+                                    {value.get('singerDatabaseId') !== null &&
+                                        <i className="fas fa-key"></i>
+                                    }
                                 </div>
                                 <div className={cn('table-column' , 'tc3')}>
                                     <input type="text" defaultValue={value.get('song')} 
@@ -214,13 +264,17 @@ class MusicManagerView extends Component {
                                     onKeyPress={e => { this.onSaveText(e , index , 'album') }}
                                     onBlur={e => { this.onBlurText(e , index , 'album') }}
                                     />
+                                    {value.get('albumDatabaseId') !== null &&
+                                        <i className="fas fa-key"></i>
+                                    }
                                 </div>
                                 <div className={cn('table-column' , 'tc5')}>
                                     <div>{value.get('fileSize')}</div>
                                 </div>
 
                                 <div className={cn('table-column' , 'tc6')}>
-                                    <select className={cn('category-select')}>
+                                    <select className={cn('category-select')} value={value.get('category')} onChange={ e => this.onChangeCategory(index , e.target.value) }>
+                                        <option></option>
                                         {
                                             this.props.musicCategories.map(
                                                 (categoryValue , categoryIndex) => (
@@ -236,15 +290,14 @@ class MusicManagerView extends Component {
                                             <span className={cn('album-image-file-text')}>
                                                 <p>{value.get('albumImgFile').name}</p>
                                                 
-                                                <i className={cn("far fa-times-circle" , "album-image-file-delete")}></i>
+                                                <i className={cn("far fa-times-circle" , "album-image-file-delete")} onClick={e => { this.onClickImageFileDelete(index) }}></i>
                                             </span>
                                             :
-                                            <span className={cn('album-image-load-button')}>
+                                            <span className={cn('album-image-load-button')} onClick={e => this.onClickImageFileLoadButton(index)}>
                                                 <i className="far fa-file-image fa-2x"></i>
                                             </span>
-                                            
                                         }
-                                        <input type="file" hidden="hidden" accept="image/*" />
+                                        
                                 </div>
                             </div>
                         )
@@ -261,9 +314,10 @@ export default connect(
     (state) => ({
         adminKey : state.admin.adminKey,
         musicCategories : state.admin.musicCategories,
+        newMusicData : state.admin.newMusicData,
     }),
     (dispatch) => ({
         AdminActions : bindActionCreators(AdminActions , dispatch),
-        ModalActions : bindActionCreators(ModalActions , dispatch)
+        ModalActions : bindActionCreators(ModalActions , dispatch),
     })
 )(MusicManagerView)

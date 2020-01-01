@@ -1,5 +1,5 @@
 import { createAction , handleActions } from 'redux-actions'
-import { takeLatest , select , put } from 'redux-saga/effects'
+import { takeLatest , select , put , call} from 'redux-saga/effects'
 import { post } from './Request/request'
 import { Map , List , fromJS } from 'immutable'
 
@@ -21,26 +21,14 @@ export const acceptGetAllMusics = createAction(ACCEPT_GET_ALL_MUSICS)
 export const ABORT_GET_ALL_MUSICS = 'admin/ABORT_GET_ALL_MUSICS'
 export const abortGetAllMusics = createAction(ABORT_GET_ALL_MUSICS)
 
-export const FETCH_SET_TODAYSLIVE = 'admin/FETCH_SET_TODAYSLIVE'
-export const fetchSetTodaysLive = createAction(FETCH_SET_TODAYSLIVE)
-
-export const ACCEPT_SET_TODAYSLIVE = 'admin/ACCEPT_SET_TODAYSLIVE'
-export const acceptSetTodaysLive = createAction(ACCEPT_SET_TODAYSLIVE)
-
-export const ABORT_SET_TODAYSLIVE = 'admin/ABORT_SET_TODAYSLIVE'
-export const abortSetTodaysLive = createAction(ABORT_SET_TODAYSLIVE)
-
-export const FETCH_SET_HOTANDNEW = 'admin/FETCH_SET_HOTANDNEW'
-export const fetchSetHotAndNew = createAction(FETCH_SET_HOTANDNEW)
-
-export const ACCEPT_SET_HOTANDNEW = 'admin/ACCEPT_SET_HOTANDNEW'
-export const acceptSetHotAndNew = createAction(ACCEPT_SET_HOTANDNEW)
-
-export const ABORT_SET_HOTANDNEW = 'admin/ABORT_SET_HOTANDNEW'
-export const abortSetHotAndNew = createAction(ABORT_SET_HOTANDNEW)
-
 export const FETCH_MUSIC_UPLOAD = 'admin/FETCH_MUSIC_UPLOAD'
 export const fetchMusicUpload = createAction(FETCH_MUSIC_UPLOAD)
+
+export const SET_NEWMUSICDATA = 'admin/SET_NEWMUSICDATA'
+export const setNewMusicData = createAction(SET_NEWMUSICDATA)
+
+export const SET_NEWMUSICDATA_END = 'admin/SET_NEWMUSICDATA_END'
+export const setNewMusicDataEnd = createAction(SET_NEWMUSICDATA_END)
 
 export const ACCEPT_MUSIC_UPLOAD = 'admin/ACCEPT_MUSIC_UPLOAD'
 export const acceptMusicUpload = createAction(ACCEPT_MUSIC_UPLOAD)
@@ -82,8 +70,8 @@ export const choiceItem = createAction(CHOICE_ITEM)
 export const CLEAR_CHOOSE_ITEM = 'admin/CLEAR_CHOOSE_ITEM'
 export const clearChooseItem = createAction(CLEAR_CHOOSE_ITEM)
 
-export const SET_HOTANDNEWMUSIC = 'admin/SETTING_HOTANDNEWMUSIC'
-export const setHotAndNewMusic = createAction(SET_HOTANDNEWMUSIC)
+export const SET_HOT_AND_NEW_AND_BOTH = 'admin/SET_HOT_AND_NEW_AND_BOTH'
+export const setHotAndNewAndBoth = createAction(SET_HOT_AND_NEW_AND_BOTH)
 
 export const DELETE_CHOSEN_HOTANDNEWMUSIC = 'admin/DELETE_CHOSEN_HOTANDNEWMUSIC'
 export const deleteChosenHotAndNewMusic = createAction(DELETE_CHOSEN_HOTANDNEWMUSIC)
@@ -100,8 +88,27 @@ export const abortDeleteSavedHotAndNew = createAction(ABORT_DELETE_SAVED_HOTANDN
 export const FETCH_SAVE = 'admin/FETCH_SAVE'
 export const fetchSave = createAction(FETCH_SAVE)
 
+export const FETCH_HOTANDNEW_SAVE = 'admin/FETCH_HOTANDNEW_SAVE'
+export const fetchHotAndNewSave = createAction(FETCH_HOTANDNEW_SAVE)
+
+export const ACCEPT_HOTANDNEW_SAVE = 'admin/ACCEPT_HOTANDNEW_SAVE'
+export const acceptHotAndNewSave = createAction(ACCEPT_HOTANDNEW_SAVE)
+
+export const ABORT_HOTANDNEW_SAVE = 'admin/ABORT_HOTANDNEW_SAVE'
+export const abortHotAndNewSave = createAction(ABORT_HOTANDNEW_SAVE)
+
+export const FETCH_TODAYSLIVE_SAVE = 'admin/FETCH_TODAYSLIVE_SAVE'
+export const fetchTodaysLiveSave = createAction(FETCH_TODAYSLIVE_SAVE)
+
+export const ACCEPT_TODAYSLIVE_SAVE = 'admin/ACCEPT_TODAYSLIVE_SAVE'
+export const acceptTodaysLiveSave = createAction(ACCEPT_TODAYSLIVE_SAVE)
+
+export const ABORT_TODAYSLIVE_SAVE = 'admin/ABORT_TODAYSLIVE_SAVE'
+export const abortTodaysLiveSave = createAction(ABORT_TODAYSLIVE_SAVE)
+
 export const RERENDER_END = 'admin/RERENDER_END'
 export const reRenderEnd = createAction(RERENDER_END)
+
 
 const initialAdminState = {
     isAdmin : false,
@@ -114,6 +121,7 @@ const initialAdminState = {
     chosenHotAndNewMusics : List(),
 
     musicCategories : List(),
+    newMusicData : List(),
 
     reRender : false,
 }
@@ -168,14 +176,8 @@ export const adminReducer = handleActions({
         return newState
     },
 
-    [CLEAR_CHOOSE_ITEM] : (state , action) => {
-        const newState = { ...state }
-        newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.clear()
-        newState.chosenTodaysLive = newState.chosenTodaysLive.clear()
-        return newState
-    },
 
-    [SET_HOTANDNEWMUSIC] : (state , action) => {
+    [SET_HOT_AND_NEW_AND_BOTH] : (state , action) => {
         const newState = { ...state }
         const { index  , hotValue , newValue } = action.payload
         newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.setIn([index , 'hot'] , hotValue).setIn([index , 'new'] , newValue)
@@ -230,7 +232,8 @@ export const adminReducer = handleActions({
 
     [ACCEPT_ADD_CATEGORY] : (state , action) => {
         const newState = { ...state }
-        const { message } = action.payload
+        const { message , categories } = action.payload
+        newState.musicCategories = newState.musicCategories.clear().concat(fromJS(categories))
         window.alert(message)
         return newState
     },
@@ -242,42 +245,57 @@ export const adminReducer = handleActions({
         return newState
     },
 
-    [ACCEPT_SET_TODAYSLIVE] : (state , action) => {
+    [ACCEPT_TODAYSLIVE_SAVE] : (state , action) => {
         const newState = { ...state }
         const { message } = action.payload
         window.alert(message)
-        newState.reRender = true
         return newState
     },
 
-    [ABORT_SET_TODAYSLIVE] : (state , action) => {
+    [ABORT_TODAYSLIVE_SAVE] : (state , action) => {
         const newState = { ...state }
         //할일 없음
         return newState
     },
 
-    [ACCEPT_SET_HOTANDNEW] : (state , action) => {
+    [ACCEPT_HOTANDNEW_SAVE] : (state , action) => {
         const newState = { ...state }
         const { message } = action.payload
         window.alert(message)
+        
+        newState.chosenHotAndNewMusics = newState.chosenHotAndNewMusics.clear()
         newState.reRender = true
         return newState
     },
-    [ABORT_SET_HOTANDNEW] : (state , action) => {
+    [ABORT_HOTANDNEW_SAVE] : (state , action) => {
         const newState = { ...state }
         const { message } = action.payload
         window.alert(message)
         return newState
     },
 
+    [SET_NEWMUSICDATA_END] : (state , action) => {
+        const newState = { ...state }
+        const newMusicData = action.payload
+        newState.newMusicData = newMusicData
+        return newState
+    },
+
     [ACCEPT_MUSIC_UPLOAD] : (state , action) => {
         const newState = {...state}
-        const { message } = action.payload
-        window.alert(message)
+        const { message , complete } = action.payload
+        if(message !== '') {
+            window.alert(message)
+        }
+        for(let i = complete.length -1  ; i > -1; i--) {
+            if(complete[i]) {
+                newState.newMusicData = newState.newMusicData.splice(i , 1)
+            }
+        }
         return newState
     },
     [ABORT_MUSIC_UPLOAD] : (state , action) => {
-        const newState = { ...initialAdminState }
+        const newState = { ...state }
         return newState
     },
 
@@ -297,55 +315,85 @@ function* fetchGetAllMusicsSaga(action) {
     yield post('/admin/getallmusics' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_ALL_MUSICS , ABORT_GET_ALL_MUSICS)
 }
 
-function* fetchSetTodaysLiveSaga(action) {
-    yield post('/admin/settodayslive' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_TODAYSLIVE , ABORT_SET_TODAYSLIVE)
-}
 
-function* fetchSetHotAndNewSaga(action) {
-    yield post('/admin/sethotandnew' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_SET_HOTANDNEW , ABORT_SET_HOTANDNEW)
-}
 
 function* fetchDeleteSavedHotAndNewSaga(action) {
     yield post('/admin/deletesavedhotandnew' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_DELETE_SAVED_HOTANDNEWMUSIC , ABORT_DELETE_SAVED_HOTANDNEWMUSIC)
 }
 
+function* setNewMusicDataSaga(action) {
+    let newMusicData = action.payload
+    const state = yield select(state => state.admin)
+    
+
+    for(let index = 0 ; index < newMusicData.size; index++) {
+            if(newMusicData.getIn([index , 'singer']) !== state.newMusicData.getIn([index , 'singer'])) {
+                const response = yield call (fetch ,`${process.env.REACT_APP_SERVER}/search/singeridbyname?name=${newMusicData.getIn([index , 'singer'])}`)
+                if(response.ok) {
+                    const fetchResult = yield call([response , 'json'])
+                    newMusicData = newMusicData.setIn([index , 'singerDatabaseId'] , fetchResult._id)
+                }
+            }
+
+            if(newMusicData.getIn([index , 'album']) !== state.newMusicData.getIn([index , 'album'])) {
+                const response = yield call (fetch , `${process.env.REACT_APP_SERVER}/search/albumidbyname?singer=${newMusicData.getIn([index , 'singer'])}&name=${newMusicData.getIn([index , 'album'])}`)
+                if(response.ok) {
+                    const fetchResult = yield call([response , 'json'])
+                    newMusicData = newMusicData.setIn([index , 'albumDatabaseId'] , fetchResult._id)
+                }
+            }
+    }
+        
+
+    yield put({type : SET_NEWMUSICDATA_END , payload : newMusicData})
+}
+
 function* fetchMusicUploadSaga(action) {
-    const { songs , singers , albums , musicFiles } = action.payload
+    const { adminKey , newMusicData } = action.payload
+
     const formData = new FormData()
+    
+
+    const songs = []
+    const singers = []
+    const albums = []
+    const categories =[]
+
+    let albumImgIndexCount = 0
+
+    newMusicData.forEach(
+        (value) => {
+                singers.push({ 'name' : value.get('singer') , 'singerDatabaseId' : value.get('singerDatabaseId') === null? '' : value.get('singerDatabaseId') })
+                songs.push({ 'name' : value.get('song') })
+                albums.push({ 
+                    'name' : value.get('album') , 
+                    'albumDatabaseId' : value.get('albumDatabaseId') === null? '' : value.get('albumDatabaseId'),
+                    'albumImgIndex' : value.get('withAlbumImg') ? albumImgIndexCount++ : -1,
+                })
+                categories.push({ 'category' : value.get('category') })
+                
+                
+                if(value.get('withAlbumImg'))
+                    formData.append('albumImgFiles' , value.get('albumImgFile'))
+                formData.append('musicFiles' , value.get('musicFile'))
+        }
+    )
+
+    formData.append('adminKey' , JSON.stringify(adminKey))
     formData.append('songs' , JSON.stringify(songs))
     formData.append('singers' , JSON.stringify(singers))
-    formData.append('albums' , JSON.stringify(albums.map((value) => ({'name' : value.name , '_id' : value._id , 'isThere' : value.isThere , 'index' : value.index}))))
-    for(const album of albums) {
-        if(album.isThere) {
-            formData.append('albumImgFiles' , album.file)
-        }
-    }
+    formData.append('albums' , JSON.stringify(albums))
+    formData.append('categories' , JSON.stringify(categories))
 
-    for(const file of musicFiles) {
-        formData.append('musicFiles' , file)
-    }
 
     yield post(`/admin/musicupload` , {} , formData , ACCEPT_MUSIC_UPLOAD , ABORT_MUSIC_UPLOAD)
 }
 
-function* fetchSaveSaga(action) {
-    const state = yield select(state => state.admin)
-    const adminKey = action.payload
-
-    switch(state.menuMode) {
-        case MENU_MODE.TODAYSLIVE :
-            const musicId = state.chosenTodaysLive.get('_id')
-            yield put({'type' : FETCH_SET_TODAYSLIVE , 'payload' : { 'adminKey' :  adminKey , 'musicId' : musicId } })
-            break;
-        case MENU_MODE.HOTANDNEW :
-            const saveList = state.chosenHotAndNewMusics.toJS()
-            yield put({'type' : FETCH_SET_HOTANDNEW , 'payload' : { 'adminKey' : adminKey , 'saveList' : saveList}})
-            break;
-        default : 
-            console.log(`비정상적 작동`)
-            break;
-    }
-
+function* fetchTodaysLiveSaveSaga(action) {
+    yield post('/admin/todayslivesave' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_TODAYSLIVE_SAVE , ABORT_TODAYSLIVE_SAVE)
+}
+function* fetchHotAndNewSaveSaga(action) {
+    yield post('/admin/hotandnewsave' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_HOTANDNEW_SAVE , ABORT_HOTANDNEW_SAVE)
 }
 
 function* fetchGetCategoriesSaga (action) {
@@ -363,11 +411,12 @@ export function* adminSaga() {
     yield takeLatest(FETCH_GET_CATEGORIES , fetchGetCategoriesSaga)
     yield takeLatest(FETCH_ADD_CATEGORY , fetchAddCategorySaga)
 
-    yield takeLatest(FETCH_SET_TODAYSLIVE , fetchSetTodaysLiveSaga)
+    yield takeLatest(FETCH_TODAYSLIVE_SAVE , fetchTodaysLiveSaveSaga)
+    yield takeLatest(FETCH_HOTANDNEW_SAVE , fetchHotAndNewSaveSaga)
 
-    yield takeLatest(FETCH_SET_HOTANDNEW , fetchSetHotAndNewSaga)
     yield takeLatest(FETCH_DELETE_SAVED_HOTANDNEWMUSIC , fetchDeleteSavedHotAndNewSaga)
 
+    yield takeLatest(SET_NEWMUSICDATA , setNewMusicDataSaga)
     yield takeLatest(FETCH_MUSIC_UPLOAD , fetchMusicUploadSaga)
-    yield takeLatest(FETCH_SAVE , fetchSaveSaga)
+
 }

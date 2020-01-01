@@ -65,7 +65,7 @@ router.post('/getallmusics' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
-router.post('/settodayslive' , doAsync(async(req , res , next) => {
+router.post('/todayslivesave' , doAsync(async(req , res , next) => {
     const { adminKey , musicId } = req.body
     console.log(`musicId : ${musicId}`)
     const response = {
@@ -92,7 +92,7 @@ router.post('/settodayslive' , doAsync(async(req , res , next) => {
     res.json(response)
 }))
 
-router.post('/sethotandnew' , doAsync(async(req , res , next) => {
+router.post('/hotandnewsave' , doAsync(async(req , res , next) => {
     const { adminKey , saveList} = req.body;
     const response = {
         message : '',
@@ -170,13 +170,17 @@ router.post('/getcategories' , doAsync(async(req , res , next) => {
 router.post('/addcategory' , doAsync(async(req , res , next) => {
     const { adminKey , newCategoryName } = req.body
     const response = {
-        message : ''
+        message : '',
+        categories : []
     }
     if(adminKey === ADMIN_KEY) {
         try {
             await new CategoryModel({
                 name : newCategoryName
             }).save()
+
+            const categories = await CategoryModel.find({}).lean()
+            response.categories = categories
             response.message = Dlogger.info(`[ADD CATEGORY] 새 카테고리 추가 성공`)
         }
         catch(e) {
@@ -205,13 +209,15 @@ const upload = multer({
 router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 'albumImgFiles' } ] ) , doAsync(async (req , res , next) => {
     
     const response = {
-        message : ''
+        message : '',
+        complete : []
     }
 
     const adminKey = JSON.parse(req.body.adminKey)
     const songs = JSON.parse(req.body.songs)
     const singers = JSON.parse(req.body.singers)
     const albums  = JSON.parse(req.body.albums)
+    const categories = JSON.parse(req.body.categories)
     const musicFiles = req.files['musicFiles']
     const albumImgFiles = req.files['albumImgFiles']
 
@@ -223,11 +229,15 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
         console.dir(singers)
         console.log(`ALBUMS`)
         console.dir(albums)
+        console.log(`CATEGORIES`)
+        console.dir(categories)
         console.log('MUSICFILES')
         console.dir(musicFiles)
+        console.log('albumImgFiles')
+        console.dir(albumImgFiles)
         */
-        
-        console.log(ALBUM_IMG_URI)
+
+        //console.log(ALBUM_IMG_URI)
 
         //파일 길이만큼 반복
         for(let i = 0 ; i < musicFiles.length ; i++) {
@@ -239,17 +249,17 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
 
                 //앨범사진 파일 옮기기
                 let albumImgUri = ''
-                if(albums[i].isThere) {
-                    const albumOldPath = `${UPLOAD_PATH}/${albumImgFiles[albums[i].index].filename}`
-                    const albumNewPath = `${ALBUM_IMG_PATH}/${albumImgFiles[albums[i].index].filename}`
-                    albumImgUri = `${ALBUM_IMG_URI}/${albumImgFiles[albums[i].index].filename}`
+                if(albums[i].albumImgIndex !== -1) {
+                    const albumOldPath = `${UPLOAD_PATH}/${albumImgFiles[albums[i].albumImgIndex].filename}`
+                    const albumNewPath = `${ALBUM_IMG_PATH}/${albumImgFiles[albums[i].albumImgIndex].filename}`
+                    albumImgUri = `${ALBUM_IMG_URI}/${albumImgFiles[albums[i].albumImgIndex].filename}`
                     fs.renameSync(albumOldPath , albumNewPath)
                 }
 
                 //가수 저장
                 let singerId = ''
-                if(singers[i]._id !== '') {
-                    singerId = singers[i]._id
+                if(singers[i].singerDatabaseId !== '') {
+                    singerId = singers[i].singerDatabaseId
                 }
                 else {
                     const singerModel = new SingerModel({
@@ -262,14 +272,13 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                 
                 
                 //앨범 저장
-                let albumId = ''
-                console.dir(albums[i])
-                if(albums[i]._id !== '') {
-                    albumId = albums[i]._id
+                let albumId = null
+                if(albums[i].albumDatabaseId !== '') {
+                    albumId = albums[i].albumDatabaseId
                 }
                 else if(albums[i].name !== '') {
                     let albumModel = null
-                    if(albumImgUri == '')
+                    if(albumImgUri === '')
                         albumModel = new AlbumModel({
                             'name' : albums[i].name,
                         })
@@ -284,7 +293,6 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                 }
 
 
-
                 //음악 저장
                 const musicModel = new MusicModel({
                     song : songs[i].name,
@@ -296,16 +304,18 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                     totalPlayCount : 0,
                     weekPlayCount : 0,
                     dayPlayCount : 0,
+                    category : categories[i].category
                 })
-                musicModel.save()
 
+
+                musicModel.save()
                 console.log('업로드 완료')
-                response.message = '업로드 완료'
+                response.complete.push(true)
             }
             catch(err) {
                 console.error(err)
                 console.log('업로드 실패')
-                response.message = '업로드 실패'
+                response.complete.push(false)
             }
         }
     }
@@ -315,6 +325,7 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
     
 
     res.json(response)
+    
 }))
 
 

@@ -18,25 +18,40 @@ class TodaysLiveSettingView extends Component {
         this.props.AdminActions.fetchSetTodaysLive({'adminKey' : this.props.adminKey , 'musicId' : musicId})
     }
 
+    onClickSave = () => {
+        this.props.AdminActions.fetchTodaysLiveSave({'adminKey' : this.props.adminKey , 'musicId' : this.props.chosenTodaysLive.get('_id')})
+    }
 
     render () {
         return (
             <React.Fragment>
             <div className={cn('todayslive')}>
-                <div className={cn('todayslive-img-wrap')}>
-                    <div className={cn('todayslive-img')} style={{backgroundImage:`url('${this.props.chosenTodaysLive.getIn(['album' , 'albumImgUri'])}')`}}></div>
-                </div>
-                <div className={cn('todayslive-info')}>
-                    <div>
-                        <span>가수 : {this.props.chosenTodaysLive.getIn(['singer' , 'name'])}</span>
-                    </div>
-                    <div>
-                        <span>노래 : {this.props.chosenTodaysLive.get('song')}</span>
-                    </div>
-                    <div>
-                        <span>앨범 : {this.props.chosenTodaysLive.getIn(['album' , 'name'])}</span>
+                <div className={cn('todayslive-menu')}>
+                    <div className={cn('todayslive-menu-item')} onClick={e => { this.onClickSave() }}>
+                        <i className="fas fa-save"></i>
+                        <span className={cn('todayslive-menu-item-text')}>
+                            저장
+                        </span>
                     </div>
                 </div>
+                
+                <div className={cn('todayslive-body')}>
+                    <div className={cn('todayslive-img-wrap')}>
+                        <div className={cn('todayslive-img')} style={{backgroundImage:`url('${this.props.chosenTodaysLive.getIn(['album' , 'albumImgUri'])}')`}}></div>
+                    </div>
+                    <div className={cn('todayslive-info')}>
+                        <div>
+                            <span>가수 : {this.props.chosenTodaysLive.getIn(['singer' , 'name'])}</span>
+                        </div>
+                        <div>
+                            <span>노래 : {this.props.chosenTodaysLive.get('song')}</span>
+                        </div>
+                        <div>
+                            <span>앨범 : {this.props.chosenTodaysLive.getIn(['album' , 'name'])}</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             </React.Fragment>
         )

@@ -1,3 +1,7 @@
+.searchtable {
+    height: 100%;
+}
+
 .search-bar {
     height: 30px;
     display: flex;
@@ -26,7 +30,7 @@
 }
 
 .search-list {
-    height: 100%;
+    height: calc(100% - 70px);
     overflow-y: scroll;
 }
 

@@ -67,4 +67,46 @@ router.get('/album' , doAsync( async (req , res , next) => {
     res.json(response)
 }))
 
+router.get('/singeridbyname' , doAsync(async (req , res , next) => {
+    
+    const response = {
+        _id : null,
+        message : ''
+    }
+
+    const { name } = req.query
+
+    try {
+        const singer = await SingerModel.findOne({'name' : name}).lean()
+        response._id = singer._id
+        response.message = '검색 완료'
+    }
+    catch(err) {
+        response.message = '검색 실패'
+    }
+    //console.log(response)
+    res.json(response)
+}))
+
+router.get('/albumidbyname' , doAsync(async (req , res , next) => {
+    
+    const response = {
+        _id : null,
+        message : ''
+    }
+
+    const { singer , name } = req.query
+
+    try {
+        const album = await AlbumModel.findOne({'singer' : singer ,'name' : name}).lean()
+        response._id = album._id
+        response.message = '검색 완료'
+    }
+    catch(err) {
+        response.message = '검색 실패'
+    }
+    //console.log(response)
+    res.json(response)
+}))
+
 module.exports = router

@@ -43,7 +43,7 @@ class SearchTable extends Component {
 
     render () {
         return (
-            <div className={cn('searchTable')}>
+            <div className={cn('searchtable')}>
                 <div className={cn('search-bar')}>
                     <select onChange={(e)=>{ this.onChangeSearchMode(e.target.value) }}>
                         <option value={SEARCH_MODE.SONG}>제목</option>

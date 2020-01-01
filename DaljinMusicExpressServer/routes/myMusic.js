@@ -353,18 +353,19 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
 
             //선호도 카운터 증가
             let loopFlag = false
-            for(let i = 0 ; i < music.category.length ; i++) {
-                for(let j = 0 ; j < user.preferCategoryCounter.length ; j++) {
-                    if(user.preferCategoryCounter[j].categoryId === music.category[i]) {
-                        user.preferCategoryCounter[j].count += 1
-                        loopFlag = true
-                        break;
+            for(let i = 0 ; i < user.preferCategoryCounter.length ; j++) {
+                if(user.preferCategoryCounter[i].categoryId === music.category) {
+                    user.preferCategoryCounter[j].count += 1
+                    //편중현상 줄이기
+                    if(user.preferCategoryCounter[j].count > 10) {
+                        user.preferCategoryCounter[j].count = user.preferCategoryCounter[j].count / 2
                     }
+                    loopFlag = true
+                    break;
                 }
             }
-
             if(!loopFlag) {
-                user.preferCategoryCounter.push({ 'categoryId' : music.category[i]._id , 'count' : 1})
+                user.preferCategoryCounter.push({ 'categoryId' : music.category , 'count' : 1})
             }
 
             await user.save()

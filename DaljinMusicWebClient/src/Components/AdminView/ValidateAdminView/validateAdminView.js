@@ -22,7 +22,6 @@ class ValidateAdminView extends Component {
     }
 
     onClickAdminLogin = () => {
-        console.log(this.state.plainPassword)
         this.props.AdminActions.fetchValidatePassword({'password' : this.state.plainPassword})
         this.setState({'plainPassword' : ''})
     }
