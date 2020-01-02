@@ -50,7 +50,7 @@ const Category = new Schema({
 })
 
 const Album = new Schema({
-    name : { type : String, required : true },
+    name : { type : String , default : null},
     albumImgUri : { type : String, default : `${process.env.ALBUM_IMG_URI}/noimage.png` },
     singer : { type : Schema.Types.ObjectId , ref : 'singer' , require : true}
 })
@@ -59,7 +59,7 @@ const Music = new Schema({
     filePath : { type : String , required : true },
     song : { type : String, required : true } ,
     singer : { type : Schema.Types.ObjectId, ref : 'singer' , required : true},
-    album : { type : Schema.Types.ObjectId, ref : 'album' , default : null},
+    album : { type : Schema.Types.ObjectId, ref : 'album'},
     duration : { type : Number, required : true } ,
     uploadDate : { type : Date, required : true } ,
     totalPlayCount : { type : Number, default : 0 },

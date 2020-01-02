@@ -319,7 +319,7 @@ class MusicPlayer extends Component {
                                             {this.props.currentMusicIndex === index &&
                                                 <i className={cn("far fa-play-circle" , "current-music-mark")}></i>
                                             }
-                                            {value.getIn(['singer' , 'name'])} - {value.getIn(['song'])} - {value.getIn(['album' , 'name'])}
+                                            {value.getIn(['singer' , 'name'])} - {value.getIn(['song'])}{typeof value.getIn(['album' , 'name']) === 'undefined' ? '' : ' - ' + value.getIn(['album' , 'name'])}
                                         </div>
                                         <div className={cn('list-item-check')}>
                                         {value.get('checked') ?

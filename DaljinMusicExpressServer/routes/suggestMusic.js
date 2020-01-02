@@ -15,7 +15,7 @@ router.get('/' , doAsync(async(req , res , next) => {
         suggestMusics : []
     }
     
-    console.log(`userid : ${userid}`)
+    //console.log(`userid : ${userid}`)
 
     //아이디가 이상하면 
     if(typeof userid === 'undefined' || typeof userid === null || userid.trim() === '') {
@@ -53,6 +53,7 @@ router.get('/' , doAsync(async(req , res , next) => {
         try {
             const user = await UserModel.findOne({ 'userId' : userid}).lean()
             const preferCategoryCounter = user.preferCategoryCounter
+            console.log(preferCategoryCounter)
             
             let totalCount = 0;
             let resizePreferCategoryCounter = []
@@ -61,25 +62,32 @@ router.get('/' , doAsync(async(req , res , next) => {
                 resizePreferCategoryCounter.push(JSON.parse(JSON.stringify(preferCategoryCounter[i])))
             }
 
-            const maxValueIndex = 0
-            const minValueIndex = 0
+            console.log('문제없음')
+            let maxValueIndex = 0
+            let minValueIndex = 0
             let extractCount = 0
             for(let i = 0 ; i < resizePreferCategoryCounter.length; i++) {
                 //최대값 인덱스 저장
                 if(resizePreferCategoryCounter[i].count > resizePreferCategoryCounter[maxValueIndex].count) {
                     maxValueIndex = i
                 }
+                console.log('error check1')
 
                 //최소값 인덱스 저장
                 if(resizePreferCategoryCounter[i].count < resizePreferCategoryCounter[minValueIndex].count) {
                     minValueIndex = i
                 }
-
+                console.log('error check2')
                 //musiccount만큼 갯수 뽑기
                 resizePreferCategoryCounter[i].count = Math.round(resizePreferCategoryCounter[i].count / totalCount * musicCount)
                 extractCount += resizePreferCategoryCounter[i].count
+                console.log('error check3')
             }
 
+            console.log(`max : ${maxValueIndex}`)
+            console.log(`min : ${minValueIndex}`)
+            console.log(`ex : ${extractCount}`)
+            console.log(resizePreferCategoryCounter)
 
             if(extractCount !== musicCount) {
                 if(extractCount > musicCount) {
@@ -93,7 +101,7 @@ router.get('/' , doAsync(async(req , res , next) => {
 
             
             //선호도 비율에 맞게 노래 가져오기
-            for(let i = 0 ; i < resizePreferCategoryCounter[i].length ; i++) {
+            for(let i = 0 ; i < resizePreferCategoryCounter.length ; i++) {
 
                 const randoms = []
                 const documentSize = await MusicModel.countDocuments({'category' : resizePreferCategoryCounter[i].categoryId})
@@ -117,11 +125,12 @@ router.get('/' , doAsync(async(req , res , next) => {
                     const randomMusic = await MusicModel.findOne({'category' : resizePreferCategoryCounter[i].categoryId}).skip(random).populate('singer album').lean()
                     response.suggestMusics.push(randomMusic)
                 }
-                
+                console.log(response)
             }
             response.message = Dlogger.info('[LOGGED-SUGGESTMUSIC]추천음악 조회 완료')
         }  
         catch(e) {
+            console.error(e)
             response.message = Dlogger.error('[LOGGED-SUGGESTMUSIC]추천음악 조회 실패')
         }
     }

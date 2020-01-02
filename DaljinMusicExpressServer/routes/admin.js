@@ -262,11 +262,17 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                     singerId = singers[i].singerDatabaseId
                 }
                 else {
-                    const singerModel = new SingerModel({
-                        'name' : singers[i].name
-                    })
-                    const singerDoc = await singerModel.save()
-                    singerId = singerDoc._id
+                    const singerFindResult = await SingerModel.findOne({'name' : singers[i].name})
+                    if(singerFindResult === null) {
+                        const singerModel = new SingerModel({
+                            'name' : singers[i].name
+                        })
+                        const singerDoc = await singerModel.save()
+                        singerId = singerDoc._id
+                    }
+                    else {
+                        singerId = singerFindResult._id
+                    }
                 }
                 
                 
@@ -276,20 +282,50 @@ router.post('/musicupload' , upload.fields( [ { name: 'musicFiles' } , { name : 
                 if(albums[i].albumDatabaseId !== '') {
                     albumId = albums[i].albumDatabaseId
                 }
-                else if(albums[i].name !== '') {
+                else {
                     let albumModel = null
-                    if(albumImgUri === '')
-                        albumModel = new AlbumModel({
-                            'name' : albums[i].name,
-                        })
-                    else
-                        albumModel = new AlbumModel({
-                            'name' : albums[i].name,
-                            'albumImgUri' : albumImgUri,
-                        })
+
+                    //앨범 이름 없을때
+                    if(albums[i].name === '' || albums[i].name === null) {
+                        const albumFindResult = await AlbumModel.findOne({'name' : null , 'singer' : singerId})
+                        if(albumFindResult === null) {
+                            albumModel = new AlbumModel({
+                                'singer' : singerId
+                            })
+                            const albumDoc = await albumModel.save()
+                            albumId = albumDoc._id
+                        }
+                        else {
+                            albumId = albumFindResult._id
+                        }
+                    }
+                    //앨범 이름 있을때
+                    else {
+                        //앨범 사진 없을때
+                        const albumFindResult = await AlbumModel.findOne({'name' : albums[i].name , 'singer' : singerId})
+                        if(albumFindResult === null) {
+                            if(albumImgUri === '' || albumImgUri === null) {
+                                albumModel = new AlbumModel({
+                                    'name' : albums[i].name,
+                                    'singer' : singerId,
+                                })
+                            }
+                            else {
+                                albumModel = new AlbumModel({
+                                    'name' : albums[i].name,
+                                    'albumImgUri' : albumImgUri,
+                                    'singer' : singerId,
+                                })
+                            }
+                            const albumDoc = await albumModel.save()
+                            albumId = albumDoc._id
+                        }
+                        else {
+                            albumId = albumFindResult._id
+                        }
+                    }
+
                     
-                    const albumDoc = await albumModel.save()
-                    albumId = albumDoc._id
                 }
 
 

@@ -332,13 +332,14 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
     const { musicid , userid } = req.query
 
     try {
-        const music = await MusicModel.findOne({'_id' : musicid}).populate('singer album category')
+        const music = await MusicModel.findOne({'_id' : musicid}).populate('singer album')
 
         music.totalPlayCount++;
         music.monthPlayCount++;
         music.weekPlayCount++;
         music.dayPlayCount++;
 
+        //console.log(music.totalPlayCount)
         if(typeof userid !== 'undefined' && userid.trim() !== '') {
 
             const user = await UserModel.findOne({ 'userId' : userid })
@@ -353,7 +354,8 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
             //선호도 카운터 증가
             let loopFlag = false
             for(let i = 0 ; i < user.preferCategoryCounter.length ; i++) {
-                if(user.preferCategoryCounter[i].categoryId === music.category) {
+                if(user.preferCategoryCounter[i].categoryId.equals(music.category)) {
+                    //console.log('equals')
                     user.preferCategoryCounter[i].count += 1
                     //편중현상 줄이기
                     if(user.preferCategoryCounter[i].count > 10) {
@@ -376,6 +378,9 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
         const fileStat = fs.statSync(filePath)
 
         await music.save()
+
+
+
         res.writeHead(206, {
             'Content-Type': 'audio/mpeg',
             'Content-Length': fileStat.size,
