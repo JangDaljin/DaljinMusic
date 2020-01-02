@@ -97,6 +97,7 @@
 .tc6 {
     width: 10%;
     flex-direction: column;
+    padding : 0px 5px;
 }
 
 .tc7 {

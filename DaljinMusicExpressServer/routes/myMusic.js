@@ -331,9 +331,8 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
 
     const { musicid , userid } = req.query
 
-    
     try {
-        const music = await MusicModel.findOne({ '_id' : musicid }).populate('song album category')
+        const music = await MusicModel.findOne({'_id' : musicid}).populate('singer album category')
 
         music.totalPlayCount++;
         music.monthPlayCount++;
@@ -348,17 +347,17 @@ router.get('/playmusic' , doAsync(async (req , res , next) => {
             if(user.recentlyPlayList.length > 100) {
                 user.recentlyPlayList.shift()
             }
-            user.recentlyPlayList.push(userid)
+            user.recentlyPlayList.push(musicid)
 
 
             //선호도 카운터 증가
             let loopFlag = false
-            for(let i = 0 ; i < user.preferCategoryCounter.length ; j++) {
+            for(let i = 0 ; i < user.preferCategoryCounter.length ; i++) {
                 if(user.preferCategoryCounter[i].categoryId === music.category) {
-                    user.preferCategoryCounter[j].count += 1
+                    user.preferCategoryCounter[i].count += 1
                     //편중현상 줄이기
-                    if(user.preferCategoryCounter[j].count > 10) {
-                        user.preferCategoryCounter[j].count = user.preferCategoryCounter[j].count / 2
+                    if(user.preferCategoryCounter[i].count > 10) {
+                        user.preferCategoryCounter[i].count = user.preferCategoryCounter[i].count / 2
                     }
                     loopFlag = true
                     break;

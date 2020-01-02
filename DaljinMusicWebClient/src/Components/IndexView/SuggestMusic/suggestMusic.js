@@ -9,11 +9,12 @@ const cn = classNames.bind(styles)
 
 class SuggestMusicList extends Component {
 
-
-    constructor(props) {
-        super(props)
-        props.SuggestMusicActions.fetchSuggestMusic(this.props.userId)
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps.authMonitor && !this.props.authMonitor) {
+            this.props.SuggestMusicActions.fetchSuggestMusic({ 'userId' : this.props.userId , 'musicCount' : 5 })
+        }
     }
+
 
     render () {
         return (
@@ -23,15 +24,16 @@ class SuggestMusicList extends Component {
                 </div>
                 <ul className={cn('suggest-music-list')}>
                     {
-                        this.props.items.map((value , index) => (
+                        this.props.suggestMusics.map((value , index) => (
+
                             <li key={index} className={cn('suggest-music-list-item')}>
                                 <div className={cn('suggest-music-list-album-img-wrap')}>
-                                    <div className={cn('suggest-music-list-album-img')} style={{backgroundImage: `url('${value.albumImgUri}')`}}></div>
+                                    <div className={cn('suggest-music-list-album-img')} style={{backgroundImage: `url('${value.getIn(['album' , 'albumImgUri'])}')`}}></div>
                                 </div>
                                 <div className={cn('suggest-music-list-info')}>
-                                    <div className={cn('suggest-music-list-singer')}>{value.singer}</div>
-                                    <div className={cn('suggest-music-list-song')}>{value.song}</div>
-                                    <div className={cn('suggest-music-list-album')}>{value.album}</div>
+                                    <div className={cn('suggest-music-list-singer')}>{value.getIn(['singer' , 'name'])}</div>
+                                    <div className={cn('suggest-music-list-song')}>{value.get('song')}</div>
+                                    <div className={cn('suggest-music-list-album')}>{value.getIn(['album' , 'name'])}</div>
                                 </div>
                             </li>
                         ))
@@ -45,8 +47,9 @@ class SuggestMusicList extends Component {
 
 export default connect(
     (state) => ({
-        items : state.suggestMusic.items,
-        userId : state.auth.userId
+        suggestMusics : state.suggestMusic.suggestMusics,
+        userId : state.auth.userId,
+        authMonitor : state.auth.monitor,
     }),
     (dispatch) => ({
         SuggestMusicActions : bindActionCreators(suggestMusicActions , dispatch)
