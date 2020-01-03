@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const doAsync = require('./async')
-
+const Dlogger = require('../Dlogger')
 const MusicModel = require('../Database/mongoDB').musicModel
 const SingerModel = require('../Database/mongoDB').singerModel
 const AlbumModel = require('../Database/mongoDB').albumModel
@@ -11,17 +11,15 @@ router.get('/song' , doAsync( async (req , res , next) => {
         foundList : [],
         message : ''
     }
-    const { search } = req.query
+    const { searchtext } = req.query
     
     try {
-        const foundDoc = await MusicModel.find({ 'song' : search })
-        console.log(foundDoc)
-        response.foundList = foundDoc
-        response.message = "검색 완료"
+        const musics = await MusicModel.find({ 'song' : searchtext }).populate('singer album')
+        response.foundList = musics
+        response.message = Dlogger.info("검색 완료")
     }
     catch(err) {
-        console.log('search/song 검색 실패')
-        response.message = "검색 실패"
+        response.message = Dlogger.info("검색 실패")
     }
     res.json(response)
 }))
@@ -31,17 +29,17 @@ router.get('/singer' , doAsync( async (req , res , next) => {
         foundList : [],
         message : ''
     }
-    const { search } = req.query
+    const { searchtext } = req.query
     
     try {
-        const foundDoc = await SingerModel.find({ 'name' : search })
-        console.log(foundDoc)
-        response.foundList = foundDoc
-        response.message = "검색 완료"
+        const singer = await SingerModel.findOne({ 'name' : searchtext })
+        const musics = await MusicModel.find({'singer' : singer._id}).populate('singer album')
+        response.foundList = musics
+        response.message = Dlogger.info("가수 검색 완료")
     }
     catch(err) {
-        console.log('search/singer 검색 실패')
-        response.message = "검색 실패"
+        console.error(err)
+        response.message = Dlogger.error("가수 검색 실패")
     }
     res.json(response)
 }))
@@ -51,18 +49,16 @@ router.get('/album' , doAsync( async (req , res , next) => {
         foundList : [],
         message : ''
     }
-    const { search } = req.query
+    const { searchtext } = req.query
     
     try {
-        console.log(search)
-        const foundDoc = await AlbumModel.find({ 'name' : search })
-        console.log(foundDoc)
-        response.foundList = foundDoc
-        response.message = "검색 완료"
+        const album = await AlbumModel.find({ 'name' : searchtext }).select('_id')
+        const musics = await MusicModel.find({'album' : { $in : album }}).populate('singer album')
+        response.foundList = musics
+        response.message = Dlogger.info("앨범 검색 완료")
     }
     catch(err) {
-        console.log('search/album 검색 실패')
-        response.message = "검색 실패"
+        response.message = Dlogger.info("앨범 검색 실패")
     }
     res.json(response)
 }))

@@ -2,7 +2,7 @@ import { createAction , handleActions } from 'redux-actions'
 import { takeLatest } from 'redux-saga/effects'
 import { get } from './Request/request'
 
-import { List } from 'immutable'
+import { List, fromJS } from 'immutable'
 export const FETCH_SEARCH_SINGER = 'admin/FETCH_SEARCH_SINGER'
 export const fetchSearchSinger = createAction(FETCH_SEARCH_SINGER)
 
@@ -38,7 +38,8 @@ export const searchReducer = handleActions({
     [ACCEPT_SEARCH_SINGER] : (state , action) => {
         const newState = { ...state }
         const { foundList } = action.payload
-        newState.foundList = newState.foundList.clear().concat(foundList)
+        
+        newState.foundList = newState.foundList.clear().concat(fromJS(foundList))
         return newState
     },
     [ABORT_SEARCH_SINGER] : (state , action) => {
@@ -49,7 +50,8 @@ export const searchReducer = handleActions({
     [ACCEPT_SEARCH_SONG] : (state , action) => {
         const newState = { ...state }
         const { foundList } = action.payload
-        newState.foundList = newState.foundList.clear().concat(foundList)
+        console.log(foundList)
+        newState.foundList = newState.foundList.clear().concat(fromJS(foundList))
         return newState
     },
     [ABORT_SEARCH_SONG] : (state , action) => {
@@ -60,7 +62,7 @@ export const searchReducer = handleActions({
     [ACCEPT_SEARCH_ALBUM] : (state , action) => {
         const newState = { ...state }
         const { foundList } = action.payload
-        newState.foundList = newState.foundList.clear().concat(foundList)
+        newState.foundList = newState.foundList.clear().concat(fromJS(foundList))
         return newState
     },
     [ABORT_SEARCH_ALBUM] : (state , action) => {
@@ -72,19 +74,19 @@ export const searchReducer = handleActions({
 } , initialSearchState)
 
 function* fetchSearchSingerSaga(action) {
-    const { search } = action.payload
-    yield get(`/search/singer?search=${search}` , ACCEPT_SEARCH_SINGER , ABORT_SEARCH_SINGER)
+    const { searchText } = action.payload
+    console.log(searchText)
+    yield get(`/search/singer?searchtext=${searchText}` , ACCEPT_SEARCH_SINGER , ABORT_SEARCH_SINGER)
 }
 
 function* fetchSearchSongSaga(action) {
-    const { search } = action.payload
-    yield get(`/search/song?search=${search}` , ACCEPT_SEARCH_SONG , ABORT_SEARCH_SONG)
+    const { searchText } = action.payload
+    yield get(`/search/song?searchtext=${searchText}` , ACCEPT_SEARCH_SONG , ABORT_SEARCH_SONG)
 }
 
 function* fetchSearchAlbumSaga(action) {
-    const { search } = action.payload
-    console.log(search)
-    yield get(`/search/album?search=${search}` , ACCEPT_SEARCH_ALBUM , ABORT_SEARCH_ALBUM)
+    const { searchText } = action.payload
+    yield get(`/search/album?searchtext=${searchText}` , ACCEPT_SEARCH_ALBUM , ABORT_SEARCH_ALBUM)
 }
 
 export function* searchSaga() {
