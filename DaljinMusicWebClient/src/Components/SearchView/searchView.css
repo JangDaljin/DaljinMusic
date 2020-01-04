@@ -82,6 +82,22 @@
     margin: 8px;
 }
 
+.searchview-body-item:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 5px 5px #303030;
+    transition: box-shadow .5s 0s;
+}
+
+.searchview-body-item-selected {
+    box-shadow: 0px 0px 5px 5px #0AC !important;
+    transition: box-shadow .5s 0s;
+}
+
+.searchview-body-item-unselected {
+    box-shadow: 0px 0px 5px 5px #AAA;
+    transition: box-shadow .5s 0s;
+}
+
 .searchview-body-item-img-wrap {
     width: 100px;
     height: 100px;
@@ -118,3 +134,60 @@
     font-family: 'jua';
 }
 
+.searchview-bottom-bar {
+    position: relative;
+    bottom: -60px;
+    height: 60px;
+    background-color: #303030;
+    color: #EEE;
+    font-family: 'jua';
+    font-size: 1.2rem;
+    display: flex;
+    align-items: stretch;
+}
+
+.searchview-bottom-bar-text {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.searchview-bottom-bar-buttons {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.searchview-bottom-bar-button > i {
+    margin-right: 5px;
+}
+
+.searchview-bottom-bar-button {
+    border: 4px double #EEE;
+    border-radius: 1rem;
+    font-size: 1rem;
+    padding: 5px 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    margin : 0px 5px;
+}
+
+.searchview-bottom-bar-button:hover {
+    cursor: pointer;
+    border-color: #0AC;
+    color: #0AC;
+}
+
+.searchview-bottom-bar-show {
+    bottom: 0px;
+    transition: bottom 1s 0s;
+}
+
+.searchview-bottom-bar-hide {
+    bottom : -60px;
+    transition: bottom 1s 0s;
+}

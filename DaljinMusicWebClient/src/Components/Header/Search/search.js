@@ -1,5 +1,10 @@
 import React , { Component } from 'react'
-import { Link , withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as SearchActions from '../../../ReduxModules/search'
+
 import queryString from 'query-string'
 import styles from './search.css'
 import classNames from 'classnames/bind'
@@ -15,9 +20,14 @@ class Search extends Component {
         this.searchTextChanged = this.searchTextChanged.bind(this);
     }
 
-    searchTextChanged (e) {
+    searchTextChanged = (e) => {
         e.preventDefault()
         this.setState({searchtext : e.target.value})
+    }
+
+    onClickSearchButton = (e) => {
+        //this.props.SearchActions.fetchSearch({'searchText' : this.state.searchtext})
+        this.props.history.push(`/search?searchtext=${this.state.searchtext}`)
     }
 
     render () {
@@ -27,14 +37,22 @@ class Search extends Component {
                     <i className={cn('header-search-icon' , 'fas fa-search')} ></i>
                 </div>
                 <div className={cn('header-search-text-wrap')}>
-                    <input className={cn('header-search-text')} type="text" placeholder="노래를 찾아보세요." onChange={this.searchTextChanged} value={this.state.searchtext}/>
+                    <input className={cn('header-search-text')} type="text" placeholder="검색어 입력" onChange={this.searchTextChanged} value={this.state.searchtext}/>
                 </div>
-                <div className={cn('header-search-button')}>
-                    <Link to={`/search?searchtext=${this.state.searchtext}`} style={{textDecoration:'inherit', color:'inherit'}}>검색</Link>
+                <div className={cn('header-search-button')} onClick={this.onClickSearchButton}>
+                    검색
                 </div>
             </div>
         )
     }
 }
 
-export default withRouter(Search);
+export default connect(
+    (state) => ({
+        
+    })
+    ,
+    (dispatch) => ({
+        SearchActions : bindActionCreators(SearchActions , dispatch)
+    })
+)(withRouter(Search))

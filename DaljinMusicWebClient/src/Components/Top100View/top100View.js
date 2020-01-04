@@ -35,9 +35,9 @@ class Top100ViewBody extends Component {
                 body.push(
                 <div key={body.length} onClick={(e) => { 
                     const addMusicIds = []
-                    for(let i = 0 ; i < MAX_RANK; i++) {
-                        if(this.state.selected.get(i)) {
-                            addMusicIds.push(this.props.items.getIn([i , '_id']))
+                    for(let j = 0 ; j < MAX_RANK; j++) {
+                        if(this.state.selected.get(j)) {
+                            addMusicIds.push(this.props.items.getIn([j , '_id']))
                         }
                     }
 

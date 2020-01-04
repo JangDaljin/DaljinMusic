@@ -35,7 +35,9 @@ class Router extends Component {
                 </Switch>
                 <MusicPlayer />
                 <Modal />
+                {/*
                 <MessageView />
+                */}
             </BrowserRouter>
         )
     }
