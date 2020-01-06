@@ -37,9 +37,9 @@ class TodaysMusic extends Component {
             <div className={cn('todaymusic-title')}>
                 <p>#오늘의 라이브</p>
             </div>
-            
-            <div className={cn('todaymusic-img')} style={{backgroundImage : `url('${this.props.music.getIn(['album' , 'albumImgUri'])}')`}}>
-
+            <div className={cn('todaymusic-img-wrap')}>
+                <div className={cn('todaymusic-img')} style={{backgroundImage : `url('${this.props.music.getIn(['album' , 'albumImgUri'])}')`}}>
+                </div>
             </div>
 
             <div className={cn('todaymusic-info')}>

@@ -132,11 +132,12 @@ class SearchView extends Component {
                     </div>
                 </div>
 
-                <div className={cn('searchview-message')}>
-                    검색결과 ({this.props.foundLists.get(this.state.showMode).size})
-                </div>
+
                     
                 <div className={cn('searchview-body')}>
+                    <div className={cn('searchview-message')}>
+                        검색결과 ({this.props.foundLists.get(this.state.showMode).size})
+                    </div>
                     {this.props.foundLists.get(this.state.showMode).size === 0 ?
                         <div>
                             
@@ -145,6 +146,7 @@ class SearchView extends Component {
                         <div className={cn('searchview-body-list')}>
                         {this.props.foundLists.get(this.state.showMode).map(
                             (value , index) => (
+                                <div className={cn('flex-wrapping')}>
                                 <div className={cn('searchview-body-item' , {'searchview-body-item-selected' : this.state.selected.get(index)} , {'searchview-body-item-unselected' : !this.state.selected.get(index)})} key={value} onClick={e => { this.onClickSelect(index)}}>
                                     <div className={cn('searchview-body-item-img-wrap')}>
                                         <div className={cn('searchview-body-item-img')} style={{backgroundImage: `url('${value.getIn(['album' , 'albumImgUri'])}')`}}>
@@ -162,6 +164,7 @@ class SearchView extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             )
                         )
                         }
@@ -178,13 +181,13 @@ class SearchView extends Component {
                                                     (e) => {
                                                         this.play()
                                                     }
-                                                }><i className={cn('fas fa-play')}></i>재생</div>
+                                                }><i className={cn('fas fa-play')}></i><p>재생</p></div>
 
                         <div className={cn('searchview-add' , 'searchview-bottom-bar-button')} onClick={
                             (e) => {
                                 this.addMusicPlayer()
                             }
-                        }><i className={cn('fas fa-plus')}></i>플레이리스트에 추가</div>
+                        }><i className={cn('fas fa-plus')}></i><p>플레이리스트에 추가</p></div>
 
                         <div className={cn('searchview-addlist' , 'searchview-bottom-bar-button')} onClick={
                             (e) => { if(this.props.isAuthenticated) {
@@ -195,7 +198,7 @@ class SearchView extends Component {
                                     this.props.history.push('auth')
                                 }
                             } }
-                        }><i className={cn('fas fa-list')}></i>내 음악리스트에 추가</div>
+                        }><i className={cn('fas fa-list')}></i><p>내 음악리스트에 추가</p></div>
                         </div>
                 </div>
             </div>

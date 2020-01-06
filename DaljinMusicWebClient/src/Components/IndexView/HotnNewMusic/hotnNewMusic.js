@@ -75,8 +75,8 @@ class HotAndNewMusic extends Component {
                                 onClick={(e) => { this.play(index) }}
                                 onMouseOver={(e) => this.imageShow(e , index)} onMouseOut={this.imageClose} onMouseMove={this.imageMove}>
                                     <div className={cn('hotandnew-list-item-info')}>
-                                        <div>{value.getIn(['music' , 'singer' , 'name'])}</div>
-                                        <div>{value.getIn(['music' , 'song'])}</div>
+                                        <div className={cn('hotandnew-list-item-info-singer')}>{value.getIn(['music' , 'singer' , 'name'])}</div>
+                                        <div className={cn('hotandnew-list-item-info-song')}>{value.getIn(['music' , 'song'])}</div>
                                     </div>
                                     <div className={cn('hotandnew-hotnew')}>
                                         {value.get('hot')&&

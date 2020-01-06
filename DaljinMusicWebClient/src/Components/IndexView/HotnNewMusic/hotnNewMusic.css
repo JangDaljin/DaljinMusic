@@ -81,10 +81,23 @@
 }
 
 .hotandnew-list-item-info {
-    flex: 3 0 auto;
+    flex: 3 0 50%;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+}
+
+.hotandnew-list-item-info > div {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.hotandnew-list-item-info-singer {
+    color: #069;
+}
+
+.hotandnew-list-item-info-song {
+    color: #ff5a5a;
 }
 
 .hotandnew-hotnew {
@@ -114,6 +127,7 @@
     height: 200px;
     border: 2px solid #303030;
     visibility: hidden;
+    background-color: #EEE;
 }
 
 .hotandnew-img-wrap::after {

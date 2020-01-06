@@ -5,6 +5,20 @@
     padding-right: 180px;
 }
 
+@media (max-width : 1000px) {
+    .indexbody {
+        padding-right: 100px;
+        padding-left: 100px;
+    }
+}
+
+@media (max-width : 600px) {
+    .indexbody {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+}
+
 .first {
     display: flex;
     justify-content: center;

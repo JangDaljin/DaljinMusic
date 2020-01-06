@@ -118,7 +118,7 @@
 }
 
 .selected-musiclist-img-wrap {
-    flex: 1 0 10px;
+    flex: .5 1 70px;
     position: relative;
     border-radius: 0.35rem;
     overflow: hidden;
