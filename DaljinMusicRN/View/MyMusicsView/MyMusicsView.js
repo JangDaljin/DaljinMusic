@@ -3,17 +3,20 @@ import React, { Component } from 'react'
 import { View , Text, StyleSheet } from 'react-native'
 
 
-class Top100 extends Component {
+class MyMusicsView extends Component {
 
 
     render () {
-        return (
+        return(
             <View style={styles.container}>
-                <Text>Top 100</Text>
+                <Text>
+                    MyMusics
+                </Text>
             </View>
         )
     }
 }
+
 
 const styles = StyleSheet.create({
 
@@ -24,4 +27,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Top100;
+export default MyMusicsView;

@@ -4,18 +4,19 @@ import { createAppContainer } from 'react-navigation'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 
 
-import Home from './Home'
-import Top100 from './Top100'
-import MyMusics from './MyMusics'
 import Setting from './Setting'
 
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
+import HomeView from './HomeView/HomeView'
+import MyMusicsView from './MyMusicsView/Drawer'
+import Top100View from './Top100View/Drawer'
+
 const TabNavigator = createBottomTabNavigator(
     {
-    'Home' : Home,
-    'Top100' : Top100,
-    'MyMusics' : MyMusics,
+    'Home' : HomeView,
+    'Top100' : Top100View,
+    'MyMusics' : MyMusicsView,
     'Setting' : Setting,
     },
     {
@@ -34,7 +35,7 @@ const TabNavigator = createBottomTabNavigator(
                     iconType = 'solid'    
                 }
                 else if(routeName === 'Top100') {
-                    iconName = 'list-ol'
+                    iconName = 'trophy'
                     iconType = 'solid'
                 }
                 else if(routeName === 'MyMusics') {
@@ -48,7 +49,7 @@ const TabNavigator = createBottomTabNavigator(
                 if(focused) {
                     iconStyle.color = '#069'
                 }
-                return <IconComponent style={iconStyle} name={iconName} size={iconSize} iconType />
+                return <IconComponent style={iconStyle} name={iconName} size={iconSize} {...iconType} />
             },
             tabBarOptions : {
                 activeTintColor : '#069',
