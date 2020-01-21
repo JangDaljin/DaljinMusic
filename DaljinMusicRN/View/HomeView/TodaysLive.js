@@ -1,16 +1,17 @@
 import React , { Component } from 'react'
 import { View, Text , StyleSheet, Image , Dimensions } from 'react-native'
+import { commonStyles } from './commonStyles'
+
 
 const { width , height } = Dimensions.get('window')
-
 
 class TodaysLive extends Component {
 
 
     render () {
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>
+            <View style={commonStyles.container}>
+                <Text style={commonStyles.title}>
                     #오늘의 라이브
                 </Text>
                 <View style={styles.infoContainer}>
@@ -30,18 +31,6 @@ class TodaysLive extends Component {
 }
 
 const styles = StyleSheet.create({
-    container : {
-        flex : 1,
-        flexDirection : 'column',
-        padding : 10,
-        elevation : 2,
-    },
-    title : {
-        flex : 1,
-        justifyContent : 'center',
-        fontSize : 20,
-        fontFamily : 'jua',
-    },
     infoContainer : {
         borderWidth : 2,
         borderRadius : 10,
