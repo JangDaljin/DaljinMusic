@@ -1,8 +1,9 @@
 import React , { Component } from 'react'
-import { View , Text, StyleSheet, Image} from 'react-native'
 
 import { commonStyles } from './commonStyles'
+
 import { Map , List } from 'immutable'
+import { StyleSheet , View , Text, Image } from 'react-native'
 
 const testData = List([
     Map({
@@ -22,17 +23,12 @@ const testData = List([
     }),
 ])
 
-class SuggestMusicsView extends Component {
-
+class HotAndNewMusicsView extends Component {
 
     render () {
         return (
             <View style={commonStyles.container}>
-
-                <Text style={commonStyles.title}>
-                    #추천음악
-                </Text>
-
+                <Text style={commonStyles.title}>#HOT AND NEW</Text>
 
                 <View style={styles.contentsWrap}>
                     {
@@ -40,19 +36,25 @@ class SuggestMusicsView extends Component {
                             (value , index) => (
                                 <View key={index} style={styles.content}>
                                     <View style={styles.imageWrap}>
-                                        <Image style={styles.image} source={require('../../testImg/test1.jpg')} />
+                                        <Image style={styles.image} source={require('../../testImg/test2.jpg')} />
                                     </View>
                                     <View style={styles.infoWrap}>
-                                        <Text style={styles.info}>{value.get('singer')}</Text>
-                                        <Text style={styles.info}>{value.get('song')}</Text>
-                                        <Text style={styles.info}>{value.get('album')}</Text>
+                                        <Text style={styles.info}>
+                                            {value.get('singer')}
+                                        </Text>
+                                        <Text style={styles.info}>
+                                            {value.get('song')}
+                                        </Text>
+                                        <Text style={styles.info}>
+                                            {value.get('album')}
+                                        </Text>
                                     </View>
+
                                 </View>
                             )
                         )
                     }
                 </View>
-
             </View>
         )
     }
@@ -61,12 +63,14 @@ class SuggestMusicsView extends Component {
 const styles = StyleSheet.create({
     contentsWrap : {
         flex : 1,
+        flexDirection : 'row',
+        flexWrap : 'wrap',
     },
     content : {
-        flex : 1,
         flexDirection : 'row',
+        width : '100%',
         borderWidth : 2,
-        marginBottom : 5,
+        margin : 2,
         borderRadius : 10,
         overflow : 'hidden',
     },
@@ -83,12 +87,11 @@ const styles = StyleSheet.create({
     },
     info : {
         flex : 1,
+        textAlignVertical : 'center',
         paddingLeft : 5,
-        paddingRight : 5,
         fontFamily : 'jua',
-        textAlignVertical: 'center',
-    }
+    },
 })
 
 
-export default SuggestMusicsView
+export default HotAndNewMusicsView
