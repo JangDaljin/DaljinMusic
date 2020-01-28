@@ -220,8 +220,7 @@ class Top100View extends Component {
                 </ScrollView>
                 {this.state.checkedCounter > 0 &&
                 <Animated.View style={[styles.bottomController , 
-                        { 
-                            
+                        {
                             opacity : this.state.bottomControllerAnimationOpacity ,
                             bottom : this.state.bottomControllerAnimationPosition ,
                         }

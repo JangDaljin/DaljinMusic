@@ -7,3 +7,7 @@ export const LeftDrawerOptions = {
         inactiveTintColor : '#EEE',
     }
 }
+
+export const defaultBackgroundColor = {
+    
+}
