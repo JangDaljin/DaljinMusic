@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
     image : width > height ? 
         {
             width : height,
-            height : undefined,
+            height : null,
             aspectRatio : 1,
     }
         :
         {
             width : '100%',
-            height : undefined,
+            height : null,
             aspectRatio : 1,
     }
     ,

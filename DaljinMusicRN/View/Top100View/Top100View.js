@@ -3,179 +3,43 @@ import React, { Component } from 'react'
 import { View , Text, StyleSheet, TouchableOpacity, Image, ScrollView , Animated } from 'react-native'
 import { List , Map} from 'immutable'
 
-import Icon from 'react-native-vector-icons/FontAwesome5'
-
+import BottomMenuController from '../BottomMenuController'
 class Top100View extends Component {
 
-    state = {
-        testData : List([
-            Map({
-                song : 'a',
-                singer : {
-                    name : 'a'
-                },
-                album : {
-                    name : 'a',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'b',
-                singer : {
-                    name : 'b'
-                },
-                album : {
-                    name : 'b',
-                    albumImgUri : '../../testImg/test2.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            }),
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c'
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : '../../testImg/test1.jpg'
-                },
-                checked : false,
-            })
-        ]),
-
-        checkedCounter : 0,
-        bottomControllerAnimationValue : new Animated.Value(0),
-        bottomControllerAnimationPosition : -50,
-        bottomControllerAnimationOpacity : 0,
+    constructor(props) {
+        super(props);
+        this.state = {
+            checkList : List(new Array(props.list.size).fill(false)),
+            checkCounter : 0,
+            bottomMenuShow : false,
+        }
     }
 
+
     onPressContent = (index) => {
-        let checkedCounter = this.state.checkedCounter
-        if(!this.state.testData.getIn([index , 'checked'])) {
-            if(checkedCounter === 0) {
-                this.setState({ 
-                    bottomControllerAnimationValue : new Animated.Value(0),
-                    
-                    bottomControllerAnimationPosition : this.state.bottomControllerAnimationValue.interpolate({
-                        inputRange : [0 , 1],
-                        outputRange : [-50 , 0]
-                    }) ,
-
-                    bottomControllerAnimationOpacity : this.state.bottomControllerAnimationValue.interpolate({
-                        inputRange : [0 , 1],
-                        outputRange : [0 , 1],
-                    }) 
-                })
-
-                Animated.timing(this.state.bottomControllerAnimationValue , {
-                    toValue : 1,
-                    duration : 500,
-                    delay : 0,
-                }).start()
-            }
-            checkedCounter++
+        let checkCounter = this.state.checkCounter
+        let bottomMenuShow = this.state.bottomMenuShow
+        
+        
+        if(this.state.checkList.get(index)) {
+            checkCounter--
         }
         else {
-            this.setState({ 
-                bottomControllerAnimationValue : new Animated.Value(0),
-
-                bottomControllerAnimationPosition : this.state.bottomControllerAnimationValue.interpolate({
-                    inputRange : [0 , 1],
-                    outputRange : [0 , -50]
-                }) ,
-                
-                bottomControllerAnimationOpacity : this.state.bottomControllerAnimationValue.interpolate({
-                    inputRange : [0 , 1],
-                    outputRange : [1 , 0],
-                }) 
-            })
-
-            Animated.timing(this.state.bottomControllerAnimationValue , {
-                toValue : 1,
-                duration : 500,
-                delay : 0,
-            }).start()
-            checkedCounter--
+            checkCounter++
         }
-        this.setState({ testData : this.state.testData.updateIn([index , 'checked'] , value => !value) , checkedCounter : checkedCounter})
+
+        if(checkCounter > 0) {
+            bottomMenuShow = true
+        }
+        else {
+            bottomMenuShow = false
+        }
+
+        this.setState({
+            checkList : this.state.checkList.update(index , value => !value),
+            checkCounter : checkCounter,
+            bottomMenuShow : bottomMenuShow,
+        })
     }
 
     render () {
@@ -184,27 +48,29 @@ class Top100View extends Component {
                 
                 <ScrollView style={styles.contentsContainer}>
                     {
-                        this.state.testData.map(
+                        this.props.list.map(
                             (value , index) => (
                                 <TouchableOpacity key={index} 
                                 style={styles.contentWrap}
                                 onPress={() => { this.onPressContent(index) }}>
 
-                                    <View style={[styles.contentBody , this.state.testData.getIn([index , 'checked']) ? styles.checkedBackgroundColor : null]}>
-                                        <Text style={[styles.rank , this.state.testData.getIn([index , 'checked']) ? styles.checkedFontColor : null]}>
-                                            {index + 1}
-                                        </Text>
+                                    <View style={[styles.contentBody , this.state.checkList.get(index) ? styles.checkedBackgroundColor : null]}>
+                                        <View style={styles.rankWrap}>
+                                            <Text style={[styles.rank , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
+                                                {index + 1}
+                                            </Text>
+                                        </View>
                                         <View style={styles.imageWrap}>
-                                            <Image style={styles.image} source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}} />
+                                            <Image style={styles.image} source={{uri: value.getIn(['album' , 'albumImgUri'])}} />
                                         </View>
                                         <View style={styles.infoWrap}>
-                                            <Text style={[styles.infoText , this.state.testData.getIn([index , 'checked']) ? styles.checkedFontColor : null]}>
+                                            <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
                                                 {value.getIn(['singer' , 'name'])}
                                             </Text>
-                                            <Text style={[styles.infoText , this.state.testData.getIn([index , 'checked']) ? styles.checkedFontColor : null]}>
+                                            <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
                                                 {value.getIn(['song'])}
                                             </Text>
-                                            <Text style={[styles.infoText , this.state.testData.getIn([index , 'checked']) ? styles.checkedFontColor : null]}>
+                                            <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
                                                 {value.getIn(['album' , 'name'])}
                                             </Text>
                                         </View>
@@ -218,35 +84,7 @@ class Top100View extends Component {
 
                     </View>
                 </ScrollView>
-                {this.state.checkedCounter > 0 &&
-                <Animated.View style={[styles.bottomController , 
-                        {
-                            opacity : this.state.bottomControllerAnimationOpacity ,
-                            bottom : this.state.bottomControllerAnimationPosition ,
-                        }
-                    ]}>
-                    <TouchableOpacity style={styles.bottomControllerButton}>
-                        <View style={styles.bottomControllerButtonBody}>
-                            <Icon style={styles.bottomControllerButtonFontColor} name={'play'} size={16} solid />
-                            <Text style={[{marginLeft : 6 , fontFamily : 'jua' } , styles.bottomControllerButtonFontColor]}>재생</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.bottomControllerButton}>
-                        <View style={styles.bottomControllerButtonBody}>
-                            <Icon style={styles.bottomControllerButtonFontColor} name={'plus'} size={16} solid />
-                            <Text style={[{marginLeft : 6 , fontFamily : 'jua' } , styles.bottomControllerButtonFontColor]}>추가</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.bottomControllerButton}>
-                        <View style={styles.bottomControllerButtonBody}>
-                            <Icon style={styles.bottomControllerButtonFontColor} name={'list'} size={16} solid />
-                            <Text style={[{marginLeft : 6 , fontFamily : 'jua' } , styles.bottomControllerButtonFontColor]}>목록에 추가</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Animated.View>
-                }
+                <BottomMenuController height={50} show={this.state.bottomMenuShow} />
             </View>
         )
     }
@@ -263,33 +101,6 @@ const styles = StyleSheet.create({
         padding :5,
     },
 
-    bottomController : {
-        position : 'absolute',
-        bottom : 0,
-        width : '100%',
-        height : 50,
-        backgroundColor : '#303030',
-        flex : 1,
-        flexDirection : 'row',
-    },
-
-    bottomControllerButton : {
-        flex : 1,
-        borderWidth : 1,
-        borderColor : '#EEE',
-    },
-
-    bottomControllerButtonBody : {
-        flex : 1,
-        flexDirection : 'row',
-        alignItems : 'center',
-        justifyContent : 'center',
-    },
-
-    bottomControllerButtonFontColor : {
-        color : '#EEE',
-    },
-
     contentWrap : {
         marginBottom : 4,
     },
@@ -302,10 +113,13 @@ const styles = StyleSheet.create({
         overflow : 'hidden',
     },
 
-    rank : {
+    rankWrap : {
         flex : 1.5,
-        textAlignVertical : 'center',
-        textAlign : 'center',
+        alignItems : 'center',
+        justifyContent : 'center',
+    },
+
+    rank : {
         fontSize : 24,
         fontFamily : 'jua',
     },
@@ -316,7 +130,7 @@ const styles = StyleSheet.create({
 
     image : {
         width : '100%',
-        height : undefined,
+        height : '100%',
         aspectRatio : 1,
     },
 

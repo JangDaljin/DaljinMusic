@@ -2,15 +2,118 @@ import React from 'react'
 
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
-
+import { List , Map } from 'immutable'
 import Top100View from './Top100View'
 
 import FontAweSomeIcon from 'react-native-vector-icons/FontAwesome5'
 
+
+const testList = List([
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'aa',
+        singer : {
+            name : 'aa',
+        },
+        album : {
+            name : 'aa',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'aaa',
+        singer : {
+            name : 'aaa',
+        },
+        album : {
+            name : 'aaaaaaaaaasdfasdfaaaaaaaaaSa',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+    Map({
+        song : 'a',
+        singer : {
+            name : 'a',
+        },
+        album : {
+            name : 'a',
+            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+        }
+    }),
+])
+
 const Drawer = createDrawerNavigator({
     'month' : {
-        screen : Top100View,
-        params : { show : 'month'},
+        screen : (props) => <Top100View {...props} list={testList}/>,
         navigationOptions : {
             title : '월간',
             drawerIcon : ({tintColor}) => (
@@ -19,8 +122,7 @@ const Drawer = createDrawerNavigator({
         }
     },
     'week' : {
-        screen : Top100View,
-        params : { show : 'week'},
+        screen : (props) => <Top100View {...props} list={testList}/>,
         navigationOptions : {
             title : '주간',
             drawerIcon : ({tintColor}) => (
@@ -29,8 +131,7 @@ const Drawer = createDrawerNavigator({
         }
     },
     'day' : {
-        screen : Top100View,
-        params : { show : 'day' },
+        screen : (props) => <Top100View {...props} list={testList}/>,
         navigationOptions : {
             title : '일간',
             drawerIcon : ({tintColor}) => (
