@@ -66,26 +66,7 @@ export default class BottomMenuController extends Component {
                         height : this.props.height,
                     }
                 ]}>
-                <TouchableOpacity style={styles.bottomControllerButton}>
-                    <View style={styles.bottomControllerButtonBody}>
-                        <Icon style={styles.bottomControllerButtonIcon} name={'play'} size={16} solid />
-                        <Text style={styles.bottomControllerButtonFont}>재생</Text>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.bottomControllerButton}>
-                    <View style={styles.bottomControllerButtonBody}>
-                        <Icon style={styles.bottomControllerButtonIcon} name={'plus'} size={16} solid />
-                        <Text style={styles.bottomControllerButtonFont}>추가</Text>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.bottomControllerButton}>
-                    <View style={styles.bottomControllerButtonBody}>
-                        <Icon style={styles.bottomControllerButtonIcon} name={'list'} size={16} solid />
-                        <Text style={styles.bottomControllerButtonFont}>목록에 추가</Text>
-                    </View>
-                </TouchableOpacity>
+                <this.props.buttons />
             </Animated.View>
         )
     }
@@ -101,26 +82,5 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
     },
 
-    bottomControllerButton : {
-        flex : 1,
-        borderWidth : 1,
-        borderColor : '#EEE',
-    },
 
-    bottomControllerButtonBody : {
-        flex : 1,
-        flexDirection : 'row',
-        alignItems : 'center',
-        justifyContent : 'center',
-    },
-
-    bottomControllerButtonIcon : {
-        color : '#EEE',
-    },
-
-    bottomControllerButtonFont : {
-        color : '#EEE',
-        marginLeft : 6 , 
-        fontFamily : 'jua',
-    },
 })

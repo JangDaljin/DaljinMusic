@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { View , Text, StyleSheet, TouchableOpacity, Image, ScrollView , Animated } from 'react-native'
 import { List , Map} from 'immutable'
-
+import Icon from 'react-native-vector-icons/FontAwesome5'
 import BottomMenuController from '../BottomMenuController'
 class Top100View extends Component {
 
@@ -41,6 +41,31 @@ class Top100View extends Component {
             bottomMenuShow : bottomMenuShow,
         })
     }
+
+    bottomMenuControllerButtons = ({}) => (
+        <View style={{flex : 1, flexDirection : 'row'}}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'play'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'plus'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생목록에 추가</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'list'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>내음악에 추가</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+    )
 
     render () {
         return (
@@ -84,11 +109,14 @@ class Top100View extends Component {
 
                     </View>
                 </ScrollView>
-                <BottomMenuController height={50} show={this.state.bottomMenuShow} />
+                <BottomMenuController height={50} show={this.state.bottomMenuShow} buttons={this.bottomMenuControllerButtons}/>
             </View>
         )
     }
 }
+
+
+
 
 const styles = StyleSheet.create({
 
@@ -155,5 +183,32 @@ const styles = StyleSheet.create({
     },
 
 })
+
+
+
+const bottomMenuControllerStyles = {
+    bottomControllerButton : {
+        flex : 1,
+        borderWidth : 1,
+        borderColor : '#EEE',
+    },
+
+    bottomControllerButtonBody : {
+        flex : 1,
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'center',
+    },
+
+    bottomControllerButtonIcon : {
+        color : '#EEE',
+    },
+
+    bottomControllerButtonFont : {
+        color : '#EEE',
+        marginLeft : 6 , 
+        fontFamily : 'jua',
+    },
+}
 
 export default Top100View;

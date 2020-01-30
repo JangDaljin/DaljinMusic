@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 
-import { View , Text, StyleSheet , ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View , Text, StyleSheet , ScrollView, Image, TouchableOpacity, Modal } from 'react-native'
 import { List } from 'immutable'
-
+import Icon from 'react-native-vector-icons/FontAwesome5'
 import BottomMenuController from '../BottomMenuController'
+import { TouchableHighlight } from 'react-native-gesture-handler'
 class MyMusicsView extends Component {
 
     constructor(props) {
@@ -12,6 +13,7 @@ class MyMusicsView extends Component {
             checkedList : List(new Array(props.myMusicList.get('list').size).fill(false)),
             checkCounter : 0,
             bottomMenuShow : false,
+            popupMenuShow : false,
         }
     }
 
@@ -42,18 +44,76 @@ class MyMusicsView extends Component {
         })
     }
 
+    popupMenuShow = () => {
+        this.setState({
+            popupMenuShow : true
+        })
+    }
+
+    popupMenuHide = () => {
+        this.setState({
+            popupMenuShow : false
+        })
+    }
+
+    bottomMenuControllerButtons = ({}) => (
+        <View style={{flex : 1, flexDirection : 'row'}}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'play'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'plus'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생목록에 추가</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'trash'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>삭제</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+    )
+
+    modalMenus = ({}) => (
+        <TouchableOpacity style={styles.modalContainer} onPress={() => {this.popupMenuHide()}}>
+            <TouchableOpacity style={styles.modalItem}>
+                <Icon style={styles.modalItemFont} size={16} name={'check'} solid />
+                <Text style={[styles.modalItemFont , {marginLeft : 4}]}>전체선택</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.modalItem}>
+                <Icon style={styles.modalItemFont} size={16} name={'trash'} solid />
+                <Text style={[styles.modalItemFont , {marginLeft : 4}]}>삭제</Text>
+            </TouchableOpacity>
+
+        </TouchableOpacity>
+    )
 
     render () {
         return(
             <View style={{flex : 1}}>
-                <View style={{height : 50 , backgroundColor : '#303030'}}>
-                    <Text>
-                        
-                    </Text>
-                    <View>
+                <View style={styles.titleHeader}>
+                    <Text style={styles.titleHeaderFont}>{this.props.myMusicList.get('listName')}</Text>
+                    <TouchableOpacity style={styles.titleHeaderButton} onPress={() => {this.popupMenuShow()}}>
+                        <Icon style={{color : '#EEE'}} size={18} name={'ellipsis-v'} solid /> 
+                    </TouchableOpacity>
 
-                    </View>
+
+
+                    <Modal transparent={true} visible={this.state.popupMenuShow}>
+                        <this.modalMenus />
+                    </Modal>
+
                 </View>
+
+
                 
                 <ScrollView style={styles.scroll}>
 
@@ -84,7 +144,7 @@ class MyMusicsView extends Component {
 
                 </ScrollView>
 
-                <BottomMenuController height={50} show={this.state.bottomMenuShow} />
+                <BottomMenuController height={50} show={this.state.bottomMenuShow} buttons={this.bottomMenuControllerButtons} />
             </View>
         )
     }
@@ -103,6 +163,28 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         flexWrap : 'wrap',
         justifyContent : 'flex-start',
+    },
+
+    titleHeader : {
+        flexDirection : 'row' ,
+        height : 50 ,
+        backgroundColor : '#303030' ,
+        alignItems: 'center',
+        paddingLeft : 20,
+    },
+
+    titleHeaderFont : {
+        flex : 1,
+        fontSize : 20,
+        color : '#EEE',
+        fontFamily : 'jua',
+    },
+
+    titleHeaderButton : { 
+        height : '100%' ,
+        aspectRatio : 1 ,
+        justifyContent : 'center',
+        alignItems : 'center'
     },
 
     content : {
@@ -139,8 +221,58 @@ const styles = StyleSheet.create({
     infoWrap : {
         flex : 1,
         alignSelf : 'center',
+    },
+
+    modalContainer : {
+        flex : 1,
+        paddingTop : 50,
+        alignItems : 'flex-end',
+        justifyContent : 'flex-start',
+    },
+
+    modalItem : {
+        flexDirection : 'row',
+        width : 100,
+        height : 30,
+        alignItems : 'center',
+        justifyContent : 'center',
+        backgroundColor : '#EEE',
+        borderLeftWidth : 1,
+        borderRightWidth : 1,
+        borderBottomWidth : 1,
+        borderColor : '#CCC',
+    },
+
+    modalItemFont : {
+        color : '#303030',
+        fontFamily : 'jua',
     }
 
 })
+
+const bottomMenuControllerStyles = {
+    bottomControllerButton : {
+        flex : 1,
+        borderWidth : 1,
+        borderColor : '#EEE',
+    },
+
+    bottomControllerButtonBody : {
+        flex : 1,
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'center',
+    },
+
+    bottomControllerButtonIcon : {
+        color : '#EEE',
+    },
+
+    bottomControllerButtonFont : {
+        color : '#EEE',
+        marginLeft : 6 , 
+        fontFamily : 'jua',
+    },
+}
 
 export default MyMusicsView;

@@ -7,8 +7,7 @@ export const commonStyles = StyleSheet.create({
         padding : 10,
     },
     title : {
-        flex : 1,
-        justifyContent : 'center',
+        height : 30,
         fontSize : 20,
         fontFamily : 'jua',
     }

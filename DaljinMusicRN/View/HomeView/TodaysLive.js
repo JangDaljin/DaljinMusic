@@ -3,10 +3,42 @@ import { View, Text , StyleSheet, Image , Dimensions } from 'react-native'
 import { commonStyles } from './commonStyles'
 
 
-const { width , height } = Dimensions.get('window')
+const win = Dimensions.get('window')
 
 class TodaysLive extends Component {
 
+    state = {
+        imageWidth : 0,
+        imageHeight : 0,
+    }
+
+    getImageSize = (e) => {
+        const containerWidth = e.nativeEvent.layout.width
+
+        Image.getSize('https://facebook.github.io/react-native/img/tiny_logo.png' , (width , height) => {
+
+            const ratio = height / width
+            let imageWidth = 0
+            let imageHeight = 0
+
+            if(win.width < win.height) {
+                imageWidth = containerWidth 
+                imageHeight = containerWidth * ratio
+            }
+
+            else {
+                let pre_Height = win.height
+
+                imageWidth = pre_Height
+                imageHeight = pre_Height * ratio
+            }
+
+            this.setState({
+                imageWidth : imageWidth,
+                imageHeight : imageHeight,
+            })
+        })
+    }
 
     render () {
         return (
@@ -14,15 +46,25 @@ class TodaysLive extends Component {
                 <Text style={commonStyles.title}>
                     #오늘의 라이브
                 </Text>
-                <View style={styles.infoContainer}>
-                    <Image style={styles.image} source={require('../../testImg/test1.jpg')} />
-                    <View style={styles.info}>
-                        <Text style={styles.infoFixedText}>가수</Text>
-                        <Text style={styles.infoInFixedText}>zxcv</Text>
-                        <Text style={styles.infoFixedText}>제목</Text>
-                        <Text style={styles.infoInFixedText}>qwer</Text>
-                        <Text style={styles.infoFixedText}>앨범</Text>
-                        <Text style={styles.infoInFixedText}>asdf</Text>
+                <View style={styles.contentsContainer}>
+                    <View style={styles.imageWrap} onLayout={this.getImageSize}>
+                        <Image style={[styles.image , {width : this.state.imageWidth , height : this.state.imageHeight}]} source={{uri : 'https://facebook.github.io/react-native/img/tiny_logo.png'}} />
+                    </View>
+                    <View style={styles.infoWrap}>
+                        <View style={styles.infoTextWrap}>  
+                            <Text style={styles.infoFixedText}>가수</Text>
+                            <Text style={styles.infoInFixedText}>zxcv</Text>
+                        </View>
+
+                        <View style={styles.infoTextWrap}>
+                            <Text style={styles.infoFixedText}>제목</Text>
+                            <Text style={styles.infoInFixedText}>qwer</Text>
+                        </View>
+
+                        <View style={styles.infoTextWrap}>
+                            <Text style={styles.infoFixedText}>앨범</Text>
+                            <Text style={styles.infoInFixedText}>asdf</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -31,33 +73,36 @@ class TodaysLive extends Component {
 }
 
 const styles = StyleSheet.create({
-    infoContainer : {
+    contentsContainer : {
+        flex : 1,
+        
         borderWidth : 2,
         borderRadius : 10,
         overflow : 'hidden',
         paddingBottom : 3,
+        
     },
-    image : width > height ? 
-        {
-            width : height,
-            height : null,
-            aspectRatio : 1,
-    }
-        :
-        {
-            width : '100%',
-            height : null,
-            aspectRatio : 1,
-    }
-    ,
-    info : {
+
+    imageWrap : {
         flex : 1,
+        justifyContent : 'center',
+        alignItems : 'center',
+    },
+
+    infoWrap : {
+        width : '100%',
         flexDirection : 'row',
         borderTopWidth : 2,
         paddingTop : 5,
         paddingLeft : 5,
         paddingRight : 5,
     },
+
+    infoTextWrap : {
+        flex : 1,
+        flexDirection : 'row',
+    },
+
     infoFixedText : {
         fontFamily : 'jua',
         borderWidth : 2,
