@@ -5,6 +5,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer'
 
 import { List, Map } from 'immutable'
 import MyMusicsView from './MyMusicsView'
+import CustomDrawerComponent from './CustomDrawerComponent'
 
 const testList = 
     List([
@@ -285,19 +286,28 @@ const testList =
         })
     ])
 
-
-
-
 const Drawer = createDrawerNavigator({
     ...testList.reduce((acc , data , index) => {
         return acc.set(data.get('listName') , {
             screen : (props) => <MyMusicsView {...props} myMusicList={data} />,
             navigationOptions : {
                 title : `${data.get('listName')}(${10})`,
+                
             }
         })
     } , Map()).toJS()
-} , require('../commonOptions').LeftDrawerOptions)
+} , {
+    ...require('../commonOptions').LeftDrawerOptions,
+    contentComponent : (props) => <CustomDrawerComponent {...props} list={testList}/>
+})
+
+
+
+
+
+
+
+
 
 
 export default createAppContainer(Drawer)

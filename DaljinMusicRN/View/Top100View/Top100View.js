@@ -15,6 +15,10 @@ class Top100View extends Component {
         }
     }
 
+    onPressTitleHeaderButton = () => {
+        this.props.navigation.openDrawer()
+    }
+
 
     onPressContent = (index) => {
         let checkCounter = this.state.checkCounter
@@ -70,7 +74,13 @@ class Top100View extends Component {
     render () {
         return (
             <View style={styles.container}>
-                
+                <View style={styles.titleHeader}>
+                    <TouchableOpacity style={styles.titleHeaderButton} onPress={() => {this.onPressTitleHeaderButton()}}>
+                        <Icon style={styles.titleHeaderButtonTextColor} size={18} name={'stream'} solid />
+                    </TouchableOpacity>
+                    <Text style={styles.titleHeaderText}>{this.props.title}</Text>
+                </View>
+
                 <ScrollView style={styles.contentsContainer}>
                     {
                         this.props.list.map(
@@ -123,6 +133,37 @@ const styles = StyleSheet.create({
     container : {
         flex : 1,
     },
+
+    titleHeader : {
+        flexDirection : 'row' ,
+        height : 50 ,
+        backgroundColor : '#303030' ,
+        alignItems: 'center',
+    },
+
+    titleHeaderText : {
+        flex : 1,
+        fontSize : 20,
+        color : '#EEE',
+        fontFamily : 'jua',
+        paddingHorizontal : 10,
+    },
+
+    titleHeaderButton : { 
+        height : '100%' ,
+        aspectRatio : 1 ,
+        alignItems : 'center',
+        justifyContent : 'center',
+        backgroundColor : '#EEE',
+        borderColor : '#CCC',
+        borderWidth : 4,
+    },
+
+    titleHeaderButtonTextColor : {
+        color : '#303030',
+    },
+
+
 
     contentsContainer : {
         flex : 1,

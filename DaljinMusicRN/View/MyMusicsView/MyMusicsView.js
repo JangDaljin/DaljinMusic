@@ -84,13 +84,13 @@ class MyMusicsView extends Component {
     modalMenus = ({}) => (
         <TouchableOpacity style={styles.modalContainer} onPress={() => {this.popupMenuHide()}}>
             <TouchableOpacity style={styles.modalItem}>
-                <Icon style={styles.modalItemFont} size={16} name={'check'} solid />
-                <Text style={[styles.modalItemFont , {marginLeft : 4}]}>전체선택</Text>
+                <Icon style={[styles.modalItemFont , styles.modalItemIcon]}size={16} name={'check'} solid />
+                <Text style={[styles.modalItemFont , styles.modalItemText]}>전체선택</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.modalItem}>
-                <Icon style={styles.modalItemFont} size={16} name={'trash'} solid />
-                <Text style={[styles.modalItemFont , {marginLeft : 4}]}>삭제</Text>
+                <Icon style={[styles.modalItemFont , styles.modalItemIcon]} size={16} name={'trash'} solid />
+                <Text style={[styles.modalItemFont , styles.modalItemText]}>삭제</Text>
             </TouchableOpacity>
 
         </TouchableOpacity>
@@ -100,9 +100,12 @@ class MyMusicsView extends Component {
         return(
             <View style={{flex : 1}}>
                 <View style={styles.titleHeader}>
-                    <Text style={styles.titleHeaderFont}>{this.props.myMusicList.get('listName')}</Text>
-                    <TouchableOpacity style={styles.titleHeaderButton} onPress={() => {this.popupMenuShow()}}>
-                        <Icon style={{color : '#EEE'}} size={18} name={'ellipsis-v'} solid /> 
+                    <TouchableOpacity style={styles.titleHeaderLeftButton} onPress={() => {this.onPressTitleHeaderButton()}}>
+                        <Icon style={styles.titleHeaderLeftButtonTextColor} size={18} name={'stream'} solid />
+                    </TouchableOpacity>
+                    <Text style={styles.titleHeaderText}>{this.props.myMusicList.get('listName')}</Text>
+                    <TouchableOpacity style={styles.titleHeaderRightButton} onPress={() => {this.popupMenuShow()}}>
+                        <Icon style={styles.titleHeaderRightButtonTextColor} size={18} name={'ellipsis-v'} solid /> 
                     </TouchableOpacity>
 
 
@@ -170,21 +173,39 @@ const styles = StyleSheet.create({
         height : 50 ,
         backgroundColor : '#303030' ,
         alignItems: 'center',
-        paddingLeft : 20,
     },
 
-    titleHeaderFont : {
+    titleHeaderText : {
         flex : 1,
         fontSize : 20,
         color : '#EEE',
         fontFamily : 'jua',
+        paddingHorizontal : 10,
     },
 
-    titleHeaderButton : { 
+    titleHeaderLeftButton : {
+        height : '100%',
+        aspectRatio : 1,
+        justifyContent : 'center',
+        alignItems : 'center',
+        borderWidth : 4,
+        borderColor : '#CCC',
+        backgroundColor : '#EEE',
+    },
+
+    titleHeaderRightButton : { 
         height : '100%' ,
         aspectRatio : 1 ,
         justifyContent : 'center',
         alignItems : 'center'
+    },
+    
+    titleHeaderLeftButtonTextColor : {
+        color : '#303030'
+    },
+
+    titleHeaderRightButtonTextColor : {
+        color : '#EEE'
     },
 
     content : {
@@ -246,7 +267,22 @@ const styles = StyleSheet.create({
     modalItemFont : {
         color : '#303030',
         fontFamily : 'jua',
+    },
+
+    modalItemText : {
+        flex : 1,
+        marginLeft : 4,
+        textAlignVertical : 'center',
+    },
+
+    modalItemIcon : {
+        height : '100%',
+        aspectRatio : 1,
+        textAlignVertical : 'center',
+        textAlign : 'center',
     }
+
+
 
 })
 

@@ -11,13 +11,14 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import HomeView from './HomeView/HomeView'
 import MyMusicsView from './MyMusicsView/Drawer'
 import Top100View from './Top100View/Drawer'
+import SearchView from './SearchView/SearchView'
 
 const TabNavigator = createBottomTabNavigator(
     {
     'Home' : HomeView,
     'Top100' : Top100View,
     'MyMusics' : MyMusicsView,
-    'Setting' : Setting,
+    'Search' : SearchView,
     },
     {
         defaultNavigationOptions : ({ navigation }) => ({
@@ -42,8 +43,8 @@ const TabNavigator = createBottomTabNavigator(
                     iconName = 'folder-open'
                     iconType = 'solid'
                 }
-                else if(routeName === 'Setting') {
-                    iconName = 'cog'
+                else if(routeName === 'Search') {
+                    iconName = 'search'
                     iconType = 'solid'
                 }
                 if(focused) {

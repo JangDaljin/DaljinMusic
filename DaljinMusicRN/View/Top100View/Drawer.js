@@ -113,7 +113,7 @@ const testList = List([
 
 const Drawer = createDrawerNavigator({
     'month' : {
-        screen : (props) => <Top100View {...props} list={testList}/>,
+        screen : (props) => <Top100View {...props} list={testList} title={'월간'} />,
         navigationOptions : {
             title : '월간',
             drawerIcon : ({tintColor}) => (
@@ -122,7 +122,7 @@ const Drawer = createDrawerNavigator({
         }
     },
     'week' : {
-        screen : (props) => <Top100View {...props} list={testList}/>,
+        screen : (props) => <Top100View {...props} list={testList} title={'주간'}/>,
         navigationOptions : {
             title : '주간',
             drawerIcon : ({tintColor}) => (
@@ -131,15 +131,15 @@ const Drawer = createDrawerNavigator({
         }
     },
     'day' : {
-        screen : (props) => <Top100View {...props} list={testList}/>,
+        screen : (props) => <Top100View {...props} list={testList} title={'일일'}/>,
         navigationOptions : {
-            title : '일간',
+            title : '일일',
             drawerIcon : ({tintColor}) => (
                 <FontAweSomeIcon style={{color : tintColor}} size={18} name={'sun'} solid />
             )
         }
     },
-}, require('../commonOptions').LeftDrawerOptions)
+}, { ...require('../commonOptions').LeftDrawerOptions })
 
 
 export default createAppContainer(Drawer)
