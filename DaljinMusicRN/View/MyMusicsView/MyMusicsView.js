@@ -56,6 +56,10 @@ class MyMusicsView extends Component {
         })
     }
 
+    onPressTitleHeaderButton = () => {
+        this.props.navigation.openDrawer()
+    }
+
     bottomMenuControllerButtons = ({}) => (
         <View style={{flex : 1, flexDirection : 'row'}}>
             <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
