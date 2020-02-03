@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Map , List } from 'immutable'
 
 import SearchContentView from './SearchContentView'
+import BottomMenuController from '../BottomMenuController'
 
 export default class SearchView extends Component {
 
@@ -45,6 +46,8 @@ export default class SearchView extends Component {
                 }
             }),
         ]),
+        checkedFoundSong : List(new Array(3).fill(false)),
+        checkedFoundSongCounter : 0,
         foundSinger : List([
             Map({
                 song : 'b',
@@ -77,6 +80,8 @@ export default class SearchView extends Component {
                 }
             }),
         ]),
+        checkedFoundSinger : List(new Array(3).fill(false)),
+        checkedFoundSingerCounter : 0,
         foundAlbum : List([
             Map({
                 song : 'c',
@@ -109,11 +114,77 @@ export default class SearchView extends Component {
                 }
             }),
         ]),
-        show : 'total'
+        checkedFoundAlbum : List(new Array(3).fill(false)),
+        checkedFoundAlbumCounter : 0,
+
+        show : 'total',
+        bottomMenuControllerShow : true,
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if( prevState.show !== this.state.show ||
+            prevState.checkedFoundSongCounter !== this.state.checkedFoundSongCounter ||
+            prevState.checkedFoundSingerCounter !== this.state.checkedFoundSingerCounter ||
+            prevState.checkedFoundAlbumCounter !== this.state.checkedFoundAlbumCounter) {
+
+                let bottomMenuControllerShow = false
+                if(this.state.show === 'total' && 
+                (
+                    this.state.checkedFoundSongCounter > 0 ||
+                    this.state.checkedFoundSingerCounter > 0 ||
+                    this.state.checkedFoundAlbumCounter > 0
+                )) 
+                {
+                    bottomMenuControllerShow = true
+                }
+                else if(this.state.show === 'song' && this.state.checkedFoundSongCounter > 0) {
+                    bottomMenuControllerShow = true
+                }
+                else if(this.state.show === 'singer' && this.state.checkedFoundSingerCounter > 0) {
+                    bottomMenuControllerShow = true
+                }
+                else if(this.state.show === 'album' && this.state.checkedFoundAlbumCounter > 0) {
+                    bottomMenuControllerShow = true
+                }
+                else {
+                    bottomMenuControllerShow = false
+                }
+                this.setState({bottomMenuControllerShow : bottomMenuControllerShow})
+
+        }
     }
 
     onPressShowButton = (viewName) => {
         this.setState({show : viewName})
+    }
+
+    bottomMenuControllerButtons = ({}) => (
+        <View style={{flex : 1, flexDirection : 'row'}}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'play'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'plus'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생목록에 추가</Text>
+                </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+                    <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'list'} size={16} solid />
+                    <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>내음악에 추가</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+    )
+
+    onCheckedItem = (index , checkedList , checkedCounter) => {
+        this.setState({[checkedList] : checkedList.update(index , value => !value) , [checkedCounter] : checkedCounter++})
     }
 
     render () {
@@ -131,18 +202,64 @@ export default class SearchView extends Component {
                         <Text style={[styles.searchModeButtonText , this.state.show === 'total' ? styles.selectedTextColor : null]}>통합검색</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.searchModeButton , this.state.show === 'song' ? styles.selectedBackground : null]} onPress={() => { this.onPressShowButton('song') }}>
-                        <Text style={[styles.searchModeButtonText , this.state.show === 'song' ? styles.selectedTextColor : null]}>제목</Text>
+                        <Text style={[styles.searchModeButtonText , this.state.show === 'song' ? styles.selectedTextColor : null]}>제목({this.state.foundSong.size})</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.searchModeButton , this.state.show === 'singer' ? styles.selectedBackground : null]} onPress={() => { this.onPressShowButton('singer') }}>
-                        <Text style={[styles.searchModeButtonText , this.state.show === 'singer' ? styles.selectedTextColor : null]}>가수</Text>
+                        <Text style={[styles.searchModeButtonText , this.state.show === 'singer' ? styles.selectedTextColor : null]}>가수({this.state.foundSinger.size})</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.searchModeButton , this.state.show === 'album' ? styles.selectedBackground : null]} onPress={() => { this.onPressShowButton('album') }}>
-                        <Text style={[styles.searchModeButtonText , this.state.show === 'album' ? styles.selectedTextColor : null]}>앨범</Text>
+                        <Text style={[styles.searchModeButtonText , this.state.show === 'album' ? styles.selectedTextColor : null]}>앨범({this.state.foundAlbum.size})</Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={{padding : 5,}}>
-                    <SearchContentView show={this.state.show} foundSong={this.state.foundSong} foundSinger={this.state.foundSinger} foundAlbum={this.state.foundAlbum}/>
+                    <SearchContentView 
+                    show={this.state.show} 
+                    onChangeShow={pageName => { this.setState({show : pageName}) }}
+
+                    foundSong={this.state.foundSong}
+                    checkedFoundSong={this.state.checkedFoundSong}
+                    onCheckedFoundSong={index => {
+                        const check = this.state.checkedFoundSong.get(index)
+                        let count = this.state.checkedFoundSongCounter
+                        check ? count-- : count++
+                        this.setState({
+                            checkedFoundSong : this.state.checkedFoundSong.set(index , !check),
+                            checkedFoundSongCounter : count
+                        })
+                    }}
+
+                    foundSinger={this.state.foundSinger}
+                    checkedFoundSinger={this.state.checkedFoundSinger}
+                    onCheckedFoundSinger={index => {
+                        const check = this.state.checkedFoundSinger.get(index)
+                        let count = this.state.checkedFoundSingerCounter
+                        check ? count++ : count--
+                        this.setState({
+                            checkedFoundSinger : this.state.checkedFoundSinger.set(index , !check),
+                            checkedFoundSingerCounter : count
+                        })
+                    }}
+
+
+                    foundAlbum={this.state.foundAlbum}
+                    checkedFoundAlbum={this.state.checkedFoundAlbum}
+                    onCheckedFoundAlbum={index => {
+                        const check = this.state.checkedFoundAlbum.get(index)
+                        let count = this.state.checkedFoundAlbumCounter
+                        check ? count-- : count++
+                        this.setState({
+                            checkedFoundAlbum : this.state.checkedFoundAlbum.set(index , !check),
+                            checkedFoundAlbumCounter : count
+                        })
+                    }}
+
+                    />
+
+                    <View style={{height : 50}}>
+                    </View>
                 </ScrollView>
+
+                <BottomMenuController height={50} show={this.state.bottomMenuControllerShow} buttons={this.bottomMenuControllerButtons} />
             </View>
 
         )
@@ -215,3 +332,28 @@ const styles = StyleSheet.create({
     },
     
 })
+
+const bottomMenuControllerStyles = {
+    bottomControllerButton : {
+        flex : 1,
+        borderWidth : 1,
+        borderColor : '#EEE',
+    },
+
+    bottomControllerButtonBody : {
+        flex : 1,
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'center',
+    },
+
+    bottomControllerButtonIcon : {
+        color : '#EEE',
+    },
+
+    bottomControllerButtonFont : {
+        color : '#EEE',
+        marginLeft : 6 , 
+        fontFamily : 'jua',
+    },
+}

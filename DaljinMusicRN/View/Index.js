@@ -4,7 +4,7 @@ import { View , Text, StyleSheet, Platform, StatusBar } from 'react-native'
 
 import BottomNavigator from './BottomNavigator'
 import LoadingView from './LoadingView';
-
+import MusicPlayer from './MusicPlayerView/MusicPlayer'
 
 class Index extends Component {
 
@@ -14,6 +14,7 @@ class Index extends Component {
             <View style={styles.container}>
                 <BottomNavigator />
                 <LoadingView />
+                <MusicPlayer />
             </View>
         )
     }

@@ -75,9 +75,9 @@ export default class BottomMenuController extends Component {
 const styles = StyleSheet.create({
     bottomController : {
         position : 'absolute',
-        bottom : 100,
         width : '100%',
         backgroundColor : '#303030',
+        bottom : 0,
         flex : 1,
         flexDirection : 'row',
     },

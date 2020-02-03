@@ -47,7 +47,7 @@ class Top100View extends Component {
     }
 
     bottomMenuControllerButtons = ({}) => (
-        <View style={{flex : 1, flexDirection : 'row'}}>
+        <View style={bottomMenuControllerStyles.bottomControllerButtonsWrap}>
             <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
                 <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'play'} size={16} solid />
@@ -228,6 +228,10 @@ const styles = StyleSheet.create({
 
 
 const bottomMenuControllerStyles = {
+    bottomControllerButtonsWrap : {
+        flex : 1, flexDirection : 'row'
+    },
+
     bottomControllerButton : {
         flex : 1,
         borderWidth : 1,
