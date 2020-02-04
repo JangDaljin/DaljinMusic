@@ -17,12 +17,8 @@ export default class ModalMusicplayer extends Component {
             <Modal animationType='slide' visible={this.props.show} onRequestClose={() => { this.props.onClose() }}>
                     <View style={modalStyle.container}>
 
-                        <ModalHeader title=
-                        {`
-                            ${this.props.currentMusic.getIn(['song'])}-
-                            ${this.props.currentMusic.getIn(['singer' , 'name'])}-
-                            ${this.props.currentMusic.getIn(['album' , 'name'])}
-                        `} 
+                        <ModalHeader
+                        title={`${this.props.currentMusic.get('song')}-${this.props.currentMusic.getIn(['singer' , 'name'])}-${this.props.currentMusic.getIn(['album' , 'name'])}`} 
                         onPressBackButton={this.props.onClose}
                         />
 

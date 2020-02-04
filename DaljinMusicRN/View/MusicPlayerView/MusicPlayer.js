@@ -11,7 +11,7 @@ import ModalPlaylist from './ModalPlaylist'
 export default class MusicPlayerMini extends Component {
 
     state = {
-        currentMusic : 2,
+        currentMusicIndex : 2,
 
         playlist : List([
             Map({
@@ -22,7 +22,8 @@ export default class MusicPlayerMini extends Component {
                 album : {
                     name : 'aaa',
                     albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                } 
+                },
+                duration : 172,
             }),
             Map({
                 song : 'bbb',
@@ -32,20 +33,22 @@ export default class MusicPlayerMini extends Component {
                 album : {
                     name : 'bbb',
                     albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                } 
+                } ,
+                duration : 512,
             }),
             Map({
-                song : 'ccc',
+                song : 'qwer',
                 singer : {
-                    name : 'ccc',
+                    name : 'asdf',
                 },
                 album : {
-                    name : 'ccc',
+                    name : 'zxcv',
                     albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                } 
+                },
+                duration : 212,
             })
         ]),
-
+        checkedPlaylist : List(new Array(3).fill(false)),
         showMusicplayer : false,
         showPlaylist : false,
     }
@@ -66,17 +69,21 @@ export default class MusicPlayerMini extends Component {
         this.setState({showMusicplayer : false})
     }
 
+    onCheckedPlaylist = (index) => {
+        this.setState({checkedPlaylist : this.state.checkedPlaylist.update(index , value => !value)})
+    }
+
     render () {
         return (
             <TouchableOpacity style={styles.container} onPress={this.onShowMusicPlayer}>
                 <View style={styles.imageWrap}>
-                    <Image style={styles.image} source={{uri : this.state.playlist.getIn([this.state.currentMusic , 'album' , 'albumImgUri'])}} />
+                    <Image style={styles.image} source={{uri : this.state.playlist.getIn([this.state.currentMusicIndex , 'album' , 'albumImgUri'])}} />
                 </View>
                 <View style={styles.infoWrap}>
                     <Text style={styles.infoText}>
-                        {this.state.playlist.getIn([this.state.currentMusic , 'song'])}-
-                        {this.state.playlist.getIn([this.state.currentMusic ,'singer' , 'name'])}-
-                        {this.state.playlist.getIn([this.state.currentMusic , 'album' , 'name'])}
+                        {this.state.playlist.getIn([this.state.currentMusicIndex , 'song'])}-
+                        {this.state.playlist.getIn([this.state.currentMusicIndex ,'singer' , 'name'])}-
+                        {this.state.playlist.getIn([this.state.currentMusicIndex , 'album' , 'name'])}
                     </Text>
                 </View>
                 <View style={styles.buttonsWrap}>
@@ -94,14 +101,17 @@ export default class MusicPlayerMini extends Component {
                 <ModalMusicplayer 
                 show={this.state.showMusicplayer} 
                 onClose={this.onCloseMusicPlayer}
-                currentMusic={this.state.playlist.getIn([this.state.currentMusic])}
+                currentMusic={this.state.playlist.get(this.state.currentMusicIndex)}
                 onShowPlaylist={this.onShowPlaylist}
                 />
 
                 <ModalPlaylist 
                 show={this.state.showPlaylist} 
                 onClose={this.onClosePlayList}
+                currentMusicIndex={this.state.currentMusicIndex}
                 playlist={this.state.playlist}
+                checkedPlaylist={this.state.checkedPlaylist}
+                onCheckedPlaylist={this.onCheckedPlaylist}
                 />
                 
             </TouchableOpacity>
