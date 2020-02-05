@@ -12,8 +12,6 @@ router.get('/' , doAsync(async (req , res , next) => {
         message : ''
     }
 
-
-
     try {
         const index = await IndexModel.findOne({}).populate({path : 'todaysLive' , populate : 'singer album'}).lean()
         //console.log(index)

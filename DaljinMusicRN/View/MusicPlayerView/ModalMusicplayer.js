@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 
 import ModalHeader from './ModalHeader'
 
+import { mmss } from '../commonFunctions'
+
 export default class ModalMusicplayer extends Component {
 
     state = {
@@ -12,38 +14,64 @@ export default class ModalMusicplayer extends Component {
         isRandom : false,
     }
 
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(this.props.currentMusic === null) {
+                this.setState({isPlaying : false})
+            }
+        }
+    }
+
     render () {
         return (
             <Modal animationType='slide' visible={this.props.show} onRequestClose={() => { this.props.onClose() }}>
                     <View style={modalStyle.container}>
 
                         <ModalHeader
-                        title={`${this.props.currentMusic.get('song')}-${this.props.currentMusic.getIn(['singer' , 'name'])}-${this.props.currentMusic.getIn(['album' , 'name'])}`} 
+                        title={this.props.currentMusic !== null ? 
+                            `${this.props.currentMusic.get('song')}-${this.props.currentMusic.getIn(['singer' , 'name'])}-${this.props.currentMusic.getIn(['album' , 'name'])}`
+                            :
+                            ''
+                        } 
                         onPressBackButton={this.props.onClose}
                         />
 
                         <View style={modalStyle.contentWrap}>
-                            <Image style={modalStyle.image} source={{uri : this.props.currentMusic.getIn(['album' , 'albumImgUri'])}}/>
+                            {this.props.currentMusic !== null ?
+                                <Image style={modalStyle.image} source={{uri : this.props.currentMusic.getIn(['album' , 'albumImgUri'])}}/>
+                                :
+                                <View style={modalStyle.image}>
+
+                                </View>
+                            }
                         </View>
 
                         <View style={modalStyle.controller}>
                             <View style={modalStyle.progressbarWrap}>
-                                <Text style={modalStyle.time}>00:00</Text>
+                                <Text style={modalStyle.time}>
+                                    {this.props.currentPlayData.get('duration')}
+                                </Text>
                                 <View style={modalStyle.progressbar}>
 
                                 </View>
-                                <Text style={modalStyle.time}>33:33</Text>
+                                <Text style={modalStyle.time}>
+                                    {this.props.currentMusic !== null ?
+                                        mmss(this.props.currentMusic.get('duration'))
+                                        :
+                                        '00:00'
+                                    }
+                                </Text>
                             </View>
                             <View style={modalStyle.buttonsWrap}>
-                                <TouchableOpacity onPress={() => { this.setState({isLoop : !this.state.isLoop}) }}>
-                                    <Icon style={[modalStyle.buttonTextColor , this.state.isLoop ? modalStyle.checkedButtonColor : null]} name={'sync-alt'} size={20} solid />
+                                <TouchableOpacity onPress={() => { this.props.onTogglePlayOptions('isLoop') }}>
+                                    <Icon style={[modalStyle.buttonTextColor , this.props.playOptions.get('isLoop') ? modalStyle.checkedButtonColor : null]} name={'sync-alt'} size={20} solid />
                                 </TouchableOpacity>
                                 <TouchableOpacity>
                                     <Icon style={modalStyle.buttonTextColor} name={'backward'} size={20} solid />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.setState({ isPlaying : !this.state.isPlaying }) }}>
+                                <TouchableOpacity onPress={() => { this.props.onTogglePlayOptions('isPlaying') } }>
                                     {
-                                        this.state.isPlaying ?
+                                        this.props.playOptions.get('isPlaying') ?
                                             <Icon style={modalStyle.buttonTextColor} name={'pause'} size={20} solid />
                                             :
                                             <Icon style={modalStyle.buttonTextColor} name={'play'} size={20} solid />
@@ -52,8 +80,8 @@ export default class ModalMusicplayer extends Component {
                                 <TouchableOpacity>
                                     <Icon style={modalStyle.buttonTextColor} name={'forward'} size={20} solid />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.setState({isRandom : !this.state.isRandom}) }}>
-                                    <Icon style={[modalStyle.buttonTextColor , this.state.isRandom ? modalStyle.checkedButtonColor : null]} name={'random'} size={20} solid />
+                                <TouchableOpacity onPress={() => { this.props.onTogglePlayOptions('isRandom') }}>
+                                    <Icon style={[modalStyle.buttonTextColor , this.props.playOptions.get('isRandom') ? modalStyle.checkedButtonColor : null]} name={'random'} size={20} solid />
                                 </TouchableOpacity>
                             </View>
                             <View style={modalStyle.viewChangeButtonsWrap}>

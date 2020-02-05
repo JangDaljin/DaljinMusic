@@ -11,7 +11,16 @@ import ModalPlaylist from './ModalPlaylist'
 export default class MusicPlayerMini extends Component {
 
     state = {
-        currentMusicIndex : 2,
+        currentPlayData : Map({
+            musicIndex : 2,
+            duration : 0,
+        }),
+
+        playOptions : Map({
+            isLoop : false,
+            isRandom : false,
+            isPlaying : false,
+        }),
 
         playlist : List([
             Map({
@@ -69,21 +78,57 @@ export default class MusicPlayerMini extends Component {
         this.setState({showMusicplayer : false})
     }
 
-    onCheckedPlaylist = (index) => {
-        this.setState({checkedPlaylist : this.state.checkedPlaylist.update(index , value => !value)})
+    onTogglePlayOptions = (message) => {
+        if(message === 'isPlaying' || message === 'isRandom' || message === 'isLoop') {
+            this.setState({
+                playOptions : this.state.playOptions.update(message , value => !value)
+            })
+        }
     }
+
+    onCheckedPlaylist = (index) => {
+        if(index === -1) {
+            this.setState({checkedPlaylist : this.state.checkedPlaylist.map(value => !value)})
+        }
+        else {
+            this.setState({checkedPlaylist : this.state.checkedPlaylist.update(index , value => !value)})
+        }
+    }
+
+    onDeleteListItem = () => {
+        let currentMusicIndex = this.state.currentPlayData.get('musicIndex')
+
+        this.setState({
+            playlist : this.state.playlist.filter((value , index) => {
+                if(this.state.checkedPlaylist.get(index)) {
+                    currentMusicIndex > index ? currentMusicIndex-- : 
+                    currentMusicIndex === index ? currentMusicIndex-- : null
+                }
+                return !this.state.checkedPlaylist.get(index)
+            }),
+            checkedPlaylist : this.state.checkedPlaylist.filter(value => !value),
+            currentPlayData : this.state.currentPlayData.set('musicIndex' , currentMusicIndex)
+        })
+    }
+
+    onPlay = (index) => {
+        this.setState({currentMusic : this.state.currentPlayData.set('musicIndex' , index)})
+    }
+
+    
+
 
     render () {
         return (
             <TouchableOpacity style={styles.container} onPress={this.onShowMusicPlayer}>
                 <View style={styles.imageWrap}>
-                    <Image style={styles.image} source={{uri : this.state.playlist.getIn([this.state.currentMusicIndex , 'album' , 'albumImgUri'])}} />
+                    <Image style={styles.image} source={{uri : this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'albumImgUri'])}} />
                 </View>
                 <View style={styles.infoWrap}>
                     <Text style={styles.infoText}>
-                        {this.state.playlist.getIn([this.state.currentMusicIndex , 'song'])}-
-                        {this.state.playlist.getIn([this.state.currentMusicIndex ,'singer' , 'name'])}-
-                        {this.state.playlist.getIn([this.state.currentMusicIndex , 'album' , 'name'])}
+                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'song'])}-
+                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') ,'singer' , 'name'])}-
+                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'name'])}
                     </Text>
                 </View>
                 <View style={styles.buttonsWrap}>
@@ -101,17 +146,22 @@ export default class MusicPlayerMini extends Component {
                 <ModalMusicplayer 
                 show={this.state.showMusicplayer} 
                 onClose={this.onCloseMusicPlayer}
-                currentMusic={this.state.playlist.get(this.state.currentMusicIndex)}
+                currentPlayData={this.state.currentPlayData}
+                currentMusic={this.state.playlist.get(this.state.currentPlayData.get('musicIndex'))}
+                playOptions={this.state.playOptions}
+                onTogglePlayOptions={this.onTogglePlayOptions}
                 onShowPlaylist={this.onShowPlaylist}
                 />
 
                 <ModalPlaylist 
                 show={this.state.showPlaylist} 
                 onClose={this.onClosePlayList}
-                currentMusicIndex={this.state.currentMusicIndex}
+                currentMusicIndex={this.state.currentPlayData.get('musicIndex')}
                 playlist={this.state.playlist}
                 checkedPlaylist={this.state.checkedPlaylist}
                 onCheckedPlaylist={this.onCheckedPlaylist}
+                onPlay={this.onPlay}
+                onDeleteListItem={this.onDeleteListItem}
                 />
                 
             </TouchableOpacity>

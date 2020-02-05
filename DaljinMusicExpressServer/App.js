@@ -20,6 +20,7 @@ const Top100Router = require('./routes/top100')
 const MyMusicRouter = require('./routes/myMusic')
 const AdminRouter = require('./routes/admin')
 const SearchRouter = require('./routes/search')
+const CheckAPIRouter = require('./routes/checkapi')
 
 //DB
 const MongoDB = require('./Database/mongoDB')
@@ -65,6 +66,7 @@ app.use('/top100' , Top100Router)
 app.use('/mymusic' , MyMusicRouter)
 app.use('/admin' , AdminRouter)
 app.use('/search' , SearchRouter)
+app.use('/checkapi' , CheckAPIRouter)
 
 
 const directorySetting = async () => {

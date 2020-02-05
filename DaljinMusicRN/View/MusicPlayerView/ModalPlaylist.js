@@ -3,11 +3,7 @@ import { View , Text , Modal , TouchableOpacity , StyleSheet, ScrollView} from '
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import ModalHeader from './ModalHeader'
 
-const mmss = (t) => {
-    const m = Math.floor(parseInt(t) / 60)
-    const s = t % 60
-    return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s )
-}
+import { mmss } from '../commonFunctions'
 
 export default class ModalPlaylist extends Component {
 
@@ -21,36 +17,47 @@ export default class ModalPlaylist extends Component {
                         {
                             this.props.playlist.map(
                                 (value , index) => (
-                                    <TouchableOpacity key={index} style={[styles.listItem , this.props.checkedPlaylist.get(index) ? styles.checkedBackgroundColor : null]} onPress={ () => { this.props.onCheckedPlaylist(index) }}>
+                                    <View key={index} style={styles.listItem}>
+                                        <TouchableOpacity style={styles.checkedButton} onPress={ () => { this.props.onCheckedPlaylist(index) } }>
                                         {
-                                            this.props.currentMusicIndex === index ?
-                                            <Icon style={[styles.playingInfo , this.props.checkedPlaylist.get(index) ? styles.checkedTextColor : null]} size={15} name={'play'} solid />
+                                            this.props.checkedPlaylist.get(index) ?
+                                            <Icon style={styles.checkedIcon} size={24} name={'check-circle'} regular />
                                             :
-                                            <Icon style={[styles.playingInfo , this.props.checkedPlaylist.get(index) ? styles.checkedTextColor : null]} size={15} name={'music'} solid />
+                                            <Icon style={styles.checkedIcon} size={24} name={'circle'} regular />
                                         }
-                                        
+                                        </TouchableOpacity>    
 
-                                        <View style={styles.listItemInfoWrap}>
-                                            <Text style={[styles.listItemInfo , this.props.checkedPlaylist.get(index) ? styles.checkedTextColor : null]}>
-                                                {value.getIn(['singer' , 'name'])}-
-                                                {value.get('song')}-
-                                                {value.getIn(['album' , 'name'])}
-                                            </Text>
-                                            <Text style={[styles.listItemTime , this.props.checkedPlaylist.get(index) ? styles.checkedTextColor : null]}>
-                                                {mmss(value.get('duration'))}
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.listInfoButton , this.props.checkedPlaylist.get(index) ? styles.checkedBackgroundColor : null , this.props.currentMusicIndex === index ? styles.playingMusicBorder : null]} onPress={ () => { this.props.onPlay(index) }}>
+                                        {
+                                            this.props.currentMusicIndex === index &&
+                                            <Icon style={[styles.playingIcon , styles.playingMusicTextColor]} size={15} name={'play'} solid />
+
+                                        }
+                                            
+
+                                            <View style={styles.listInfo}>
+                                                <Text style={[styles.listInfoText , this.props.checkedPlaylist.get(index) ? styles.checkedTextColor : null , this.props.currentMusicIndex === index ? styles.playingMusicTextColor : null]}>
+                                                    {value.getIn(['singer' , 'name'])}-
+                                                    {value.get('song')}-
+                                                    {value.getIn(['album' , 'name'])}
+                                                </Text>
+                                                <Text style={[styles.listInfoTime , this.props.checkedPlaylist.get(index) ? styles.checkedTextColor : null , this.props.currentMusicIndex === index ? styles.playingMusicTextColor : null]}>
+                                                    {mmss(value.get('duration'))}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    
+                                    </View>
                                 )
                             )
                         }
                     </ScrollView>
                     <View style={styles.buttonsWrap}>
-                        <TouchableOpacity style={[styles.controllButton , {borderRightWidth : 1}]}>
+                        <TouchableOpacity style={[styles.controllButton , {borderRightWidth : 1}]} onPress={ () => { this.props.onCheckedPlaylist(-1) }}>
                             <Icon style={styles.controllButtonText} size={20} name={'check-circle'} regular />
                             <Text style={[styles.controllButtonText , { paddingLeft : 5 }]}>전체선택</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.controllButton , {borderLeftWidth : 1}]}>
+                        <TouchableOpacity style={[styles.controllButton , {borderLeftWidth : 1}]} onPress={ () => { this.props.onDeleteListItem() }}>
                             <Icon style={styles.controllButtonText} size={20} name={'eraser'} solid />
                             <Text style={[styles.controllButtonText , {paddingLeft : 5 }]}>삭제</Text>
                         </TouchableOpacity>
@@ -89,44 +96,59 @@ const styles = StyleSheet.create({
     },
 
     listWrap : {
-        flex : 1,
         padding : 10,
     },
 
     listItem : {
         flex : 1,
         flexDirection : 'row',
-        height : 35,
-        borderWidth : 2,
-        borderColor : '#303030',
-        paddingHorizontal : 5,
+        height : 40,
         marginBottom : 5,
-        borderRadius : 10,
     },
 
-    playingInfo : {
+    checkedButton : {
+        height : '100%',
+    },
+
+    checkedIcon : {
         height : '100%',
         aspectRatio : 1,
         textAlign : 'center',
         textAlignVertical : 'center',
     },
 
-    listItemInfoWrap : {
+    listInfoButton : {
         flex : 1,
         flexDirection : 'row',
-        alignItems : 'center',
-        paddingLeft : 5,
+        borderWidth : 2,
+        borderRadius : 10,
+        
+        paddingHorizontal : 10,
     },
 
-    listItemInfo : {
+    listInfo : {
         flex : 1,
-        fontFamily : 'jua',
+        flexDirection : 'row',
     },
 
-    listItemTime : {
-        textAlign : 'center',
+    listInfoText : {
+        flex : 1,
         textAlignVertical : 'center',
         fontFamily : 'jua',
+        fontSize : 16,
+    },
+    
+    listInfoTime : {
+        textAlignVertical : 'center',
+        fontSize : 16,
+        fontFamily : 'jua',
+
+    },
+
+    playingIcon : {
+        textAlign : 'center',
+        textAlignVertical : 'center',
+        marginRight : 5,
     },
 
     buttonsWrap : {
@@ -160,5 +182,13 @@ const styles = StyleSheet.create({
 
     checkedTextColor : {
         color : '#EEE',
-    }
+    },
+
+    playingMusicBorder : {
+        borderColor : '#069',
+    },
+
+    playingMusicTextColor : {
+        color : '#0AC'
+    },
 })

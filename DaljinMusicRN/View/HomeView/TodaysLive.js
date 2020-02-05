@@ -1,11 +1,17 @@
 import React , { Component } from 'react'
-import { View, Text , StyleSheet, Image , Dimensions } from 'react-native'
+import { View, Text , StyleSheet, Image , Dimensions , ToastAndroid } from 'react-native'
 import { commonStyles } from './commonStyles'
-
-
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as TodaysLiveActions from '../../Reducers/todaysLive'
 const win = Dimensions.get('window')
 
 class TodaysLive extends Component {
+
+    componentDidMount() {
+        ToastAndroid.show('component Did Mount' , ToastAndroid.SHORT)
+        this.props.TodaysLiveActions.fetchTodaysLive()
+    }
 
     state = {
         imageWidth : 0,
@@ -123,4 +129,11 @@ const styles = StyleSheet.create({
 
 
 
-export default TodaysLive
+export default connect(
+    (state) => ({
+        todaysLiveMusic : state.todaysLive.music,
+    }),
+    (dispatch) => ({
+        TodaysLiveActions : bindActionCreators(TodaysLiveActions , dispatch),
+    })
+)(TodaysLive)
