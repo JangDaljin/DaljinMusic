@@ -1,55 +1,51 @@
 import React , { Component } from 'react'
-
-import { commonStyles } from './commonStyles'
-
-import { Map , List } from 'immutable'
 import { StyleSheet , View , Text, Image } from 'react-native'
 
-const testData = List([
-    Map({
-        song : 'a',
-        singer : 'a',
-        album : 'a',
-    }),
-    Map({
-        song : 'b',
-        singer : 'b',
-        album : 'b',
-    }),
-    Map({
-        song : 'c',
-        singer : 'c',
-        album : 'c',
-    }),
-])
+
+import { commonStyles } from './commonStyles'
+import { url } from '../commonFunctions'
+
 
 class HotAndNewMusicsView extends Component {
 
     render () {
         return (
             <View style={commonStyles.container}>
-                <Text style={commonStyles.title}>#HOT AND NEW</Text>
+                <Text style={commonStyles.title}>#
+                    <Text style={styles.hotTextColor}>HOT</Text>
+                    &nbsp;
+                    <Text style={styles.bothTextColor}>AND</Text>
+                    &nbsp;
+                    <Text style={styles.newTextColor}>NEW</Text>
+                </Text>
 
                 <View style={styles.contentsWrap}>
                     {
-                        testData.map(
+                        this.props.musics.map(
                             (value , index) => (
                                 <View key={index} style={styles.content}>
                                     <View style={styles.imageWrap}>
-                                        <Image style={styles.image} source={require('../../testImg/test2.jpg')} />
+                                        <Image style={styles.image} source={{ uri : url(value.getIn(['music', 'album' , 'albumImgUri']))}} />
                                     </View>
                                     <View style={styles.infoWrap}>
                                         <Text style={styles.info}>
-                                            {value.get('singer')}
+                                            {value.getIn(['music' , 'singer' , 'name'])}
                                         </Text>
                                         <Text style={styles.info}>
-                                            {value.get('song')}
+                                            {value.getIn(['music' , 'song'])}
                                         </Text>
                                         <Text style={styles.info}>
-                                            {value.get('album')}
+                                            {value.getIn(['music' , 'album' , 'name'])}
                                         </Text>
                                     </View>
-
+                                    <View style={styles.hotAndNewWrap}>
+                                        {value.get('hot') &&
+                                            <Text style={[styles.hotTextColor , styles.hotAndNew]}>HOT</Text>
+                                        }
+                                        {value.get('new') &&
+                                            <Text style={[styles.newTextColor , styles.hotAndNew]}>NEW</Text>
+                                        }
+                                    </View>
                                 </View>
                             )
                         )
@@ -91,6 +87,31 @@ const styles = StyleSheet.create({
         paddingLeft : 5,
         fontFamily : 'jua',
     },
+
+    hotAndNewWrap : {
+        alignItems : 'center',
+        justifyContent : 'center',
+        paddingHorizontal : 5,
+        width : 50,
+        borderLeftWidth : 2,
+    },
+
+    hotAndNew : {
+        fontSize : 18,
+        fontFamily : 'jua',
+    },
+
+    hotTextColor : {
+        color : '#FF5A5A'
+    },
+
+    newTextColor : {
+        color : '#069'
+    },
+
+    bothTextColor : {
+        color : '#9887B9'
+    }
 })
 
 

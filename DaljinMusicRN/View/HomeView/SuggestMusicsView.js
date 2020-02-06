@@ -2,27 +2,11 @@ import React , { Component } from 'react'
 import { View , Text, StyleSheet, Image} from 'react-native'
 
 import { commonStyles } from './commonStyles'
-import { Map , List } from 'immutable'
-
-const testData = List([
-    Map({
-        song : 'a',
-        singer : 'a',
-        album : 'a',
-    }),
-    Map({
-        song : 'b',
-        singer : 'b',
-        album : 'b',
-    }),
-    Map({
-        song : 'c',
-        singer : 'c',
-        album : 'c',
-    }),
-])
+import { url } from '../commonFunctions'
 
 class SuggestMusicsView extends Component {
+
+
 
 
     render () {
@@ -36,16 +20,16 @@ class SuggestMusicsView extends Component {
 
                 <View style={styles.contentsWrap}>
                     {
-                        testData.map(
+                        this.props.musics.map(
                             (value , index) => (
                                 <View key={index} style={styles.content}>
                                     <View style={styles.imageWrap}>
-                                        <Image style={styles.image} source={require('../../testImg/test1.jpg')} />
+                                        <Image style={styles.image} source={{ uri : url(value.getIn(['album' , 'albumImgUri']))}} />
                                     </View>
                                     <View style={styles.infoWrap}>
-                                        <Text style={styles.info}>{value.get('singer')}</Text>
-                                        <Text style={styles.info}>{value.get('song')}</Text>
-                                        <Text style={styles.info}>{value.get('album')}</Text>
+                                        <Text style={styles.info}>{value.getIn(['singer' , 'name'])}</Text>
+                                        <Text style={styles.info}>{value.getIn(['song'])}</Text>
+                                        <Text style={styles.info}>{value.getIn(['album' , 'name'])}</Text>
                                     </View>
                                 </View>
                             )

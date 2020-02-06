@@ -13,7 +13,6 @@ class Index extends Component {
         return (
             <View style={styles.container}>
                 <BottomNavigator />
-                <LoadingView />
                 <MusicPlayer />
             </View>
         )

@@ -2,38 +2,31 @@ import React , { Component } from 'react'
 
 import { commonStyles } from './commonStyles'
 import { Map , List } from 'immutable'
-import { View , Text , StyleSheet , TouchableOpacity , TouchableHighlight } from 'react-native'
+import { View , Text , StyleSheet , TouchableOpacity , TouchableHighlight, ToastAndroid } from 'react-native'
 
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 class Top10View extends Component {
 
+    state = {
+        checkedMusics = List(new Array(10).fill(false))
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(prevProps.musics !== this.props.musics) {
+                this.setState({
+                    checkedMusics = List(new Array(10).fill(false))
+                })
+            }
+        }
+    }
+
     onPressContent = (index) => {
         this.setState({testData : this.state.testData.updateIn([index , 'checked'] , value => !value)})
     }
 
-    state = {
-        testData : List([
-            Map({
-                song : 'a',
-                singer : 'a',
-                album : 'a',
-                checked : false,    
-            }),
-            Map({
-                song : 'b',
-                singer : 'b',
-                album : 'b',
-                checked : true,
-            }),
-            Map({
-                song : 'c',
-                singer : 'c',
-                album : 'c',
-                checked : false,
-            }),
-        ])
-    }
+
     
     render () {
         return (
