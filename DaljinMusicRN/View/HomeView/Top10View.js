@@ -9,21 +9,21 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 class Top10View extends Component {
 
     state = {
-        checkedMusics = List(new Array(10).fill(false))
+        checkedMusics : List(new Array(10).fill(false))
     }
 
     componentDidUpdate(prevProps , prevState) {
         if(prevProps !== this.props) {
             if(prevProps.musics !== this.props.musics) {
                 this.setState({
-                    checkedMusics = List(new Array(10).fill(false))
+                    checkedMusics : this.state.checkedMusics.map((value) => false)
                 })
             }
         }
     }
 
     onPressContent = (index) => {
-        this.setState({testData : this.state.testData.updateIn([index , 'checked'] , value => !value)})
+        this.setState({ checkedMusics : this.state.checkedMusics.update(index , value => !value) })
     }
 
 
@@ -36,50 +36,49 @@ class Top10View extends Component {
 
                 <View style={styles.contentsWrap}>
                     {
-                        this.state.testData.map(
+                        this.props.musics.map(
                             (value , index) => (
-                                <TouchableOpacity key={index} onPress={() => this.onPressContent(index) }>
-                                    <View style={[styles.content , value.get('checked')? styles.checkedBackground : null]}>
-                                        <Text style={[styles.rank , value.get('checked')? styles.checkedFontColor : null]}>
-                                            {index+1}
-                                        </Text>
-                                        
-                                        <Text style={[styles.song, value.get('checked')? styles.checkedFontColor : null]}>
-                                            {value.get('song')}
-                                        </Text>
-                                        <Text style={[styles.singer , value.get('checked')? styles.checkedFontColor : null]}>
-                                            {value.get('singer')}
-                                        </Text>
-                                        <Text style={[styles.album , value.get('checked')? styles.checkedFontColor : null]}>
-                                            {value.get('album')}
-                                        </Text>
-                                    </View>
+                                <TouchableOpacity key={index} style={[styles.content , this.state.checkedMusics.get(index)? styles.checkedBackground : null]} onPress={() => this.onPressContent(index) }>
+                                    <Text style={[styles.rank , styles.contentTextStyle , {borderLeftWidth : 2 , borderRightWidth : 2}, this.state.checkedMusics.get(index)? styles.checkedFontColor : null]}>
+                                        {index+1}
+                                    </Text>
+                                    
+                                    <Text style={[styles.infoText, styles.contentTextStyle , this.state.checkedMusics.get(index)? styles.checkedFontColor : null]} numberOfLines={1} ellipsizeMode='tail'>
+                                        {value.get('song')}
+                                    </Text>
+                                    <Text style={[styles.infoText , styles.contentTextStyle , this.state.checkedMusics.get(index) ? styles.checkedFontColor : null]} numberOfLines={1} ellipsizeMode='tail'>
+                                        {value.getIn(['singer' , 'name'])}
+                                    </Text>
+                                    <Text style={[styles.infoText , styles.contentTextStyle , this.state.checkedMusics.get(index) ? styles.checkedFontColor : null]} numberOfLines={1} ellipsizeMode='tail'>
+                                        {value.getIn(['album' , 'name'])}
+                                    </Text>
                                 </TouchableOpacity>
                             )
                         )
                     }
                 </View>
                 <View style={styles.controller}>
-                    <TouchableHighlight style={styles.controllerButton}>
+                    <TouchableOpacity style={styles.controllerButton}>
                         <View style={styles.controllerButtonBody}>
-                            <Icon name={'list'} size={16} solid />
-                            <Text style={{marginLeft : 4 , fontFamily : 'jua' }}>재생</Text>
+                            
+                        <Icon style={styles.controllerButtonTextColor} name={'play'} size={16} solid />
+                            <Text style={[styles.controllerButtonTextColor , styles.controllerButtonText]}>재생</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
 
-                    <TouchableHighlight style={[styles.controllerButton , { marginLeft : 2 , marginRight : 2 }]}>
+                    <TouchableOpacity style={[styles.controllerButton , { marginLeft : 2 , marginRight : 2 }]}>
                         <View style={styles.controllerButtonBody}>
-                            <Icon name={'plus'} size={16} solid />
-                            <Text style={{marginLeft : 4 , fontFamily : 'jua' }}>재생</Text>
+                            <Icon style={styles.controllerButtonTextColor} name={'plus'} size={16} solid />
+                            <Text style={[styles.controllerButtonTextColor , styles.controllerButtonText]}>추가</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
 
-                    <TouchableHighlight style={styles.controllerButton}>
+                    <TouchableOpacity style={styles.controllerButton}>
                         <View style={styles.controllerButtonBody}>
-                            <Icon name={'play'} size={16} solid />
-                            <Text style={{marginLeft : 4 , fontFamily : 'jua' }}>재생</Text>
+                            <Icon style={styles.controllerButtonTextColor} name={'list'} size={16} solid />
+                            <Text style={[styles.controllerButtonTextColor , styles.controllerButtonText]}>내 리스트에 추가</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -93,43 +92,41 @@ const styles = StyleSheet.create({
     content : {
         flex : 1,
         flexDirection : 'row',
-        marginBottom : 2,
-        paddingTop : 4,
-        paddingBottom : 4,
-        borderWidth : 2,
+        marginBottom : 4,
     },
     rank : {
         width : 30,
         textAlign : 'center',
     },
-    song : {
+
+    infoText : {
         flex : 1,
         paddingLeft : 3,
         paddingRight : 3,
     },
-    singer : {
-        flex : 1,
-        paddingLeft : 3,
-        paddingRight : 3,
-    },
-    album : {
-        flex : 1,
-        paddingLeft : 3,
-        paddingRight : 3,
+
+    contentTextStyle : {
+        paddingTop : 4,
+        paddingBottom : 4,
+        fontSize : 12,
+        textAlignVertical : 'center',
+        borderWidth : 2,
+        borderLeftWidth : 0,
+        fontFamily : 'jua',
     },
 
     checkedBackground : {
         backgroundColor : '#303030',
     },
+
     checkedFontColor : {
         color : '#EEE',
+        borderColor : '#AAA',
     },
 
     controller : {
         flex : 1,
         flexDirection : 'row',
-        justifyContent : 'space-between',
-        flexWrap : 'wrap',
     },
 
     controllerButton : {
@@ -139,11 +136,24 @@ const styles = StyleSheet.create({
         padding : 4,
         borderWidth : 2,
         borderRadius : 5,
+        backgroundColor : '#303030',
+        borderColor : '#AAA',
     },
 
     controllerButtonBody : {
         flexDirection : 'row',
         alignItems : 'center',
+    },
+
+    controllerButtonText : {
+        
+        marginLeft : 4,
+        marginRight : 4,
+        fontFamily : 'jua',
+    },
+
+    controllerButtonTextColor : {
+        color : '#EEE',
     },
 
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
@@ -111,9 +111,11 @@ const testList = List([
     }),
 ])
 
+
 const Drawer = createDrawerNavigator({
     'month' : {
         screen : (props) => <Top100View {...props} list={testList} title={'월간'} />,
+
         navigationOptions : {
             title : '월간',
             drawerIcon : ({tintColor}) => (

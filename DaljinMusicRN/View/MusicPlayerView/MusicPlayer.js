@@ -125,10 +125,11 @@ export default class MusicPlayerMini extends Component {
                     <Image style={styles.image} source={{uri : this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'albumImgUri'])}} />
                 </View>
                 <View style={styles.infoWrap}>
-                    <Text style={styles.infoText}>
-                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'song'])}-
-                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') ,'singer' , 'name'])}-
-                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'name'])}
+                    <Text style={[styles.infoText , styles.infoSong]} numberOfLines={1} ellipsizeMode='tail'>
+                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'song'])}
+                    </Text>
+                    <Text style={[styles.infoText , styles.infoSinger]} numberOfLines={1} ellipsizeMode='tail'>
+                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') ,'singer' , 'name'])}
                     </Text>
                 </View>
                 <View style={styles.buttonsWrap}>
@@ -201,8 +202,18 @@ const styles = StyleSheet.create({
     infoText : {
         flex : 1,
         textAlignVertical : 'center',
-        fontSize : 20,
         fontFamily : 'jua',
+    },
+
+    infoSong : {
+        fontSize : 18,
+        color : '#303030'
+    },
+
+    infoSinger : {
+        
+        fontSize : 14,
+        color : '#303030'
     },
 
     buttonsWrap : {
