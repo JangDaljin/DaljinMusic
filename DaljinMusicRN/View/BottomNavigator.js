@@ -9,6 +9,7 @@ import HomeView from './HomeView/HomeView'
 import MyMusicsView from './MyMusicsView/Drawer'
 import Top100View from './Top100View/Drawer'
 import SearchView from './SearchView/SearchView'
+import SettingView from './SettingView/SettingView'
 
 const TabNavigator = createBottomTabNavigator(
     {
@@ -16,6 +17,7 @@ const TabNavigator = createBottomTabNavigator(
     'Top100' : Top100View,
     'MyMusics' : MyMusicsView,
     'Search' : SearchView,
+    'Setting' : SettingView
     },
     {
         defaultNavigationOptions : ({ navigation }) => ({
@@ -42,6 +44,10 @@ const TabNavigator = createBottomTabNavigator(
                 }
                 else if(routeName === 'Search') {
                     iconName = 'search'
+                    iconType = 'solid'
+                }
+                else if(routeName === 'Setting') {
+                    iconName = 'cog'
                     iconType = 'solid'
                 }
                 if(focused) {

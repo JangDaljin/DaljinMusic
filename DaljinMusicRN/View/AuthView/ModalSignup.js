@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { View , Text, StyleSheet } from 'react-native'
 
 
-class Signup extends Component {
+class ModalSignup extends Component {
 
 
     render () {
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Signup;
+export default ModalSignup;

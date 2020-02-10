@@ -29,11 +29,13 @@ router.post('/login' , doAsync(async (req , res , next) => {
             }
             //비밀번호 오류
             else {
+                console.log('아이디 또는 비밀번호가 잘못되었습니다.')
                 response.message = '아이디 또는 비밀번호가 잘못되었습니다.'
             }
         }
         else {
             //아이디 오류
+            console.log('아이디 또는 비밀번호가 잘못되었습니다.')
             response.message = '아이디 또는 비밀번호가 잘못되었습니다.'
         }
     }
