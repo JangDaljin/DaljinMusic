@@ -2,8 +2,15 @@ import React, { Component } from 'react'
 
 import { View , Text, StyleSheet, TouchableOpacity, Image, ScrollView , Animated } from 'react-native'
 import { List , Map} from 'immutable'
+import { withNavigationFocus } from 'react-navigation'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import BottomMenuController from '../BottomMenuController'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as Top100MusicsActions from '../../Reducers/top100Musics'
+
+import LoadingView from '../LoadingView'
+
 class Top100View extends Component {
 
     constructor(props) {
@@ -13,6 +20,22 @@ class Top100View extends Component {
             checkCounter : 0,
             bottomMenuShow : false,
         }
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(!prevProps.isFocused && this.props.isFocused) {
+                this.dataUpdate()
+            }
+        }
+    }
+
+    componentDidMount() {
+        this.dataUpdate()
+    }
+
+    dataUpdate = () => {
+        this.props.Top100MusicsActions.fetchTop100Musics({from : 1 , to : 100 , init : true , mode : this.props.mode})
     }
 
     onPressTitleHeaderButton = () => {
@@ -74,52 +97,58 @@ class Top100View extends Component {
     render () {
         return (
             <View style={styles.container}>
-                <View style={styles.titleHeader}>
-                    <TouchableOpacity style={styles.titleHeaderButton} onPress={() => {this.onPressTitleHeaderButton()}}>
-                        <Icon style={styles.titleHeaderButtonTextColor} size={18} name={'stream'} solid />
-                    </TouchableOpacity>
-                    <Text style={styles.titleHeaderText}>{this.props.title}</Text>
-                </View>
-
-                <ScrollView style={styles.contentsContainer}>
-                    {
-                        this.props.list.map(
-                            (value , index) => (
-                                <TouchableOpacity key={index} 
-                                style={styles.contentWrap}
-                                onPress={() => { this.onPressContent(index) }}>
-
-                                    <View style={[styles.contentBody , this.state.checkList.get(index) ? styles.checkedBackgroundColor : null]}>
-                                        <View style={styles.rankWrap}>
-                                            <Text style={[styles.rank , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
-                                                {index + 1}
-                                            </Text>
-                                        </View>
-                                        <View style={styles.imageWrap}>
-                                            <Image style={styles.image} source={{uri: value.getIn(['album' , 'albumImgUri'])}} />
-                                        </View>
-                                        <View style={styles.infoWrap}>
-                                            <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
-                                                {value.getIn(['singer' , 'name'])}
-                                            </Text>
-                                            <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
-                                                {value.getIn(['song'])}
-                                            </Text>
-                                            <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
-                                                {value.getIn(['album' , 'name'])}
-                                            </Text>
-                                        </View>
-                                    </View>
-
-                                </TouchableOpacity>
-                            )
-                        )
-                    }
-                    <View style={{height : 50 , width : '100%'}}>
-
+                {this.props.isLoading ?
+                    <LoadingView />
+                    :
+                    <React.Fragment>
+                    <View style={styles.titleHeader}>
+                        <TouchableOpacity style={styles.titleHeaderButton} onPress={() => {this.onPressTitleHeaderButton()}}>
+                            <Icon style={styles.titleHeaderButtonTextColor} size={18} name={'stream'} solid />
+                        </TouchableOpacity>
+                        <Text style={styles.titleHeaderText}>{this.props.title}</Text>
                     </View>
-                </ScrollView>
-                <BottomMenuController height={50} show={this.state.bottomMenuShow} buttons={this.bottomMenuControllerButtons}/>
+
+                    <ScrollView style={styles.contentsContainer}>
+                        {
+                            this.props.list.map(
+                                (value , index) => (
+                                    <TouchableOpacity key={index} 
+                                    style={styles.contentWrap}
+                                    onPress={() => { this.onPressContent(index) }}>
+
+                                        <View style={[styles.contentBody , this.state.checkList.get(index) ? styles.checkedBackgroundColor : null]}>
+                                            <View style={styles.rankWrap}>
+                                                <Text style={[styles.rank , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
+                                                    {index + 1}
+                                                </Text>
+                                            </View>
+                                            <View style={styles.imageWrap}>
+                                                <Image style={styles.image} source={{uri: value.getIn(['album' , 'albumImgUri'])}} />
+                                            </View>
+                                            <View style={styles.infoWrap}>
+                                                <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
+                                                    {value.getIn(['singer' , 'name'])}
+                                                </Text>
+                                                <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
+                                                    {value.getIn(['song'])}
+                                                </Text>
+                                                <Text style={[styles.infoText , this.state.checkList.get(index) ? styles.checkedFontColor : null]}>
+                                                    {value.getIn(['album' , 'name'])}
+                                                </Text>
+                                            </View>
+                                        </View>
+
+                                    </TouchableOpacity>
+                                )
+                            )
+                        }
+                        <View style={{height : 50 , width : '100%'}}>
+
+                        </View>
+                    </ScrollView>
+                    <BottomMenuController height={50} show={this.state.bottomMenuShow} buttons={this.bottomMenuControllerButtons}/>
+                    </React.Fragment>
+                }
             </View>
         )
     }
@@ -256,4 +285,12 @@ const bottomMenuControllerStyles = {
     },
 }
 
-export default Top100View;
+export default connect(
+    (state) => ({
+        musics : state.top100Musics.musics,
+        isLoading : state.top100Musics.isLoading,
+    }),
+    (dispatch) => ({
+        Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch)
+    })
+)(withNavigationFocus(Top100View));

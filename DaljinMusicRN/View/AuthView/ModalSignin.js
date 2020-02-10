@@ -31,9 +31,21 @@ class ModalSignin  extends Component {
         this.props.AuthActions.fetchLogin({userId : this.state.userId , userPw : this.state.userPw})
     }
 
+    componentDidUpdate (prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(this.props.isAuthenticated) {
+                this.onClose()
+            }
+        }
+    }
+
+    onClose = () => {
+        this.props.AuthActions.hideModal()
+    }
+
     render () {
         return (
-            <Modal visible={this.props.modalShow} animationType='slide' onRequestClose={ () => { this.props.AuthActions.hideModal() }} onShow={this.onShow}>
+            <Modal visible={this.props.modalShow} animationType='slide' onRequestClose={ () => { this.onClose() }} onShow={this.onShow}>
                 {this.props.isLoading ?
                     <LoadingView />
                     :
@@ -145,7 +157,7 @@ const styles = StyleSheet.create({
 export default connect(
     (state) => ({
         modalShow : state.auth.modalShow,
-        isAuthticated : state.auth.isAuthticated,
+        isAuthenticated : state.auth.isAuthenticated,
         isLoading : state.auth.isLoading,
     }),
     (dispatch) => ({

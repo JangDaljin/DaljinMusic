@@ -2,119 +2,62 @@ import React, { Component } from 'react'
 
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
-import { List , Map } from 'immutable'
 import Top100View from './Top100View'
 
 import FontAweSomeIcon from 'react-native-vector-icons/FontAwesome5'
+import { List , Map} from 'immutable'
 
 
-const testList = List([
+const propsList = List([
     Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
+        mode : 'total',
+        title : '전체',
+        icon : 'tree',
     }),
     Map({
-        song : 'aa',
-        singer : {
-            name : 'aa',
-        },
-        album : {
-            name : 'aa',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
+        mode : 'month',
+        title : '월간',
+        icon : 'star',
     }),
     Map({
-        song : 'aaa',
-        singer : {
-            name : 'aaa',
-        },
-        album : {
-            name : 'aaaaaaaaaasdfasdfaaaaaaaaaSa',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
+        mode : 'week',
+        title : '주간',
+        icon : 'moon',
     }),
     Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
-    }),
-    Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
-    }),
-    Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
-    }),
-    Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
-    }),
-    Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
-    }),
-    Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
-    }),
-    Map({
-        song : 'a',
-        singer : {
-            name : 'a',
-        },
-        album : {
-            name : 'a',
-            albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-        }
+        mode : 'day',
+        title : '일일',
+        icon : 'sun',
     }),
 ])
-
-
 const Drawer = createDrawerNavigator({
+    ...propsList.reduce((acc , data , index) => {
+        return acc.set(data.get('mode') , {
+            screen : (props) => <Top100View {...props} title={data.get('title')} mode={data.get('mode')} />,
+            navigationOptions : {
+                title : data.get('title'),
+                drawerIcon : ({tintColor}) => (
+                    <FontAweSomeIcon style={{color : tintColor}} size={18} name={data.get('icon')} solid />
+                )
+            }
+        })
+    } , Map()).toJS()
+}, { ...require('../commonOptions').LeftDrawerOptions })
+
+/*
+const Drawer = createDrawerNavigator({
+    'total' : {
+        screen : (props) => <Top100View {...props} title={'전체'} mode={'total'} />,
+
+        navigationOptions : {
+            title : '전체',
+            drawerIcon : ({tintColor}) => (
+                <FontAweSomeIcon style={{color : tintColor}} size={18} name={'tree'} solid />
+            )
+        }
+    },
     'month' : {
-        screen : (props) => <Top100View {...props} list={testList} title={'월간'} />,
+        screen : (props) => <Top100View {...props} title={'월간'} />,
 
         navigationOptions : {
             title : '월간',
@@ -124,7 +67,7 @@ const Drawer = createDrawerNavigator({
         }
     },
     'week' : {
-        screen : (props) => <Top100View {...props} list={testList} title={'주간'}/>,
+        screen : (props) => <Top100View {...props} title={'주간'}/>,
         navigationOptions : {
             title : '주간',
             drawerIcon : ({tintColor}) => (
@@ -133,7 +76,7 @@ const Drawer = createDrawerNavigator({
         }
     },
     'day' : {
-        screen : (props) => <Top100View {...props} list={testList} title={'일일'}/>,
+        screen : (props) => <Top100View {...props} title={'일일'}/>,
         navigationOptions : {
             title : '일일',
             drawerIcon : ({tintColor}) => (
@@ -142,6 +85,7 @@ const Drawer = createDrawerNavigator({
         }
     },
 }, { ...require('../commonOptions').LeftDrawerOptions })
+*/
 
 
 export default createAppContainer(Drawer)

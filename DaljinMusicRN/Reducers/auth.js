@@ -1,6 +1,7 @@
 import { createAction , handleActions } from 'redux-actions'
 import { takeLatest , put} from 'redux-saga/effects'
 import { post } from './Request/request'
+import { ToastAndroid } from 'react-native'
 
 export const FETCH_LOGIN = 'auth/FETCH_LOGIN'
 export const fetchLogin = createAction(FETCH_LOGIN)
@@ -43,9 +44,9 @@ const authInitialState = {
     userId : '',
     userName : '',
     isAuthenticated : false,
-    isLoading : true,
 
-    modalShow : false,
+    isLoading : true,
+    modalShow : true,
 }
 
 export const authReducer = handleActions({
@@ -76,6 +77,9 @@ export const authReducer = handleActions({
 
     [ACCEPT_LOGOUT] : (state , action) => { 
         const newState = { ...state }
+        newState.userId = ''
+        newState.userName = ''
+        newState.isAuthenticated = false
         return newState
     },
     [ABORT_LOGOUT] : (state , action) => {

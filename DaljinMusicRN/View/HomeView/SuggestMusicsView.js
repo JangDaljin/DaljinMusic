@@ -22,7 +22,7 @@ class SuggestMusicsView extends Component {
                     {
                         this.props.musics.map(
                             (value , index) => (
-                                <View key={index} style={styles.content}>
+                                <View key={value} style={styles.content}>
                                     <View style={styles.imageWrap}>
                                         <Image style={styles.image} source={{ uri : url(value.getIn(['album' , 'albumImgUri']))}} />
                                     </View>

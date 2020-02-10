@@ -65,11 +65,11 @@ export const top100MusicsReducer = handleActions({
 
 
 function * fetchTop100MusicsSaga(action) {
-    const { from , to  , init} = action.payload
+    const { from , to  , init , mode} = action.payload
     if(init)
         yield put({ type : TOP100MUSICS_INIT })
     yield put({ type : START_LOADING })
-    yield get(`/top100?from=${from}&to=${to}` , ACCEPT_TOP100MUSICS , ABORT_TOP100MUSICS)
+    yield get(`/top100?from=${from}&to=${to}&mode=${mode}` , ACCEPT_TOP100MUSICS , ABORT_TOP100MUSICS)
     yield put({ type : END_LOADING })
 }
 

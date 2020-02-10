@@ -302,12 +302,4 @@ const Drawer = createDrawerNavigator({
 })
 
 
-
-
-
-
-
-
-
-
 export default createAppContainer(Drawer)

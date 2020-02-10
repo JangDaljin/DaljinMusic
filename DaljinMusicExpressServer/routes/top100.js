@@ -10,7 +10,7 @@ router.get('/' , doAsync( async (req , res , next) => {
     const { from , to , mode} = req.query
     const p_from = parseInt(from)
     const p_to = parseInt(to)
-    const p_mode = (mode === null || typeof mode === 'undefined' || mode == '' || mode == 'total') ? '-totalPlayCount' : (mode == 'month')? '-monthPlayCount' : (mode == 'week') ? 'weekPlayCount' : '-dayPlayCount' 
+    const p_mode = (mode === null || typeof mode === 'undefined' || mode == '' || mode == 'total') ? '-totalPlayCount' : (mode == 'month')? '-monthPlayCount' : (mode == 'week') ? '-weekPlayCount' : '-dayPlayCount' 
     const response = {
         from : p_from,
         to : p_to,   

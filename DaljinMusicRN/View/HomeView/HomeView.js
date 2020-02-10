@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-
+import React, { Component , useEffect } from 'react'
 import { ScrollView , Text, StyleSheet, View, ToastAndroid} from 'react-native'
+import { withNavigationFocus } from 'react-navigation'
+
 import TodaysLive from './TodaysLive'
 import SuggestMusicsView from './SuggestMusicsView'
 import HotAndNewMusicsView from './HotAndNewMusicsView'
@@ -18,9 +19,22 @@ import * as Top100MusicsActions from '../../Reducers/top100Musics'
 
 class HomeView extends Component {
 
+
     componentDidMount() {
+        this.dataUpdate()
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(!prevProps.isFocused && this.props.isFocused) {
+                this.dataUpdate()
+            }
+        }
+    }
+
+    dataUpdate() {
         this.props.TodaysLiveActions.fetchTodaysLive()
-        this.props.SuggestMusicsActions.fetchSuggestMusics({ userId : '' , musicCount : 5})
+        this.props.SuggestMusicsActions.fetchSuggestMusics({ userId : this.props.userId , musicCount : 5})
         this.props.HotAndNewMusicsActions.fetchHotAndNewMusics()
         this.props.Top100MusicsActions.fetchTop100Musics({from : 1 , to : 10 , init : true})
     }
@@ -66,6 +80,9 @@ export default connect(
 
         top100Musics : state.top100Musics.musics,
         top100MusicsLoading : state.top100Musics.isLoading,
+
+        userId : state.auth.userId,
+
     }),
     (dispatch) => ({
         TodaysLiveActions : bindActionCreators(TodaysLiveActions , dispatch),
@@ -73,4 +90,4 @@ export default connect(
         HotAndNewMusicsActions : bindActionCreators(HotAndNewMusicsActions , dispatch),
         Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch)
     })
-)(HomeView);
+)(withNavigationFocus(HomeView));

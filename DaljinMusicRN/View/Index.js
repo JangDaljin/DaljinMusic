@@ -6,16 +6,23 @@ import BottomNavigator from './BottomNavigator'
 import MusicPlayer from './MusicPlayerView/MusicPlayer'
 import ModalSignin from './AuthView/ModalSignin'
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as AuthActions from '../Reducers/auth'
 class Index extends Component {
 
 
     render () {
         return (
             <View style={styles.container}>
-                <BottomNavigator />
-                <MusicPlayer />
-
                 <ModalSignin />
+                {!this.props.isLoading &&
+                    <React.Fragment>
+                        <BottomNavigator />
+                        <MusicPlayer />
+                    </React.Fragment>
+                }
+
             </View>
         )
     }
@@ -35,4 +42,11 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Index;
+export default connect(
+    (state) => ({
+        isAuthLoading : state.auth.isLoading,
+    }),
+    (dispatch) => ({
+        AuthActions : bindActionCreators(AuthActions , dispatch)
+    })
+)(Index);

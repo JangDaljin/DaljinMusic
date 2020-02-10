@@ -20,7 +20,7 @@ class AuthComponent extends Component {
                 </Text>
                 
                 {this.props.isAuthenticated?
-                    <TouchableOpacity style={styles.authButton} onPress={ () => { }}>
+                    <TouchableOpacity style={styles.authButton} onPress={ () => { this.props.AuthActions.fetchLogout() }}>
                         <Icon style={styles.authButtonIcon} name={'lock-open'} size={20} solid />
                     </TouchableOpacity>
                     :

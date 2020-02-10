@@ -20,6 +20,7 @@ export default class App extends Component {
     fontLoaded : false,
     splashHide : false,
     checkAPI : false,
+    isLogin : false,
     splashMessage : '',
   }
 
