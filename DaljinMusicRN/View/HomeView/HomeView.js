@@ -1,6 +1,5 @@
-import React, { Component , useEffect } from 'react'
+import React, { Component , useCallback } from 'react'
 import { ScrollView , Text, StyleSheet, View, ToastAndroid} from 'react-native'
-import { withNavigationFocus } from 'react-navigation'
 
 import TodaysLive from './TodaysLive'
 import SuggestMusicsView from './SuggestMusicsView'
@@ -16,23 +15,22 @@ import * as SuggestMusicsActions from '../../Reducers/suggestMusics'
 import * as HotAndNewMusicsActions from '../../Reducers/hotAndNewMusics'
 import * as Top100MusicsActions from '../../Reducers/top100Musics'
 
+import { useFocusEffect } from '@react-navigation/native'
+
+function DataUpdater({onUpdate}) {
+    useFocusEffect(
+        useCallback(() => {
+            onUpdate()
+            
+        return (() => {})
+        } , [])
+    )
+    return null
+}
 
 class HomeView extends Component {
 
-
-    componentDidMount() {
-        this.dataUpdate()
-    }
-
-    componentDidUpdate(prevProps , prevState) {
-        if(prevProps !== this.props) {
-            if(!prevProps.isFocused && this.props.isFocused) {
-                this.dataUpdate()
-            }
-        }
-    }
-
-    dataUpdate() {
+    onUpdate = () => {
         this.props.TodaysLiveActions.fetchTodaysLive()
         this.props.SuggestMusicsActions.fetchSuggestMusics({ userId : this.props.userId , musicCount : 5})
         this.props.HotAndNewMusicsActions.fetchHotAndNewMusics()
@@ -41,6 +39,9 @@ class HomeView extends Component {
 
     render () {
         return (
+            <React.Fragment>
+            <DataUpdater onUpdate={this.onUpdate} />
+            {
                 this.props.todaysLiveLoading && 
                 this.props.suggestMusicsLoading &&
                 this.props.hotAndNewMusicsLoading &&
@@ -54,6 +55,8 @@ class HomeView extends Component {
                     <HotAndNewMusicsView musics={this.props.hotAndNewMusics} />
                     <Top10View musics={this.props.top100Musics} />
                 </ScrollView>
+            }
+            </React.Fragment>
         )
     }
 }
@@ -90,4 +93,4 @@ export default connect(
         HotAndNewMusicsActions : bindActionCreators(HotAndNewMusicsActions , dispatch),
         Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch)
     })
-)(withNavigationFocus(HomeView));
+)(HomeView);

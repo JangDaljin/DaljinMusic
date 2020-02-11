@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-import { createAppContainer } from 'react-navigation'
-import { createDrawerNavigator } from 'react-navigation-drawer'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { NavigationContainer } from '@react-navigation/native'
 
 import { List, Map } from 'immutable'
 import MyMusicsView from './MyMusicsView'
 import CustomDrawerComponent from './CustomDrawerComponent'
+
+import { connect } from 'react-redux'
 
 const testList = 
     List([
@@ -285,7 +287,7 @@ const testList =
             ])
         })
     ])
-
+/*
 const Drawer = createDrawerNavigator({
     ...testList.reduce((acc , data , index) => {
         return acc.set(data.get('listName') , {
@@ -300,7 +302,24 @@ const Drawer = createDrawerNavigator({
     ...require('../commonOptions').LeftDrawerOptions,
     contentComponent : (props) => <CustomDrawerComponent {...props} list={testList}/>
 })
+*/
+
+const Drawer = createDrawerNavigator()
+
+const MyMusicsViewConnected = connect((state) => ({ list : state.myMusics.lists }))(MyMusicsView)
+
+class DrawerView extends Component {
 
 
+    render () {
+        return (
+            <NavigationContainer>
+                <Drawer.Navigator>
+                    <Drawer.Screen name={'test'} component={MyMusicsView} />
+                </Drawer.Navigator>
+            </NavigationContainer>
+        )
+    }
+}
 
-export default createAppContainer(Drawer)
+export default DrawerView

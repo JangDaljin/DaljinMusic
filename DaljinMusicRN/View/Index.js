@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { View , Text, StyleSheet, Platform, StatusBar } from 'react-native'
 
-import BottomNavigator from './BottomNavigator'
+import BottomTabNavigator from './BottomTabNavigator'
 import MusicPlayer from './MusicPlayerView/MusicPlayer'
 import ModalSignin from './AuthView/ModalSignin'
 
@@ -18,7 +18,7 @@ class Index extends Component {
                 <ModalSignin />
                 {!this.props.isLoading &&
                     <React.Fragment>
-                        <BottomNavigator />
+                        <BottomTabNavigator />
                         <MusicPlayer />
                     </React.Fragment>
                 }
