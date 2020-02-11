@@ -68,9 +68,7 @@ export default class CustomDrawerComponent extends Component {
         this.props.navigation.navigate(listName)
     }
 
-
-
-
+    
     render () {
         return (
             <View>

@@ -44,18 +44,29 @@ class DrawerView extends Component {
     
     render () {
         return (
-            <Drawer.Navigator>
+            <Drawer.Navigator 
+            drawerStyle={{
+                backgroundColor : '#303030'
+            }}
+            drawerContentOptions={{
+                activeTintColor : '#069',
+                activeBackgroundColor : '#EEE',
+                inactiveTintColor : '#EEE',
+                labelStyle : { fontFamily : 'jua' , fontSize : 20 }
+            }}
+            >
                 {
                     propsList.map(
                         (value , index) => (
                             <Drawer.Screen
+                            key={index}
                             name={value.get('mode')} 
                             component={Top100View} 
                             options={{ 
                                 title : value.get('title'), 
                                 drawerIcon : ({focused , color , size}) => (
-                                    <Icon style={{ color : focused ? '#EEE' : '#069'}} size={18} name={value.get('icon')} solid />
-                                )
+                                    <Icon style={{ color : color }} size={size} name={value.get('icon')} solid />
+                                ),
                             }} 
                             />
                         )

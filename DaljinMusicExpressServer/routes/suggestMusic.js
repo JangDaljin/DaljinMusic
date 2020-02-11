@@ -125,7 +125,7 @@ router.get('/' , doAsync(async(req , res , next) => {
                     const randomMusic = await MusicModel.findOne({'category' : resizePreferCategoryCounter[i].categoryId}).skip(random).populate('singer album').lean()
                     response.suggestMusics.push(randomMusic)
                 }
-                console.log(response)
+                //console.log(response)
             }
             response.message = Dlogger.info('[LOGGED-SUGGESTMUSIC]추천음악 조회 완료')
         }  

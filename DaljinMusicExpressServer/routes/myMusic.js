@@ -36,6 +36,51 @@ router.post('/getmusiclists' , doAsync(async (req , res , next) => {
         }
     }
     else {
+        console.log('getmusiclists 검증 실패')
+        response.message = '검증 실패'
+    }
+    res.json(response)
+}))
+
+router.post('/getmusiclist' , doAsync(async (req , res , next) => {
+    const { userId , listName } = req.body
+    const response = {
+        message : '',
+        myMusicList : [],
+        error : true,
+    }
+
+    console.log('getmusiclist')
+
+    if( userId === req.session.userId) {
+        try {
+            const user = await UserModel.findOne({'userId' : userId}).populate(
+                {
+                    path : 'myMusicLists.list',
+                    populate : 'singer album'
+                }
+            ).lean()
+
+
+            if(user !== null) {
+                const foundItem = user.myMusicLists.find(value => value.listName === listName)
+                if(typeof foundItem === 'undefined') {
+                    throw new Error(`리스트 이름 찾을 수 없음(${listName})`)
+                }
+                response.myMusicList = foundItem
+                console.dir(response.myMusicList)
+                response.message = '검색 완료'
+                response.error = false
+            }
+        }
+        catch (err) {
+            console.err(err)
+            console.log('검색 실패')
+            response.error = true
+            response.message = '검색 실패'
+        }
+    }
+    else {
         console.log('검증 실패')
         response.message = '검증 실패'
     }

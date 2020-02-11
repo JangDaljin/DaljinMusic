@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 import HomeView from './HomeView/HomeView'
-import MyMusicsView from './MyMusicsView/Drawer'
+import MyMusicsView from './MyMusicsView/DrawerView'
 import Top100View from './Top100View/DrawerView'
 import SearchView from './SearchView/SearchView'
 import SettingView from './SettingView/SettingView'

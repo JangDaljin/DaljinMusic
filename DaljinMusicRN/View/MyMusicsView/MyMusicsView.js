@@ -1,22 +1,47 @@
 import React, { Component } from 'react'
 
-import { View , Text, StyleSheet , ScrollView, Image, TouchableOpacity, Modal } from 'react-native'
+import { View , Text, StyleSheet , ScrollView, Image, TouchableOpacity, Modal, ToastAndroid } from 'react-native'
 import { List } from 'immutable'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import BottomMenuController from '../BottomMenuController'
-import { TouchableHighlight } from 'react-native-gesture-handler'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as MyMusicsActions from '../../Reducers/myMusics'
+import { useRoute } from '@react-navigation/native'
+import LoadingView from '../LoadingView'
+import { url } from '../commonFunctions'
+
 class MyMusicsView extends Component {
 
     constructor(props) {
         super(props);
+
+        const myMusicListIndex = props.myMusicLists.findIndex(value => value.get('listName') === props.route.name)
+
         this.state = {
-            checkedList : List(new Array(props.myMusicList.get('list').size).fill(false)),
+            myMusicListIndex : myMusicListIndex,
+            checkedList : List(new Array(props.myMusicLists.getIn([myMusicListIndex , 'list']).size).fill(false)),
             checkCounter : 0,
             bottomMenuShow : false,
             popupMenuShow : false,
         }
     }
 
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(prevProps.myMusicLists === this.props.myMusicLists) {
+                const myMusicListIndex = this.props.myMusicLists.findIndex(value => value.get('listName') === props.route.name)
+                this.setState({
+                    myMusicListIndex : myMusicListIndex,
+                    checkedList : List(new Array(this.props.myMusicLists.getIn([myMusicListIndex , 'list']).size).fill(false)),
+                    checkCounter : 0,
+                    bottomMenuShow : false,
+                    popupMenuShow : false,
+                })
+            }
+        }
+    }
 
     onPressContent = (index) => {
         let checkCounter = this.state.checkCounter
@@ -102,12 +127,15 @@ class MyMusicsView extends Component {
 
     render () {
         return(
+            this.props.isLoading?
+            <LoadingView />
+            :
             <View style={{flex : 1}}>
                 <View style={styles.titleHeader}>
                     <TouchableOpacity style={styles.titleHeaderLeftButton} onPress={() => {this.onPressTitleHeaderButton()}}>
                         <Icon style={styles.titleHeaderLeftButtonTextColor} size={18} name={'stream'} solid />
                     </TouchableOpacity>
-                    <Text style={styles.titleHeaderText}>{this.props.myMusicList.get('listName')}</Text>
+                    <Text style={styles.titleHeaderText}>{this.props.myMusicLists.getIn([this.state.myMusicListIndex , 'listName'])}</Text>
                     <TouchableOpacity style={styles.titleHeaderRightButton} onPress={() => {this.popupMenuShow()}}>
                         <Icon style={styles.titleHeaderRightButtonTextColor} size={18} name={'ellipsis-v'} solid /> 
                     </TouchableOpacity>
@@ -119,18 +147,16 @@ class MyMusicsView extends Component {
                     </Modal>
 
                 </View>
-
-
                 
                 <ScrollView style={styles.scroll}>
 
                     <View style={styles.container}>
                     {
-                        this.props.myMusicList.get('list').map(
+                        this.props.myMusicLists.getIn([this.state.myMusicListIndex  , 'list']).map(
                             (value , index) => (
                                     <TouchableOpacity key={index} style={[styles.content , this.state.checkedList.get(index) ? styles.checkedContent : null]} onPress={() => { this.onPressContent(index) }}>
                                         <View style={styles.imageWrap}>
-                                            <Image style={styles.image} source={{uri : value.getIn(['album' , 'albumImgUri'])}} />
+                                            <Image style={styles.image} source={{uri : url(value.getIn(['album' , 'albumImgUri']))}} />
                                         </View>
                                         <View style={styles.infoWrap}>
                                             <Text style={styles.info} numberOfLines={2}>
@@ -153,6 +179,7 @@ class MyMusicsView extends Component {
 
                 <BottomMenuController height={50} show={this.state.bottomMenuShow} buttons={this.bottomMenuControllerButtons} />
             </View>
+            
         )
     }
 }
@@ -315,4 +342,15 @@ const bottomMenuControllerStyles = {
     },
 }
 
-export default MyMusicsView;
+export default connect(
+    (state) => ({
+        isLoading : state.myMusics.isLoading,
+        myMusicLists : state.myMusics.myMusicLists,
+    }),
+    (dispatch) => ({
+        MyMusicsActions : bindActionCreators(MyMusicsActions , dispatch)
+    })
+)(function(props) {
+    const route = useRoute()
+    return <MyMusicsView {...props} route={route} />
+});

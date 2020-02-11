@@ -7,7 +7,7 @@ import BottomMenuController from '../BottomMenuController'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as Top100MusicsActions from '../../Reducers/top100Musics'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect , useRoute} from '@react-navigation/native'
 import LoadingView from '../LoadingView'
 import { url } from '../commonFunctions'
 
@@ -42,7 +42,7 @@ class Top100View extends Component {
     }
 
     onUpdate = () => {
-        this.props.Top100MusicsActions.fetchTop100Musics({from : 1 , to : 100 , init : true , mode : this.props.mode})
+        this.props.Top100MusicsActions.fetchTop100Musics({from : 1 , to : 100 , init : true , mode : this.props.route.name})
     }
 
     onPressTitleHeaderButton = () => {
@@ -111,12 +111,19 @@ class Top100View extends Component {
                             <TouchableOpacity style={styles.titleHeaderButton} onPress={() => {this.onPressTitleHeaderButton()}}>
                                 <Icon style={styles.titleHeaderButtonTextColor} size={18} name={'stream'} solid />
                             </TouchableOpacity>
-                            <Text style={styles.titleHeaderText}>{this.props.title}</Text>
+                            <Text style={styles.titleHeaderText}>
+                                {this.props.route.name === 'total' ? '전체' :
+                                    this.props.route.name === 'month' ? '월간' :
+                                    this.props.route.name === 'week' ? '주간' :
+                                    this.props.route.name === 'day' ? '일일' :
+                                    'unknown'
+                                }
+                            </Text>
                         </View>
 
                         {this.props.isLoading ?
                             <LoadingView />
-                                :
+                            :
                             <ScrollView style={styles.contentsContainer}>
                                 {
                                     this.props.musics.map(
@@ -299,4 +306,8 @@ export default connect(
     (dispatch) => ({
         Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch)
     })
-)(Top100View);
+)(
+    function(props) { 
+        const route = useRoute()
+        return <Top100View {...props} route={route}/> 
+})

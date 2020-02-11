@@ -12,6 +12,15 @@ export const acceptGetMyMusicLists = createAction(ACCEPT_GET_MYMUSICLISTS)
 export const ABORT_GET_MYMUSICLISTS = 'mymusics/ABORTGETMYMUSICLISTS'
 export const abortGetMyMusicLists = createAction(ABORT_GET_MYMUSICLISTS)
 
+export const FETCH_GET_MYMUSICLIST = 'mymusics/FETCTGETMUSICLIST'
+export const fetchGetMyMusicList = createAction(FETCH_GET_MYMUSICLISTS)
+
+export const ACCEPT_GET_MYMUSICLIST = 'mymusics/ACCEPTGETMUSICLIST'
+export const acceptGetMyMusicList = createAction(ACCEPT_GET_MYMUSICLISTS)
+
+export const ABORT_GET_MYMUSICLIST = 'mymusics/ABORTGETMYMUSICLIST'
+export const abortGetMyMusicList = createAction(ABORT_GET_MYMUSICLISTS)
+
 export const FETCH_UPLOAD_FILE = 'mymusics/FETCHUPLOADFILE'
 export const fetchUploadFile = createAction(FETCH_UPLOAD_FILE)
 
@@ -107,6 +116,22 @@ export const myMusicsReducer = handleActions({
         return newState
     },
 
+    [ACCEPT_GET_MYMUSICLIST] : (state , action) => {
+        const newState = { ...state }
+        const { myMusicList , error} = action.payload
+        if(!error) {
+            newState.myMusicLists = newState.myMusicLists.updateIn(
+                newState.myMusicLists.findIndex(value => value.get('listName') === myMusicList.listName), 
+                value => value.set('list' , fromJS(myMusicList.list)))
+        }
+        return newState
+    },
+    
+    [ABORT_GET_MYMUSICLIST] : (state , action) => {
+        const newState = { ...myMusicInitialState } 
+        return newState
+    },
+
     [ACCEPT_UPLOAD_FILE] : (state , action) => {
         const newState = { ...state }
         console.log("ACCEPT UPLOAD")
@@ -190,6 +215,12 @@ function* fetchGetMyMusicListsSaga(action) {
     yield put({type : END_LOADING})
 }
 
+function* fetchGetMyMusicListSaga(action) {
+    yield put({type : START_LOADING})
+    yield post(`/mymusic/getmusiclist` , { 'Content-Type' : 'application/json' , 'Cache' : 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_GET_MYMUSICLISTS , ABORT_GET_MYMUSICLISTS)
+    yield put({type : END_LOADING})
+}
+
 function* fetchUploadSaga (action) {
     const { userId , fileList , listId } = action.payload
     const formData = new FormData()
@@ -236,6 +267,7 @@ function* fetchRemoveMusicInListSaga(action) {
 
 export function* myMusicsSaga() {
     yield takeLatest(FETCH_GET_MYMUSICLISTS , fetchGetMyMusicListsSaga)
+    yield takeLatest(FETCH_GET_MYMUSICLIST , fetchGetMyMusicListSaga)
     yield takeLatest(FETCH_UPLOAD_FILE , fetchUploadSaga)
     yield takeLatest(FETCH_MAKE_MUSIC_LIST , fetchMakeMusicListSaga)
     yield takeLatest(FETCH_DELETE_MUSIC_LIST , fetchDeleteMusicListSaga)
