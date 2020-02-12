@@ -1,4 +1,4 @@
-import React , { Component } from 'react'
+import React , { Component , useCallback} from 'react'
 import { ScrollView , View , Text , StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Map , List } from 'immutable'
@@ -6,14 +6,28 @@ import { Map , List } from 'immutable'
 import SearchContentView from './SearchContentView'
 import BottomMenuController from '../BottomMenuController'
 
-export default class SearchView extends Component {
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as SearchActions from '../../Reducers/search'
+
+import { useFocusEffect } from '@react-navigation/native'
+import LoadingView from '../LoadingView'
+
+
+function DataUpdater({onUpdate}) {
+    useFocusEffect(
+        useCallback(() => {
+            onUpdate()
+            
+        return (() => {})
+        } , [])
+    )
+    return null
+}
+
+class SearchView extends Component {
 
     state = {
-
-        text : {
-            a : List(['a' , 'b' ,'c']).splice()
-        },
-
         foundSong : List([
             Map({
                 song : 'a',
@@ -187,12 +201,16 @@ export default class SearchView extends Component {
         this.setState({[checkedList] : checkedList.update(index , value => !value) , [checkedCounter] : checkedCounter++})
     }
 
+    onSearch = () => {
+
+    }
+
     render () {
         return (
             <View style={styles.container}>
                 <View style={styles.search}>
                     <TextInput style={styles.searchText} />
-                    <TouchableOpacity style={styles.searchButton}>
+                    <TouchableOpacity style={styles.searchButton} onPress={this.onSearch}>
                         <Icon style={styles.searchButtonIcon} name={'search'} size={18} solid />
                     </TouchableOpacity>
                 </View>
@@ -202,62 +220,65 @@ export default class SearchView extends Component {
                         <Text style={[styles.searchModeButtonText , this.state.show === 'total' ? styles.selectedTextColor : null]}>통합검색</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.searchModeButton , this.state.show === 'song' ? styles.selectedBackground : null]} onPress={() => { this.onPressShowButton('song') }}>
-                        <Text style={[styles.searchModeButtonText , this.state.show === 'song' ? styles.selectedTextColor : null]}>제목({this.state.foundSong.size})</Text>
+                        <Text style={[styles.searchModeButtonText , this.state.show === 'song' ? styles.selectedTextColor : null]}>제목({this.props.foundLists.get('song').size})</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.searchModeButton , this.state.show === 'singer' ? styles.selectedBackground : null]} onPress={() => { this.onPressShowButton('singer') }}>
-                        <Text style={[styles.searchModeButtonText , this.state.show === 'singer' ? styles.selectedTextColor : null]}>가수({this.state.foundSinger.size})</Text>
+                        <Text style={[styles.searchModeButtonText , this.state.show === 'singer' ? styles.selectedTextColor : null]}>가수({this.props.foundLists.get('singer').size})</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.searchModeButton , this.state.show === 'album' ? styles.selectedBackground : null]} onPress={() => { this.onPressShowButton('album') }}>
-                        <Text style={[styles.searchModeButtonText , this.state.show === 'album' ? styles.selectedTextColor : null]}>앨범({this.state.foundAlbum.size})</Text>
+                        <Text style={[styles.searchModeButtonText , this.state.show === 'album' ? styles.selectedTextColor : null]}>앨범({this.props.foundLists.get('album').size})</Text>
                     </TouchableOpacity>
                 </View>
-                <ScrollView style={{padding : 5,}}>
-                    <SearchContentView 
-                    show={this.state.show} 
-                    onChangeShow={pageName => { this.setState({show : pageName}) }}
+                {this.props.isLoading ?
+                    <LoadingView />
+                    :
+                    <ScrollView style={{padding : 5,}}>
+                        <SearchContentView 
+                        show={this.state.show} 
+                        onChangeShow={pageName => { this.setState({show : pageName}) }}
 
-                    foundSong={this.state.foundSong}
-                    checkedFoundSong={this.state.checkedFoundSong}
-                    onCheckedFoundSong={index => {
-                        const check = this.state.checkedFoundSong.get(index)
-                        let count = this.state.checkedFoundSongCounter
-                        check ? count-- : count++
-                        this.setState({
-                            checkedFoundSong : this.state.checkedFoundSong.set(index , !check),
-                            checkedFoundSongCounter : count
-                        })
-                    }}
+                        foundSong={this.props.foundLists.get('song')}
+                        checkedFoundSong={this.state.checkedFoundSong}
+                        onCheckedFoundSong={index => {
+                            const check = this.state.checkedFoundSong.get(index)
+                            let count = this.state.checkedFoundSongCounter
+                            check ? count-- : count++
+                            this.setState({
+                                checkedFoundSong : this.state.checkedFoundSong.set(index , !check),
+                                checkedFoundSongCounter : count
+                            })
+                        }}
 
-                    foundSinger={this.state.foundSinger}
-                    checkedFoundSinger={this.state.checkedFoundSinger}
-                    onCheckedFoundSinger={index => {
-                        const check = this.state.checkedFoundSinger.get(index)
-                        let count = this.state.checkedFoundSingerCounter
-                        check ? count++ : count--
-                        this.setState({
-                            checkedFoundSinger : this.state.checkedFoundSinger.set(index , !check),
-                            checkedFoundSingerCounter : count
-                        })
-                    }}
+                        foundSinger={this.props.foundLists.get('singer')}
+                        checkedFoundSinger={this.state.checkedFoundSinger}
+                        onCheckedFoundSinger={index => {
+                            const check = this.state.checkedFoundSinger.get(index)
+                            let count = this.state.checkedFoundSingerCounter
+                            check ? count++ : count--
+                            this.setState({
+                                checkedFoundSinger : this.state.checkedFoundSinger.set(index , !check),
+                                checkedFoundSingerCounter : count
+                            })
+                        }}
 
 
-                    foundAlbum={this.state.foundAlbum}
-                    checkedFoundAlbum={this.state.checkedFoundAlbum}
-                    onCheckedFoundAlbum={index => {
-                        const check = this.state.checkedFoundAlbum.get(index)
-                        let count = this.state.checkedFoundAlbumCounter
-                        check ? count-- : count++
-                        this.setState({
-                            checkedFoundAlbum : this.state.checkedFoundAlbum.set(index , !check),
-                            checkedFoundAlbumCounter : count
-                        })
-                    }}
+                        foundAlbum={this.props.foundLists.get('album')}
+                        checkedFoundAlbum={this.state.checkedFoundAlbum}
+                        onCheckedFoundAlbum={index => {
+                            const check = this.state.checkedFoundAlbum.get(index)
+                            let count = this.state.checkedFoundAlbumCounter
+                            check ? count-- : count++
+                            this.setState({
+                                checkedFoundAlbum : this.state.checkedFoundAlbum.set(index , !check),
+                                checkedFoundAlbumCounter : count
+                            })
+                        }}
 
-                    />
-
-                    <View style={{height : 50}}>
-                    </View>
-                </ScrollView>
+                        />
+                        <View style={{height : 50}}>
+                        </View>
+                    </ScrollView>
+                }
 
                 <BottomMenuController height={50} show={this.state.bottomMenuControllerShow} buttons={this.bottomMenuControllerButtons} />
             </View>
@@ -357,3 +378,13 @@ const bottomMenuControllerStyles = {
         fontFamily : 'jua',
     },
 }
+
+export default connect(
+    (state) => ({
+        isLoading : state.search.isLoading,
+        foundLists : state.search.foundLists
+    }),
+    (dispatch) => ({
+        SearchActions : bindActionCreators(SearchActions , dispatch)
+    })
+)(SearchView)

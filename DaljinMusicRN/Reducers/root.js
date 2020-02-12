@@ -6,6 +6,7 @@ import { hotAndNewMusicsReducer as hotAndNewMusics , hotAndNewMusicsSaga } from 
 import { top100MusicsReducer as top100Musics , top100MusicsSaga } from './top100Musics'
 import { authReducer as auth , authSaga } from './auth'
 import { myMusicsReducer as myMusics , myMusicsSaga } from './myMusics'
+import { searchReducer as search , searchSaga } from './search'
 export const rootReducer = combineReducers({
     todaysLive,
     suggestMusics,
@@ -13,6 +14,7 @@ export const rootReducer = combineReducers({
     top100Musics,
     auth,
     myMusics,
+    search,
 })
 
 
@@ -23,4 +25,5 @@ export function* rootSaga() {
     yield fork(top100MusicsSaga)
     yield fork(authSaga)
     yield fork(myMusicsSaga)
+    yield fork(searchSaga)
 }
