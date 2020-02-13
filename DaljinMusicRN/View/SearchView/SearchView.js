@@ -1,5 +1,5 @@
 import React , { Component , useCallback} from 'react'
-import { ScrollView , View , Text , StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { ScrollView , View , Text , StyleSheet, TextInput, TouchableOpacity, ToastAndroid } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Map , List } from 'immutable'
 
@@ -28,111 +28,19 @@ function DataUpdater({onUpdate}) {
 class SearchView extends Component {
 
     state = {
-        foundSong : List([
-            Map({
-                song : 'a',
-                singer : {
-                    name : 'a',
-                },
-                album : {
-                    name : 'a',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-            Map({
-                song : 'aa',
-                singer : {
-                    name : 'aa',
-                },
-                album : {
-                    name : 'aa',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-            Map({
-                song : 'aaa',
-                singer : {
-                    name : 'aaa',
-                },
-                album : {
-                    name : 'aaa',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-        ]),
-        checkedFoundSong : List(new Array(3).fill(false)),
+        checkedFoundSong : List(),
         checkedFoundSongCounter : 0,
-        foundSinger : List([
-            Map({
-                song : 'b',
-                singer : {
-                    name : 'b',
-                },
-                album : {
-                    name : 'b',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-            Map({
-                song : 'bb',
-                singer : {
-                    name : 'bb',
-                },
-                album : {
-                    name : 'bbb',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-            Map({
-                song : 'bbb',
-                singer : {
-                    name : 'bbb',
-                },
-                album : {
-                    name : 'bbb',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-        ]),
-        checkedFoundSinger : List(new Array(3).fill(false)),
+
+        checkedFoundSinger : List(),
         checkedFoundSingerCounter : 0,
-        foundAlbum : List([
-            Map({
-                song : 'c',
-                singer : {
-                    name : 'c',
-                },
-                album : {
-                    name : 'c',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-            Map({
-                song : 'cc',
-                singer : {
-                    name : 'cc',
-                },
-                album : {
-                    name : 'cc',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-            Map({
-                song : 'ccc',
-                singer : {
-                    name : 'ccc',
-                },
-                album : {
-                    name : 'ccc',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                }
-            }),
-        ]),
-        checkedFoundAlbum : List(new Array(3).fill(false)),
+        
+        checkedFoundAlbum : List(),
         checkedFoundAlbumCounter : 0,
 
         show : 'total',
-        bottomMenuControllerShow : true,
+        bottomMenuControllerShow : false,
+
+        searchText : ''
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -143,12 +51,12 @@ class SearchView extends Component {
 
                 let bottomMenuControllerShow = false
                 if(this.state.show === 'total' && 
-                (
-                    this.state.checkedFoundSongCounter > 0 ||
-                    this.state.checkedFoundSingerCounter > 0 ||
-                    this.state.checkedFoundAlbumCounter > 0
-                )) 
-                {
+                    (
+                        this.state.checkedFoundSongCounter > 0 ||
+                        this.state.checkedFoundSingerCounter > 0 ||
+                        this.state.checkedFoundAlbumCounter > 0
+                    )
+                ) {
                     bottomMenuControllerShow = true
                 }
                 else if(this.state.show === 'song' && this.state.checkedFoundSongCounter > 0) {
@@ -163,8 +71,24 @@ class SearchView extends Component {
                 else {
                     bottomMenuControllerShow = false
                 }
+
                 this.setState({bottomMenuControllerShow : bottomMenuControllerShow})
 
+        }
+
+        if(prevProps !== this.props) {
+            if(prevProps.foundLists !== this.props.foundLists) {
+                this.setState({        
+                    checkedFoundSong : List(new Array(this.props.foundLists.get('song').size).fill(false)),
+                    checkedFoundSongCounter : 0,
+            
+                    checkedFoundSinger : List(new Array(this.props.foundLists.get('singer').size).fill(false)),
+                    checkedFoundSingerCounter : 0,
+                    
+                    checkedFoundAlbum : List(new Array(this.props.foundLists.get('album').size).fill(false)),
+                    checkedFoundAlbumCounter : 0,
+                })
+            }
         }
     }
 
@@ -197,19 +121,20 @@ class SearchView extends Component {
         </View>
     )
 
-    onCheckedItem = (index , checkedList , checkedCounter) => {
-        this.setState({[checkedList] : checkedList.update(index , value => !value) , [checkedCounter] : checkedCounter++})
-    }
 
     onSearch = () => {
+        this.props.SearchActions.fetchSearch({searchText : this.state.searchText})
+    }
 
+    onChangeSearchText = (text) => {
+        this.setState({searchText : text})
     }
 
     render () {
         return (
             <View style={styles.container}>
                 <View style={styles.search}>
-                    <TextInput style={styles.searchText} />
+                    <TextInput style={styles.searchText} onChangeText={this.onChangeSearchText} returnKeyType='search' onSubmitEditing={() => {this.onSearch()}} />
                     <TouchableOpacity style={styles.searchButton} onPress={this.onSearch}>
                         <Icon style={styles.searchButtonIcon} name={'search'} size={18} solid />
                     </TouchableOpacity>
@@ -232,7 +157,7 @@ class SearchView extends Component {
                 {this.props.isLoading ?
                     <LoadingView />
                     :
-                    <ScrollView style={{padding : 5,}}>
+                    <View style={{flex : 1}}>
                         <SearchContentView 
                         show={this.state.show} 
                         onChangeShow={pageName => { this.setState({show : pageName}) }}
@@ -254,7 +179,7 @@ class SearchView extends Component {
                         onCheckedFoundSinger={index => {
                             const check = this.state.checkedFoundSinger.get(index)
                             let count = this.state.checkedFoundSingerCounter
-                            check ? count++ : count--
+                            check ? count-- : count++
                             this.setState({
                                 checkedFoundSinger : this.state.checkedFoundSinger.set(index , !check),
                                 checkedFoundSingerCounter : count
@@ -275,9 +200,7 @@ class SearchView extends Component {
                         }}
 
                         />
-                        <View style={{height : 50}}>
-                        </View>
-                    </ScrollView>
+                    </View>
                 }
 
                 <BottomMenuController height={50} show={this.state.bottomMenuControllerShow} buttons={this.bottomMenuControllerButtons} />
