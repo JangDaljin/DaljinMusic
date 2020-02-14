@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 
 export default connect(
     (state) => ({
-        isAuthLoading : state.auth.isLoading,
+        isLoading : state.auth.isLoading,
     }),
     (dispatch) => ({
         AuthActions : bindActionCreators(AuthActions , dispatch)

@@ -17,7 +17,7 @@ export default class ModalPlaylist extends Component {
                         {
                             this.props.playlist.map(
                                 (value , index) => (
-                                    <View key={index} style={styles.listItem}>
+                                    <View key={value} style={styles.listItem}>
                                         <TouchableOpacity style={styles.checkedButton} onPress={ () => { this.props.onCheckedPlaylist(index) } }>
                                         {
                                             this.props.checkedPlaylist.get(index) ?
@@ -140,9 +140,10 @@ const styles = StyleSheet.create({
     
     listInfoTime : {
         textAlignVertical : 'center',
+        textAlign : 'center',
         fontSize : 16,
         fontFamily : 'jua',
-
+        width : 50,
     },
 
     playingIcon : {

@@ -7,12 +7,17 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import ModalMusicplayer from './ModalMusicplayer'
 import ModalPlaylist from './ModalPlaylist'
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as MusicPlayerActions from '../../Reducers/musicPlayer'
 
-export default class MusicPlayerMini extends Component {
+import { url } from '../commonFunctions'
+
+class MusicPlayerMini extends Component {
 
     state = {
         currentPlayData : Map({
-            musicIndex : 2,
+            musicIndex : -1,
             duration : 0,
         }),
 
@@ -22,44 +27,34 @@ export default class MusicPlayerMini extends Component {
             isPlaying : false,
         }),
 
-        playlist : List([
-            Map({
-                song : 'aaa',
-                singer : {
-                    name : 'aaa',
-                },
-                album : {
-                    name : 'aaa',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                },
-                duration : 172,
-            }),
-            Map({
-                song : 'bbb',
-                singer : {
-                    name : 'bbb',
-                },
-                album : {
-                    name : 'bbb',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                } ,
-                duration : 512,
-            }),
-            Map({
-                song : 'qwer',
-                singer : {
-                    name : 'asdf',
-                },
-                album : {
-                    name : 'zxcv',
-                    albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
-                },
-                duration : 212,
-            })
-        ]),
-        checkedPlaylist : List(new Array(3).fill(false)),
+        checkedPlaylist : List(),
         showMusicplayer : false,
         showPlaylist : false,
+    }
+
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(prevProps.isAuthenticated !== this.props.isAuthenticated) {
+                this.initMusicPlayer()
+            }
+
+            if(prevProps.playlist !== this.props.playlist) {
+                this.setState({
+                    currentPlayData : this.state.currentPlayData.set('musicIndex' , -1).set('duration' , 0) ,
+                    checkedPlaylist : this.state.checkedPlaylist.clear().concat(new Array(this.props.playlist).fill(false))
+                })
+            }
+        }
+    }
+
+    initMusicPlayer () {
+        this.props.MusicPlayerActions.fetchGetPlayList({
+            userId : this.props.userId
+        })
+    }
+
+    componentDidMount() {
+        this.initMusicPlayer()
     }
 
     onShowPlaylist = () => {
@@ -98,23 +93,47 @@ export default class MusicPlayerMini extends Component {
     onDeleteListItem = () => {
         let currentMusicIndex = this.state.currentPlayData.get('musicIndex')
 
+        const removeIndexList = []
+        this.props.playlist.forEach((value , index ) => {
+            if(this.state.checkedPlaylist.get(index)) {
+                currentMusicIndex > index ? currentMusicIndex-- : 
+                currentMusicIndex === index ? currentMusicIndex-- : null
+            }
+            removeIndexList.push(index)
+        })
+        
+        this.props.MusicPlayerActions.fetchPlayListItemRemove({
+            userId : this.props.userId,
+            removeList : removeIndexList,
+        })
+
         this.setState({
-            playlist : this.state.playlist.filter((value , index) => {
-                if(this.state.checkedPlaylist.get(index)) {
-                    currentMusicIndex > index ? currentMusicIndex-- : 
-                    currentMusicIndex === index ? currentMusicIndex-- : null
-                }
-                return !this.state.checkedPlaylist.get(index)
-            }),
             checkedPlaylist : this.state.checkedPlaylist.filter(value => !value),
             currentPlayData : this.state.currentPlayData.set('musicIndex' , currentMusicIndex)
         })
     }
 
     onPlay = (index) => {
-        this.setState({currentMusic : this.state.currentPlayData.set('musicIndex' , index)})
+        if(typeof index === 'undefined') {
+            index = this.state.currentPlayData.musicIndex
+        }
+        else {
+            this.setState({currentMusic : this.state.currentPlayData.set('musicIndex' , index)})
+        }
+        
+        
+        this.onTogglePlayOptions('isPlaying')
     }
 
+    onStop = () => {
+
+        this.onTogglePlayOptions('isPlaying')
+    }
+
+
+    componentWillUnmount() {
+        
+    }
     
 
 
@@ -122,23 +141,50 @@ export default class MusicPlayerMini extends Component {
         return (
             <TouchableOpacity style={styles.container} onPress={this.onShowMusicPlayer}>
                 <View style={styles.imageWrap}>
-                    <Image style={styles.image} source={{uri : this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'albumImgUri'])}} />
+                    <Image style={styles.image} source={{uri : 
+                        this.state.currentPlayData.get('musicIndex') ? 
+                        null
+                        :
+                        url(this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'albumImgUri']))
+                    }} />
                 </View>
                 <View style={styles.infoWrap}>
-                    <Text style={[styles.infoText , styles.infoSong]} numberOfLines={1} ellipsizeMode='tail'>
-                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'song'])}
-                    </Text>
-                    <Text style={[styles.infoText , styles.infoSinger]} numberOfLines={1} ellipsizeMode='tail'>
-                        {this.state.playlist.getIn([this.state.currentPlayData.get('musicIndex') ,'singer' , 'name'])}
-                    </Text>
+                    {
+                        this.state.currentPlayData.get('musicIndex') === -1 ?
+                        <Text style={styles.infoText}>
+                            {
+                                '재생중인 음악 없음'
+                            }
+                        </Text>
+                        :
+                        <React.Fragment>
+                            <Text style={[styles.infoText , styles.infoSong]} numberOfLines={1} ellipsizeMode='tail'>
+                            {
+                                this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'song'])
+                            }
+                            </Text>
+                            <Text style={[styles.infoText , styles.infoSinger]} numberOfLines={1} ellipsizeMode='tail'>
+                                {
+                                    this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') ,'singer' , 'name'])
+                                }
+                            </Text>
+                        </React.Fragment>
+                    }
                 </View>
                 <View style={styles.buttonsWrap}>
                     <TouchableOpacity style={styles.button}>
                         <Icon size={18} name={'backward'} solid />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Icon size={18} name={'pause'} solid />
-                    </TouchableOpacity>
+                    {
+                        this.state.playOptions.get('isPlaying')?
+                        <TouchableOpacity style={styles.button} onPress={() => { this.onStop() }}>
+                            <Icon size={18} name={'pause'} solid />
+                        </TouchableOpacity> 
+                        :
+                        <TouchableOpacity style={styles.button} onPress={() => { this.onPlay() }}>
+                            <Icon size={18} name={'play'} solid />
+                        </TouchableOpacity>
+                    }
                     <TouchableOpacity style={styles.button}>
                         <Icon size={18} name={'forward'} solid />
                     </TouchableOpacity>
@@ -148,7 +194,17 @@ export default class MusicPlayerMini extends Component {
                 show={this.state.showMusicplayer} 
                 onClose={this.onCloseMusicPlayer}
                 currentPlayData={this.state.currentPlayData}
-                currentMusic={this.state.playlist.get(this.state.currentPlayData.get('musicIndex'))}
+                currentMusic={Map({
+                    song : 'test',
+                    singer : Map({
+                        name : 'testsingername'
+                    }),
+                    album : Map({
+                        name : 'testAlbumName',
+                        albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
+                    })
+                })}
+                //{this.props.playlist.get(this.state.currentPlayData.get('musicIndex'))}
                 playOptions={this.state.playOptions}
                 onTogglePlayOptions={this.onTogglePlayOptions}
                 onShowPlaylist={this.onShowPlaylist}
@@ -158,7 +214,7 @@ export default class MusicPlayerMini extends Component {
                 show={this.state.showPlaylist} 
                 onClose={this.onClosePlayList}
                 currentMusicIndex={this.state.currentPlayData.get('musicIndex')}
-                playlist={this.state.playlist}
+                playlist={this.props.playlist}
                 checkedPlaylist={this.state.checkedPlaylist}
                 onCheckedPlaylist={this.onCheckedPlaylist}
                 onPlay={this.onPlay}
@@ -170,6 +226,20 @@ export default class MusicPlayerMini extends Component {
     }
 }
 
+export default connect(
+    (state) => ({
+        userId : state.auth.userId,
+        isAuthenticated : state.auth.isAuthenticated,
+        
+        playlist : state.musicPlayer.playList,
+        randomPlaylist : state.musicPlayer.randomPlayList,
+
+        isLoading : state.musicPlayer.isLoading,
+    }),
+    (dispatch) => ({
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch)
+    })
+)(MusicPlayerMini)
 
 
 
