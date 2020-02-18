@@ -4,6 +4,8 @@ import { View, StyleSheet , TouchableOpacity, Image , Text , Modal} from 'react-
 import { Map, List } from 'immutable'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
+import Sound from 'react-native-sound'
+
 import ModalMusicplayer from './ModalMusicplayer'
 import ModalPlaylist from './ModalPlaylist'
 
@@ -47,14 +49,15 @@ class MusicPlayerMini extends Component {
         }
     }
 
+    componentDidMount() {
+        this.initMusicPlayer()
+        this.sound = new Sound()
+    }
+
     initMusicPlayer () {
         this.props.MusicPlayerActions.fetchGetPlayList({
             userId : this.props.userId
         })
-    }
-
-    componentDidMount() {
-        this.initMusicPlayer()
     }
 
     onShowPlaylist = () => {
@@ -115,10 +118,12 @@ class MusicPlayerMini extends Component {
 
     onPlay = (index) => {
         if(typeof index === 'undefined') {
-            index = this.state.currentPlayData.musicIndex
+            if(this.state.currentPlayData.get('musicIndex') === -1 && this.props.playlist.size !== 0) {
+                this.setState({currentPlayData : this.state.currentPlayData.set('musicIndex' , 1)})
+            }
         }
         else {
-            this.setState({currentMusic : this.state.currentPlayData.set('musicIndex' , index)})
+            this.setState({currentPlayData : this.state.currentPlayData.set('musicIndex' , index)})
         }
         
         
@@ -142,7 +147,7 @@ class MusicPlayerMini extends Component {
             <TouchableOpacity style={styles.container} onPress={this.onShowMusicPlayer}>
                 <View style={styles.imageWrap}>
                     <Image style={styles.image} source={{uri : 
-                        this.state.currentPlayData.get('musicIndex') ? 
+                        this.state.currentPlayData.get('musicIndex') === -1? 
                         null
                         :
                         url(this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'album' , 'albumImgUri']))
@@ -194,7 +199,7 @@ class MusicPlayerMini extends Component {
                 show={this.state.showMusicplayer} 
                 onClose={this.onCloseMusicPlayer}
                 currentPlayData={this.state.currentPlayData}
-                currentMusic={Map({
+                currentMusic=/*{Map({
                     song : 'test',
                     singer : Map({
                         name : 'testsingername'
@@ -203,8 +208,8 @@ class MusicPlayerMini extends Component {
                         name : 'testAlbumName',
                         albumImgUri : 'https://facebook.github.io/react-native/img/tiny_logo.png'
                     })
-                })}
-                //{this.props.playlist.get(this.state.currentPlayData.get('musicIndex'))}
+                })}*/
+                {this.props.playlist.get(this.state.currentPlayData.get('musicIndex'))}
                 playOptions={this.state.playOptions}
                 onTogglePlayOptions={this.onTogglePlayOptions}
                 onShowPlaylist={this.onShowPlaylist}

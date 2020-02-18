@@ -5,21 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import ModalHeader from './ModalHeader'
 
 import { mmss } from '../commonFunctions'
+import { url } from '../commonFunctions'
 
 export default class ModalMusicplayer extends Component {
 
-    state = {
-        isPlaying : false,
-        isLoop : false,
-        isRandom : false,
-    }
-
     componentDidUpdate(prevProps , prevState) {
-        if(prevProps !== this.props) {
-            if(this.props.currentMusic === null) {
-                this.setState({isPlaying : false})
-            }
-        }
+
+
     }
 
     render () {
@@ -28,37 +20,37 @@ export default class ModalMusicplayer extends Component {
                     <View style={modalStyle.container}>
 
                         <ModalHeader
-                        title={this.props.currentMusic !== null ? 
-                            `${this.props.currentMusic.get('song')}-${this.props.currentMusic.getIn(['singer' , 'name'])}-${this.props.currentMusic.getIn(['album' , 'name'])}`
+                        title={this.props.currentPlayData.get('musicIndex') === -1 ?
+                            '재생중인 음악 없음'
                             :
-                            ''
+                            `${this.props.currentMusic.get('song')}-${this.props.currentMusic.getIn(['singer' , 'name'])}-${this.props.currentMusic.getIn(['album' , 'name'])}`
                         } 
                         onPressBackButton={this.props.onClose}
                         />
 
                         <View style={modalStyle.contentWrap}>
-                            {this.props.currentMusic !== null ?
-                                <Image style={modalStyle.image} source={{uri : this.props.currentMusic.getIn(['album' , 'albumImgUri'])}}/>
-                                :
+                            {this.props.currentPlayData.get('musicIndex') === -1 ?
                                 <View style={modalStyle.image}>
 
                                 </View>
+                                :
+                                <Image style={modalStyle.image} source={{uri : url(this.props.currentMusic.getIn(['album' , 'albumImgUri']))}}/>
                             }
                         </View>
 
                         <View style={modalStyle.controller}>
                             <View style={modalStyle.progressbarWrap}>
                                 <Text style={modalStyle.time}>
-                                    {this.props.currentPlayData.get('duration')}
+                                    {mmss(this.props.currentPlayData.get('duration'))}
                                 </Text>
                                 <View style={modalStyle.progressbar}>
 
                                 </View>
                                 <Text style={modalStyle.time}>
-                                    {this.props.currentMusic !== null ?
-                                        mmss(this.props.currentMusic.get('duration'))
+                                    {this.props.currentPlayData.get('musicIndex') === -1 ?
+                                        mmss(0)
                                         :
-                                        '00:00'
+                                        mmss(this.props.currentMusic.get('duration'))
                                     }
                                 </Text>
                             </View>
