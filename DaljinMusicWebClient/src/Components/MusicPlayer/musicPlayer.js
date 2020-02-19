@@ -181,7 +181,7 @@ class MusicPlayer extends Component {
         const width = this.progressbar.clientWidth
         const seekTime = parseInt((x / width) * this.props.playList.getIn([this.props.currentMusicIndex , 'duration']))
 
-        this.props.MusicPlayerActions.changeCurrentDuration(seekTime)
+        this.props.MusicerActions.changeCurrentDuration(seekTime)
         this.audio.currentTime = seekTime
     }
 

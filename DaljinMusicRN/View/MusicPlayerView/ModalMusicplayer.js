@@ -58,18 +58,18 @@ export default class ModalMusicplayer extends Component {
                                 <TouchableOpacity onPress={() => { this.props.onTogglePlayOptions('isLoop') }}>
                                     <Icon style={[modalStyle.buttonTextColor , this.props.playOptions.get('isLoop') ? modalStyle.checkedButtonColor : null]} name={'sync-alt'} size={20} solid />
                                 </TouchableOpacity>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={() => { this.props.onPrev() }}>
                                     <Icon style={modalStyle.buttonTextColor} name={'backward'} size={20} solid />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.props.onTogglePlayOptions('isPlaying') } }>
+                                <TouchableOpacity onPress={() => { this.props.isPlaying ? this.props.onPause() : this.props.onPlay() } }>
                                     {
-                                        this.props.playOptions.get('isPlaying') ?
+                                        this.props.isPlaying ?
                                             <Icon style={modalStyle.buttonTextColor} name={'pause'} size={20} solid />
                                             :
                                             <Icon style={modalStyle.buttonTextColor} name={'play'} size={20} solid />
                                     }
                                 </TouchableOpacity>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={() => { this.props.onNext() }}>
                                     <Icon style={modalStyle.buttonTextColor} name={'forward'} size={20} solid />
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { this.props.onTogglePlayOptions('isRandom') }}>

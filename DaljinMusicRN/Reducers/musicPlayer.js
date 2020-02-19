@@ -97,9 +97,7 @@ export const musicPlayerReducer = handleActions({
         //일반 리스트 생성
         const newState = { ...state }
         const { addedPlayList } = action.payload
-
-        newState.addedIndex = newState.playList.size
-
+        
         addedPlayList.map(value => { value.checked = false; return value})
         newState.playList = newState.playList.concat(fromJS(addedPlayList))
         newState.randomPlayList = newState.randomPlayList.clear()
