@@ -1,7 +1,7 @@
 import React , { Component } from 'react'
 import { View, StyleSheet , TouchableOpacity, Image , Text , Modal, ToastAndroid} from 'react-native'
 
-import { Map, List } from 'immutable'
+import { Map, List, setIn } from 'immutable'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 import ModalMusicplayer from './ModalMusicplayer'
@@ -14,7 +14,6 @@ import * as MusicPlayerActions from '../../Reducers/musicPlayer'
 
 import { url } from '../commonFunctions'
 
-var Sound = require('react-native-sound')
 
 class MusicPlayerMini extends Component {
 
@@ -35,6 +34,8 @@ class MusicPlayerMini extends Component {
         checkedPlaylist : List(),
         showMusicplayer : false,
         showPlaylist : false,
+
+        musicTimer : null,
     }
 
     componentDidUpdate(prevProps , prevState) {
@@ -45,46 +46,43 @@ class MusicPlayerMini extends Component {
 
             if(prevProps.playlist !== this.props.playlist) {
                 this.setState({
-                    checkedPlaylist : this.state.checkedPlaylist.clear().concat(new Array(this.props.playlist).fill(false))
+                    checkedPlaylist : this.state.checkedPlaylist.clear().concat(new Array(this.props.playlist.size).fill(false))
                 })
             }
         }
 
         if(prevState !== this.state) {
             if(prevState.currentPlayData.get('musicIndex') !== this.state.currentPlayData.get('musicIndex') && this.state.currentPlayData.get('musicIndex') !== -1) {
-
-                this.sound = new Sound(url(`/mymusic/playmusic?musicid=${this.props.playList.getIn([this.props.currentMusicIndex , '_id'])}&userid=${this.props.userId}`,
-                                        '',
-                                        (error) => {
-                                            if(error) {
-                                                ToastAndroid.show('[ERROR] MUSIC LOAD ERROR' , 3000)
-                                            }
-                                            else {
-                                                //현재시간 설정
-                                                const timer = setInterval(
-                                                    () => {
-                                                        this.sound.getCurrentTime(
-                                                            (seconds , isPlaying) => {
-                                                                this.setState({
-                                                                    currentPlayData : this.state.currentPlayData.set('duration' , seconds)
-                                                                })
-                                                            }
-                                                        )
-                                                    } , 100
-                                                )
-
-                                                this.sound.play(
-                                                    //음악 끝나면
-                                                    (success) => {
-                                                        clearInterval(timer)
-                                                        this.onNext()
-                                                    }
-                                                )
-                                            }
-                                        }))
-
+                //음악재생
+                this.timerInit()
             }
         }
+    }
+
+    timerClear = () => {
+        clearInterval(this.state.musicTimer)
+        this.setState({
+            currentPlayData : this.state.currentPlayData.set('duration' , 0),
+            musicTimer : null
+        })
+    }
+
+    timerInit = () => {
+        this.setState({
+            currentPlayData : this.state.currentPlayData.set('duration' , 0),
+            musicTimer : setInterval(
+                () => {
+                    if(this.state.isPlaying) {
+                        this.setState({currentPlayData : this.state.currentPlayData.update('duration' , value => value + 0.1) })
+                    }
+                    if(this.state.currentPlayData.get('duration') >= this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'duration'])) {
+                        //음악 종료
+                        this.onNext()
+                    }
+                },
+                100
+            )
+        })
     }
 
 
@@ -188,6 +186,8 @@ class MusicPlayerMini extends Component {
     }
 
     onNext = () => {
+        
+        this.timerClear()
         let nextMusicIndex
         if(this.state.playOptions.get('isRandom')) {
 
@@ -196,10 +196,15 @@ class MusicPlayerMini extends Component {
                 'randomIndex'
             ]) + 1
 
-            if(tempIndex >= this.props.playlist.size) {
-                tempIndex = 0
-            }
 
+            if(tempIndex >= this.props.playlist.size) {
+                if(this.state.playOptions.get('isLoop')) {
+                    tempIndex = 0
+                }
+                else {
+                    tempIndex = -1
+                }
+            }
             nextMusicIndex = this.props.randomPlaylist.getIn([
                 tempIndex ,
                 'index'
@@ -221,12 +226,15 @@ class MusicPlayerMini extends Component {
             }
         }
 
+
         this.setState({
-            currentPlayData : nextMusicIndex
+            currentPlayData : this.state.currentPlayData.set('musicIndex' , nextMusicIndex),
         })
     }
 
     onPrev = () => {
+        
+        this.timerClear()
         let prevMusicIndex
         if(this.state.playOptions.get('isRandom')) {
 
@@ -236,7 +244,12 @@ class MusicPlayerMini extends Component {
             ]) - 1
 
             if(tempIndex < 0) {
-                tempIndex = -1
+                if(this.state.playOptions.get('isLoop')) {
+                    tempIndex = this.props.playlist.size - 1
+                }
+                else {
+                    tempIndex = -1
+                }
             }
 
             prevMusicIndex = this.props.randomPlaylist.getIn([
@@ -258,10 +271,9 @@ class MusicPlayerMini extends Component {
             else {
                 prevMusicIndex = -1
             }
-        }
-
+        }   
         this.setState({
-            currentPlayData : prevMusicIndex
+            currentPlayData : this.state.currentPlayData.set('musicIndex' , prevMusicIndex)
         })
     }
 

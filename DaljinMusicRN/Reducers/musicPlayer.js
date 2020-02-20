@@ -45,6 +45,11 @@ export const startLoading = createAction(START_LOADING)
 export const END_LOADING = 'mp/END_LOADINg'
 export const endLoading = createAction(END_LOADING)
 
+export const REMOTE_PLAY = 'mp/REMOTE_PLAY'
+export const remotePlay = createAction(REMOTE_PLAY)
+
+export const REMOTE_RECEIVED = 'mp/REMOTE_RECEIVED'
+export const remoteReceived = createAction(REMOTE_RECEIVED)
 
 const musicPlayerInitialState = {
 
@@ -52,6 +57,11 @@ const musicPlayerInitialState = {
     randomPlayList : List([]),
 
     isLoading : true,
+
+    remote : Map({
+        receive : false,
+        opertaionCode : -1,
+    })
 }
 
 export const musicPlayerReducer = handleActions({
@@ -134,15 +144,6 @@ export const musicPlayerReducer = handleActions({
         const newState = { ...state }
         const { removeList }= action.payload
         for(let cnt = removeList.length -1 ; cnt > -1; cnt--) {
-            if(removeList[cnt] === newState.currentMusicIndex) {
-                if(newState.currentMusicIndex === 0) {
-                    if(newState.playList.size === 0) {
-                        newState.currentMusicIndex = 0
-                    }
-                    newState.currentMusicIndex = 1
-                }
-                newState.currentMusicIndex = newState.currentMusicIndex -1 ;
-            }
             newState.playList = newState.playList.splice(removeList[cnt] , 1)
         }
         return newState
@@ -169,6 +170,24 @@ export const musicPlayerReducer = handleActions({
     [END_LOADING] : (state , action) => {
         const newState = { ...state }
         newState.isLoading = false
+        return newState
+    },
+
+    //명령 전달
+    [REMOTE_PLAY] : (state , action) => {
+        const newState = { ...state }
+        newState.remote = newState.remote
+        .set('receive' , true)
+        .set('opertaionCode' , 0)
+        return newState
+    },
+
+    //명령 처리 완료
+    [REMOTE_RECEIVED] : (state , action) => {
+        const newState = { ...state }
+        newState.remote = newState.remote
+        .set('receive' , false)
+        .set('opertaionCode' , -1)
         return newState
     }
 

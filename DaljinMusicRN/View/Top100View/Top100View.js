@@ -7,6 +7,8 @@ import BottomMenuController from '../BottomMenuController'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as Top100MusicsActions from '../../Reducers/top100Musics'
+import * as MusicPlayerActions from '../../Reducers/musicPlayer'
+import * as MyMusicsActions from '../../Reducers/myMusics'
 import { useFocusEffect , useRoute} from '@react-navigation/native'
 import LoadingView from '../LoadingView'
 import { url } from '../commonFunctions'
@@ -76,6 +78,29 @@ class Top100View extends Component {
         })
     }
 
+    onPlay = () => {
+        
+    }
+
+    onAddItemInPlaylist = () => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({
+            userId : this.props.userId,
+            addList : this.props.musics
+                .filter(
+                    (value , index) => (
+                        this.state.checkList.get(index)
+                    )
+                )
+                .map(
+                    value => (
+                        value.get('_id')
+                    )
+                )
+                .toJS()
+        })
+    }
+
+
     bottomMenuControllerButtons = ({}) => (
         <View style={bottomMenuControllerStyles.bottomControllerButtonsWrap}>
             <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
@@ -85,7 +110,7 @@ class Top100View extends Component {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton} onPress={() => { this.onAddItemInPlaylist() }}>
                 <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'plus'} size={16} solid />
                     <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생목록에 추가</Text>
@@ -300,11 +325,14 @@ const bottomMenuControllerStyles = {
 
 export default connect(
     (state) => ({
+        userId : state.auth.userId,
         musics : state.top100Musics.musics,
         isLoading : state.top100Musics.isLoading,
     }),
     (dispatch) => ({
-        Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch)
+        Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch),
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch),
+        MyMusicsActinos : bindActionCreators(MyMusicsActions , dispatch),
     })
 )(
     function(props) { 
