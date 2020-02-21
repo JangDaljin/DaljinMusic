@@ -49,6 +49,28 @@ class MusicPlayerMini extends Component {
                     checkedPlaylist : this.state.checkedPlaylist.clear().concat(new Array(this.props.playlist.size).fill(false))
                 })
             }
+
+            if(prevProps.remote !== this.props.remote) {
+                const receive = this.props.remote.get('receive')
+                const operationCode = this.props.remote.get('operationCode')
+                const operand = this.props.remote.get('operand')
+                const OP_CODE = MusicPlayerActions.REMOTE_OP_CODE
+                if(receive) {
+                    switch(operationCode) {
+                        case OP_CODE.PLAY :
+                            this.setState({
+                                currentPlayData : this.state.currentPlayData.set('musicIndex' , operand)
+                            })
+                            
+                            this.onPlay()
+                        break;
+                    }
+
+
+                    //종료
+                    this.props.MusicPlayerActions.remoteReceived()
+                }
+            }
         }
 
         if(prevState !== this.state) {
@@ -133,7 +155,11 @@ class MusicPlayerMini extends Component {
         let currentMusicIndex = this.state.currentPlayData.get('musicIndex')
 
         const removeIndexList = []
-        this.props.playlist.forEach((value , index ) => {
+        this.props.playlist
+        .filter((value , index) => (
+            this.state.checkedPlaylist.get(index)
+        ))
+        .forEach((value , index ) => {
             if(this.state.checkedPlaylist.get(index)) {
                 currentMusicIndex >= index ? currentMusicIndex-- : 
                 null
@@ -375,6 +401,8 @@ export default connect(
         
         playlist : state.musicPlayer.playList,
         randomPlaylist : state.musicPlayer.randomPlayList,
+
+        remote : state.musicPlayer.remote,
 
         isLoading : state.musicPlayer.isLoading,
     }),

@@ -1,7 +1,8 @@
 import { createAction , handleActions } from 'redux-actions'
 import { List , Map, fromJS } from 'immutable'
-import { takeLatest , put} from 'redux-saga/effects'
+import { takeLatest , put , select} from 'redux-saga/effects'
 import { post } from './Request/request'
+import { ToastAndroid } from 'react-native'
 
 export const PLAY = 'mp/PLAY'
 export const play = createAction(PLAY)
@@ -48,8 +49,24 @@ export const endLoading = createAction(END_LOADING)
 export const REMOTE_PLAY = 'mp/REMOTE_PLAY'
 export const remotePlay = createAction(REMOTE_PLAY)
 
+export const REMOTE_PLAY_INNER = 'mp/REMOTE_PLAY_INNER'
+export const remotePlayInner = createAction(REMOTE_PLAY_INNER)
+
+export const REMOTE_ADD_ITEMS_IN_PLAYLIST = 'mp/REMOTE_ADD_ITEMS_IN_PLAYLIST'
+export const remoteAddItemsInPlaylist = createAction(REMOTE_ADD_ITEMS_IN_PLAYLIST)
+
 export const REMOTE_RECEIVED = 'mp/REMOTE_RECEIVED'
 export const remoteReceived = createAction(REMOTE_RECEIVED)
+
+export const REMOTE_OP_CODE = {
+    PLAY : 0,
+}
+
+export const START_ADD_ITEMS_IN_PLAYLIST_LOADING = 'mp/START_ADD_ITEMS_IN_PLAYLIST_LOADING'
+export const startAddItemsInPlaylistLoading = createAction(START_ADD_ITEMS_IN_PLAYLIST_LOADING)
+
+export const END_ADD_ITEMS_IN_PLAYLIST_LOADING = 'mp/END_ADD_ITEMS_IN_PLAYLIST_LOADING'
+export const endAddItemsInPlaylistLoading = createAction(END_ADD_ITEMS_IN_PLAYLIST_LOADING)
 
 const musicPlayerInitialState = {
 
@@ -60,8 +77,11 @@ const musicPlayerInitialState = {
 
     remote : Map({
         receive : false,
-        opertaionCode : -1,
-    })
+        operationCode : null,
+        operand : null,
+    }),
+
+    isAddItemsPlayListLoading : false,
 }
 
 export const musicPlayerReducer = handleActions({
@@ -69,7 +89,7 @@ export const musicPlayerReducer = handleActions({
     [ACCEPT_GET_PLAYLIST] : (state , action) => {
         //일반 리스트 생성
         const newState = { ...state }
-        const { playList  , addedIndex } = action.payload
+        const { playList } = action.payload
 
 
         playList.map(value => { value.checked = false; return value})
@@ -131,6 +151,7 @@ export const musicPlayerReducer = handleActions({
         //console.dir(newState.playList.toJS())
         //console.dir(newState.randomPlayList.toJS())
 
+        //ToastAndroid.show("ACCEPTED" , 3000)
         return newState
     },
 
@@ -164,21 +185,36 @@ export const musicPlayerReducer = handleActions({
 
     [START_LOADING] : (state , action) => {
         const newState = { ...state }
+        //ToastAndroid.show('START LOADING' , 2200)
         newState.isLoading = true
         return newState
     },
     [END_LOADING] : (state , action) => {
         const newState = { ...state }
+        //ToastAndroid.show('END LOADING' , 2200)
         newState.isLoading = false
         return newState
     },
 
-    //명령 전달
-    [REMOTE_PLAY] : (state , action) => {
+    [START_ADD_ITEMS_IN_PLAYLIST_LOADING] : (state , action) => {
         const newState = { ...state }
+        newState.isAddItemsPlayListLoading = true
+        return newState
+    },
+    [END_ADD_ITEMS_IN_PLAYLIST_LOADING] : (state , action) => {
+        const newState = { ...state }
+        newState.isAddItemsPlayListLoading = false
+        return newState
+    },
+
+    //명령 전달
+    [REMOTE_PLAY_INNER] : (state , action) => {
+        const newState = { ...state }
+        //ToastAndroid.show(`${action.payload.startIndex}` , 3000)
         newState.remote = newState.remote
         .set('receive' , true)
-        .set('opertaionCode' , 0)
+        .set('operationCode' , REMOTE_OP_CODE.PLAY)
+        .set('operand' , action.payload.startIndex)
         return newState
     },
 
@@ -187,11 +223,25 @@ export const musicPlayerReducer = handleActions({
         const newState = { ...state }
         newState.remote = newState.remote
         .set('receive' , false)
-        .set('opertaionCode' , -1)
+        .set('operationCode' , null)
+        .set('operand' , null)
         return newState
     }
 
 }, musicPlayerInitialState)
+
+function* RemotePlaySaga(action) {
+    const MusicPlayerState = yield select(state => state.musicPlayer)
+    const startIndex = MusicPlayerState.playList.size
+
+    yield* fetchPlayListItemAddSaga({payload : action.payload})
+
+    yield put({ type : START_LOADING })
+    yield put({ type : REMOTE_PLAY_INNER , payload : { startIndex : startIndex }})
+    yield put({ type : END_LOADING })
+
+}
+
 
 function* fetchGetPlayListSaga(action) {
     yield put({ type : START_LOADING })
@@ -200,9 +250,9 @@ function* fetchGetPlayListSaga(action) {
 }
 
 function* fetchPlayListItemAddSaga(action) {
-    yield put({ type : START_LOADING })
+    yield put({ type : START_ADD_ITEMS_IN_PLAYLIST_LOADING })
     yield post('/mymusic/playlistitemadd' , { 'Content-Type' : 'application/json' , 'Accept':  'application/json' , 'Cache': 'no-cache' } , JSON.stringify(action.payload) , ACCEPT_PLAYLIST_ITEM_ADD , ABORT_GET_PLAYLIST)
-    yield put({ type : END_LOADING })
+    yield put({ type : END_ADD_ITEMS_IN_PLAYLIST_LOADING })
 }
 
 function* fetchPlayListItemRemoveSaga(action) {
@@ -213,6 +263,8 @@ function* fetchPlayListItemRemoveSaga(action) {
 }
 
 export function* musicPlayerSaga () {
+    yield takeLatest(REMOTE_PLAY , RemotePlaySaga)
+
     yield takeLatest(FETCH_GET_PLAYLIST , fetchGetPlayListSaga)
     yield takeLatest(FETCH_PLAYLIST_ITEM_ADD , fetchPlayListItemAddSaga)
     yield takeLatest(FETCH_PLAYLIST_ITEM_REMOVE , fetchPlayListItemRemoveSaga)

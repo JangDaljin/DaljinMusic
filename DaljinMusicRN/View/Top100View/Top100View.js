@@ -79,7 +79,21 @@ class Top100View extends Component {
     }
 
     onPlay = () => {
-        
+        this.props.MusicPlayerActions.remotePlay({
+            userId : this.props.userId,
+            addList : this.props.musics
+                .filter(
+                    (value , index) => (
+                        this.state.checkList.get(index)
+                    )
+                )
+                .map(
+                    value => (
+                        value.get('_id')
+                    )
+                )
+                .toJS()
+        })
     }
 
     onAddItemInPlaylist = () => {
@@ -103,8 +117,8 @@ class Top100View extends Component {
 
     bottomMenuControllerButtons = ({}) => (
         <View style={bottomMenuControllerStyles.bottomControllerButtonsWrap}>
-            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
-                <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton} onPress={() => { this.onPlay() }}>
+                <View style={bottomMenuControllerStyles.bottomControllerButtonBody} >
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'play'} size={16} solid />
                     <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생</Text>
                 </View>
@@ -328,6 +342,7 @@ export default connect(
         userId : state.auth.userId,
         musics : state.top100Musics.musics,
         isLoading : state.top100Musics.isLoading,
+        isMusicPlayerLoading : state.musicPlayer.isLoading,
     }),
     (dispatch) => ({
         Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch),
