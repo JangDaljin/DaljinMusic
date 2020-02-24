@@ -17,7 +17,7 @@ export default class ModalPlaylist extends Component {
                         {
                             this.props.playlist.map(
                                 (value , index) => (
-                                    <View key={value} style={styles.listItem}>
+                                    <View key={index} style={styles.listItem}>
                                         <TouchableOpacity style={styles.checkedButton} onPress={ () => { this.props.onCheckedPlaylist(index) } }>
                                         {
                                             this.props.checkedPlaylist.get(index) ?

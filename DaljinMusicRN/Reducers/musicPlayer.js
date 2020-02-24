@@ -86,11 +86,8 @@ const musicPlayerInitialState = {
 export const musicPlayerReducer = handleActions({
 
     [ACCEPT_GET_PLAYLIST] : (state , action) => {
-        //일반 리스트 생성
         const newState = { ...state }
         const { playList } = action.payload
-
-
         playList.map(value => { value.checked = false; return value})
         newState.playList = newState.playList.clear().concat(fromJS(playList))
         return newState
@@ -102,19 +99,14 @@ export const musicPlayerReducer = handleActions({
     },
 
     [ACCEPT_PLAYLIST_ITEM_ADD] : (state , action) => {
-        //일반 리스트 생성
         const newState = { ...state }
         const { addedPlayList } = action.payload
-        
-        addedPlayList.map(value => { value.checked = false; return value})
         newState.playList = newState.playList.concat(fromJS(addedPlayList))
-        
         return newState
     },
 
     [ABORT_PLAYLIST_ITEM_ADD] : (state , action) => {
         const newState = { ...state }
-
         return newState
     },
 

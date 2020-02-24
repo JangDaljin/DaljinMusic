@@ -55,14 +55,14 @@ class MusicPlayerMini extends Component {
                 const operationCode = this.props.remote.get('operationCode')
                 const operand = this.props.remote.get('operand')
                 const OP_CODE = MusicPlayerActions.REMOTE_OP_CODE
+
+                
                 if(receive) {
                     switch(operationCode) {
                         case OP_CODE.PLAY :
                             this.setState({
                                 currentPlayData : this.state.currentPlayData.set('musicIndex' , operand)
                             })
-                            
-                            this.onPlay()
                         break;
                     }
 
@@ -196,7 +196,7 @@ class MusicPlayerMini extends Component {
         if(playMusicIndex < 0) {
             //랜덤 재생
             if(this.state.playOptions.get('isRandom')) {
-                playMusicIndex = this.props.playlist.getIn([0 , 'randomIndex'])
+                playMusicIndex = this.RandomIndexMaker()
             }
             //일반재생
             else {
@@ -221,96 +221,72 @@ class MusicPlayerMini extends Component {
     onNext = () => {
         this.timerClear()
 
-        if(this.props.playlist.size === 0) {
-            return
-        }
+        let nextIndex = this.state.currentPlayData.get('musicIndex')
 
-        let nextMusicIndex
         if(this.state.playOptions.get('isRandom')) {
-            let randomIndex
-            
-            if(this.state.currentPlayData.get('musicIndex') === -1) {
-                randomIndex = this.props.randomPlaylist.getIn([0 , 'index'])
-            }
-            else {
-                randomIndex = this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'randomIndex']) + 1
-            }
-
-            if(randomIndex >= this.props.playlist.size) {
-                if(this.state.playOptions.get('isLoop')) {
-                    randomIndex = this.props.randomPlaylist.getIn([
-                        0 ,
-                        'index'
-                    ])
-                }
-                else {
-                    randomIndex = -1
-                }
-            }
-
-            nextMusicIndex = randomIndex
+            nextIndex = this.RandomIndexMaker(this.state.currentPlayData.get('musicIndex'))
         }
         else {
-            nextMusicIndex = this.state.currentPlayData.get('musicIndex') + 1
-            if(nextMusicIndex >= this.props.playlist.size) {
+            nextIndex++
+            if(nextIndex >= this.props.playlist.size) {
                 if(this.state.playOptions.get('isLoop')) {
-                    nextMusicIndex = 0
+                    nextIndex = 0
                 }
                 else {
-                    nextMusicIndex = -1
+                    nextIndex = -1
                 }
             }
         }
-
-
+        
         this.setState({
-            currentPlayData : this.state.currentPlayData.set('musicIndex' , nextMusicIndex),
+            currentPlayData : this.state.currentPlayData.set('musicIndex' , nextIndex)
         })
     }
 
     onPrev = () => {
-        
         this.timerClear()
-        let prevMusicIndex
+        
+        let prevIndex = this.state.currentPlayData.get('musicIndex')
+
         if(this.state.playOptions.get('isRandom')) {
-
-            let tempIndex = this.props.playlist.getIn([
-                this.state.currentPlayData.get('musicIndex') ,
-                'randomIndex'
-            ]) - 1
-
-            if(tempIndex < 0) {
-                if(this.state.playOptions.get('isLoop')) {
-                    tempIndex = this.props.playlist.size - 1
-                }
-                else {
-                    tempIndex = -1
-                }
-            }
-
-            prevMusicIndex = this.props.randomPlaylist.getIn([
-                tempIndex ,
-                'index'
-            ])
+            prevIndex = this.RandomIndexMaker(this.state.currentPlayData.get('musicIndex'))
         }
         else {
-            prevMusicIndex = this.state.currentPlayData.get('musicIndex') - 1
+            prevIndex--
+            if(prevIndex < 0) {
+                if(this.state.playOptions.get('isLoop')) {
+                    prevIndex = this.props.playlist.size -1
+                }
+                else {
+                    prevIndex = -1
+                }
+            }
         }
 
-        if(prevMusicIndex < 0) {
-            if(this.state.playOptions.get('isLoop')) {
-                if(this.state.playOptions.get('isRandom')) {
-                    prevMusicIndex = this.props.randomPlaylist.get([this.props.randomPlaylist.size -1] , 'index')
-                }
-                prevMusicIndex = this.props.playlist.size
-            }
-            else {
-                prevMusicIndex = -1
-            }
-        }   
         this.setState({
-            currentPlayData : this.state.currentPlayData.set('musicIndex' , prevMusicIndex)
+            currentPlayData : this.state.currentPlayData.set('musicIndex' , prevIndex)
         })
+    }
+
+    RandomIndexMaker = (exNum) => {
+        let random
+        if(exNum === null && typeof exNum !== 'undefined') {
+            random = Math.floor(Math.random() * this.props.playlist.size)
+        }
+        else if(typeof exNum === 'number') {
+            while(true) {
+                const r = Math.floor(Math.random() * this.props.playlist.size)
+                if(r !== exNum) {
+                    random = r
+                    break
+                }
+            }
+        }
+        else {
+            random = -1
+        }
+
+        return random
     }
 
 
@@ -356,7 +332,7 @@ class MusicPlayerMini extends Component {
                 </View>
                 <View style={styles.buttonsWrap}>
                     <TouchableOpacity style={styles.button}>
-                        <Icon size={18} name={'backward'} solid onPRess={() => { this.onPrev() }} />
+                        <Icon size={18} name={'backward'} solid onPress={() => { this.onPrev() }} />
                     </TouchableOpacity>
                     {
                         this.state.isPlaying ?
@@ -408,12 +384,9 @@ export default connect(
     (state) => ({
         userId : state.auth.userId,
         isAuthenticated : state.auth.isAuthenticated,
-        
+
         playlist : state.musicPlayer.playList,
-        randomPlaylist : state.musicPlayer.randomPlayList,
-
         remote : state.musicPlayer.remote,
-
         isLoading : state.musicPlayer.isLoading,
     }),
     (dispatch) => ({
