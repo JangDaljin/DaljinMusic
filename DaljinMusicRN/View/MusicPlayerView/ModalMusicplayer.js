@@ -20,7 +20,7 @@ export default class ModalMusicplayer extends Component {
                     <View style={modalStyle.container}>
 
                         <ModalHeader
-                        title={this.props.currentPlayData.get('musicIndex') === -1 ?
+                        title={this.props.currentPlayData.get('musicIndex') === -1 || this.props.currentMusic === null ?
                             '재생중인 음악 없음'
                             :
                             `${this.props.currentMusic.get('song')}-${this.props.currentMusic.getIn(['singer' , 'name'])}-${this.props.currentMusic.getIn(['album' , 'name'])}`
@@ -29,7 +29,7 @@ export default class ModalMusicplayer extends Component {
                         />
 
                         <View style={modalStyle.contentWrap}>
-                            {this.props.currentPlayData.get('musicIndex') === -1 ?
+                            {this.props.currentPlayData.get('musicIndex') === -1 || this.props.currentMusic === null?
                                 <View style={modalStyle.image}>
 
                                 </View>

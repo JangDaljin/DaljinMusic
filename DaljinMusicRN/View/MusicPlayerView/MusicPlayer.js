@@ -74,9 +74,14 @@ class MusicPlayerMini extends Component {
         }
 
         if(prevState !== this.state) {
-            if(prevState.currentPlayData.get('musicIndex') !== this.state.currentPlayData.get('musicIndex') && this.state.currentPlayData.get('musicIndex') !== -1) {
-                //음악재생
-                this.timerInit()
+            if(prevState.currentPlayData.get('musicIndex') !== this.state.currentPlayData.get('musicIndex')) {
+                if(this.state.currentPlayData.get('musicIndex') === -1) {
+                    this.timerClear()
+                }
+                else {
+                    //음악재생
+                    this.timerInit()
+                }
             }
         }
     }
@@ -84,13 +89,15 @@ class MusicPlayerMini extends Component {
     timerClear = () => {
         clearInterval(this.state.musicTimer)
         this.setState({
+            isPlaying : false,
             currentPlayData : this.state.currentPlayData.set('duration' , 0),
-            musicTimer : null
+            musicTimer : null,
         })
     }
 
     timerInit = () => {
         this.setState({
+            isPlaying : true,
             currentPlayData : this.state.currentPlayData.set('duration' , 0),
             musicTimer : setInterval(
                 () => {
@@ -212,43 +219,46 @@ class MusicPlayerMini extends Component {
     }
 
     onNext = () => {
-        
         this.timerClear()
+
+        if(this.props.playlist.size === 0) {
+            return
+        }
+
         let nextMusicIndex
         if(this.state.playOptions.get('isRandom')) {
+            let randomIndex
+            
+            if(this.state.currentPlayData.get('musicIndex') === -1) {
+                randomIndex = this.props.randomPlaylist.getIn([0 , 'index'])
+            }
+            else {
+                randomIndex = this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'randomIndex']) + 1
+            }
 
-            let tempIndex =  this.props.playlist.getIn([
-                this.state.currentPlayData.get('musicIndex') ,
-                'randomIndex'
-            ]) + 1
-
-
-            if(tempIndex >= this.props.playlist.size) {
+            if(randomIndex >= this.props.playlist.size) {
                 if(this.state.playOptions.get('isLoop')) {
-                    tempIndex = 0
+                    randomIndex = this.props.randomPlaylist.getIn([
+                        0 ,
+                        'index'
+                    ])
                 }
                 else {
-                    tempIndex = -1
+                    randomIndex = -1
                 }
             }
-            nextMusicIndex = this.props.randomPlaylist.getIn([
-                tempIndex ,
-                'index'
-            ])
+
+            nextMusicIndex = randomIndex
         }
         else {
             nextMusicIndex = this.state.currentPlayData.get('musicIndex') + 1
-        }
-
-        if(nextMusicIndex >= this.props.playlist.size) {
-            if(this.state.playOptions.get('isLoop')) {
-                nextMusicIndex = 0
-                if(this.state.playOptions.get('isRandom')) {
-                    nextMusicIndex = this.props.randomPlaylist.getIn([0 , 'index'])
+            if(nextMusicIndex >= this.props.playlist.size) {
+                if(this.state.playOptions.get('isLoop')) {
+                    nextMusicIndex = 0
                 }
-            }
-            else {
-                nextMusicIndex = -1
+                else {
+                    nextMusicIndex = -1
+                }
             }
         }
 
@@ -346,7 +356,7 @@ class MusicPlayerMini extends Component {
                 </View>
                 <View style={styles.buttonsWrap}>
                     <TouchableOpacity style={styles.button}>
-                        <Icon size={18} name={'backward'} solid />
+                        <Icon size={18} name={'backward'} solid onPRess={() => { this.onPrev() }} />
                     </TouchableOpacity>
                     {
                         this.state.isPlaying ?
@@ -358,7 +368,7 @@ class MusicPlayerMini extends Component {
                             <Icon size={18} name={'play'} solid />
                         </TouchableOpacity>
                     }
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => { this.onNext() }}>
                         <Icon size={18} name={'forward'} solid />
                     </TouchableOpacity>
                 </View>
@@ -367,7 +377,7 @@ class MusicPlayerMini extends Component {
                 show={this.state.showMusicplayer} 
                 onClose={this.onCloseMusicPlayer}
                 currentPlayData={this.state.currentPlayData}
-                currentMusic={this.props.playlist.get(this.state.currentPlayData.get('musicIndex'))}
+                currentMusic={this.props.playlist.size === 0 ? null : this.props.playlist.get(this.state.currentPlayData.get('musicIndex'))}
                 playOptions={this.state.playOptions}
                 onTogglePlayOptions={this.onTogglePlayOptions}
                 isPlaying={this.state.isPlaying}

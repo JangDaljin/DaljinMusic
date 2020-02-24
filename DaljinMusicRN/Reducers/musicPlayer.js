@@ -71,7 +71,6 @@ export const endAddItemsInPlaylistLoading = createAction(END_ADD_ITEMS_IN_PLAYLI
 const musicPlayerInitialState = {
 
     playList : List([]),// Map({ song : ### , album : ### , singer : ### , duration : ### , checked : ###})
-    randomPlayList : List([]),
 
     isLoading : true,
 
@@ -94,27 +93,6 @@ export const musicPlayerReducer = handleActions({
 
         playList.map(value => { value.checked = false; return value})
         newState.playList = newState.playList.clear().concat(fromJS(playList))
-        newState.randomPlayList = newState.randomPlayList.clear()
-
-
-        //랜덤리스트 생성
-        let indexArray = Array(newState.playList.size)
-        for(let i = 0 ; i < indexArray.length; i++) {
-            indexArray[i] = i
-        }
-        
-        for(let i = 0 ; i < newState.playList.size; i++) {
-            const random = parseInt(Math.random() * indexArray.length)
-            const randomIndex = indexArray[random]
-            indexArray.splice(random , 1)
-
-            newState.randomPlayList = newState.randomPlayList.push(newState.playList.get(randomIndex).set('index' , randomIndex))
-            newState.playList = newState.playList.setIn([randomIndex , 'randomIndex'] , newState.randomPlayList.size-1)
-        }
-
-        //console.dir(newState.playList.toJS())
-        //console.dir(newState.randomPlayList.toJS())
-
         return newState
     },
 
@@ -130,28 +108,7 @@ export const musicPlayerReducer = handleActions({
         
         addedPlayList.map(value => { value.checked = false; return value})
         newState.playList = newState.playList.concat(fromJS(addedPlayList))
-        newState.randomPlayList = newState.randomPlayList.clear()
-
-
-        //랜덤리스트 생성
-        let indexArray = Array(newState.playList.size)
-        for(let i = 0 ; i < indexArray.length; i++) {
-            indexArray[i] = i
-        }
         
-        for(let i = 0 ; i < newState.playList.size; i++) {
-            const random = parseInt(Math.random() * indexArray.length)
-            const randomIndex = indexArray[random]
-            indexArray.splice(random , 1)
-
-            newState.randomPlayList = newState.randomPlayList.push(newState.playList.get(randomIndex).set('index' , randomIndex))
-            newState.playList = newState.playList.setIn([randomIndex , 'randomIndex'] , newState.randomPlayList.size-1)
-        }
-
-        //console.dir(newState.playList.toJS())
-        //console.dir(newState.randomPlayList.toJS())
-
-        //ToastAndroid.show("ACCEPTED" , 3000)
         return newState
     },
 
