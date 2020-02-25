@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as Top100MusicsActions from '../../Reducers/top100Musics'
 import * as MusicPlayerActions from '../../Reducers/musicPlayer'
-import * as MyMusicsActions from '../../Reducers/myMusics'
+import * as ModalActions from '../../Reducers/modal'
 import { useFocusEffect , useRoute} from '@react-navigation/native'
 import LoadingView from '../LoadingView'
 import { url } from '../commonFunctions'
@@ -114,6 +114,12 @@ class Top100View extends Component {
         })
     }
 
+    onAddItemInMyMusics = () => {
+        this.props.ModalActions.modalMyMusicsShow()
+    }
+
+
+
 
     bottomMenuControllerButtons = ({}) => (
         <View style={bottomMenuControllerStyles.bottomControllerButtonsWrap}>
@@ -131,7 +137,7 @@ class Top100View extends Component {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton} onPress={() => { this.onAddItemInMyMusics() }}>
                 <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'list'} size={16} solid />
                     <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>내음악에 추가</Text>
@@ -347,7 +353,7 @@ export default connect(
     (dispatch) => ({
         Top100MusicsActions : bindActionCreators(Top100MusicsActions , dispatch),
         MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch),
-        MyMusicsActinos : bindActionCreators(MyMusicsActions , dispatch),
+        ModalActions : bindActionCreators(ModalActions , dispatch),
     })
 )(
     function(props) { 

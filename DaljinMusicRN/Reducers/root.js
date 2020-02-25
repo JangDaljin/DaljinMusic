@@ -8,6 +8,7 @@ import { authReducer as auth , authSaga } from './auth'
 import { myMusicsReducer as myMusics , myMusicsSaga } from './myMusics'
 import { searchReducer as search , searchSaga } from './search'
 import { musicPlayerReducer as musicPlayer , musicPlayerSaga } from './musicPlayer'
+import { modalReducer as modal } from './modal'
 export const rootReducer = combineReducers({
     todaysLive,
     suggestMusics,
@@ -17,6 +18,7 @@ export const rootReducer = combineReducers({
     myMusics,
     search,
     musicPlayer,
+    modal
 })
 
 
