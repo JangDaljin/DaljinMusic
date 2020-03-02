@@ -1,6 +1,6 @@
 import React, { Component , useCallback } from 'react'
 
-import { View , Text, StyleSheet, TouchableOpacity, Image, ScrollView , Animated } from 'react-native'
+import { View , Text, StyleSheet, TouchableOpacity, Image, ScrollView , Animated, ToastAndroid } from 'react-native'
 import { List , Map} from 'immutable'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import BottomMenuController from '../BottomMenuController'
@@ -38,7 +38,11 @@ class Top100View extends Component {
     componentDidUpdate(prevProps , prevState) {
         if(prevProps !== this.props) {
             if(!prevProps.isLoading && this.props.isLoading) {
-                this.setState({checkList : this.state.checkList.map((value , index) => { value = false; return value } )})
+                this.setState({
+                    checkList : this.state.checkList.map((value , index) => { value = false; return value } ),
+                    checkCounter : 0,
+                    bottomMenuShow : false,
+                })
             }
         }
     }
@@ -115,7 +119,27 @@ class Top100View extends Component {
     }
 
     onAddItemInMyMusics = () => {
-        this.props.ModalActions.modalMyMusicsShow()
+        const selectedMusicIds = this.props.musics
+        .filter(
+            (value , index) => (
+                this.state.checkList.get(index)
+            )
+        )
+        .map(
+            value => (
+                value.get('_id')
+            )
+        ).toJS()
+
+        if(selectedMusicIds.length <= 0) {
+            //
+        }
+
+        else {
+            this.props.ModalActions.modalMyMusicsShow({
+                selectedMusicIds : selectedMusicIds
+            })
+        }
     }
 
 

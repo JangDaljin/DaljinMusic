@@ -17,7 +17,7 @@ export default class ModalPlaylist extends Component {
                         {
                             this.props.playlist.map(
                                 (value , index) => (
-                                    <View key={index} style={styles.listItem}>
+                                    <View key={`${value}${index}`} style={styles.listItem}>
                                         <TouchableOpacity style={styles.checkedButton} onPress={ () => { this.props.onCheckedPlaylist(index) } }>
                                         {
                                             this.props.checkedPlaylist.get(index) ?
@@ -27,7 +27,8 @@ export default class ModalPlaylist extends Component {
                                         }
                                         </TouchableOpacity>    
 
-                                        <TouchableOpacity style={[styles.listInfoButton , this.props.checkedPlaylist.get(index) ? styles.checkedBackgroundColor : null , this.props.currentMusicIndex === index ? styles.playingMusicBorder : null]} onPress={ () => { this.props.onPlay(index) }}>
+                                        <TouchableOpacity style={[styles.listInfoButton , this.props.checkedPlaylist.get(index) ? styles.checkedBackgroundColor : null , this.props.currentMusicIndex === index ? styles.playingMusicBorder : null]} 
+                                        onPress={ () => { this.props.onPlay(index) }}>
                                         {
                                             this.props.currentMusicIndex === index &&
                                             <Icon style={[styles.playingIcon , styles.playingMusicTextColor]} size={15} name={'play'} solid />

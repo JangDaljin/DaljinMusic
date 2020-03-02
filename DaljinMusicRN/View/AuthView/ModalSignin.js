@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as AuthActions from '../../Reducers/auth'
+import * as ModalActions from '../../Reducers/modal'
 
 import LoadingView from '../LoadingView'
 
@@ -59,7 +60,7 @@ class ModalSignin  extends Component {
                                 </View>
 
                                 <View style={styles.dataWrap}>
-                                    <TextInput ref={ref => { this.userPw = ref }} style={styles.plainTextInput} placeholder="비밀번호" placeholderTextColor={'#303030'} onChangeText={this.onChangeUserPw} returnKeyType='done' onSubmitEditing={this.onPressLoginButton} />
+                                    <TextInput ref={ref => { this.userPw = ref }} secureTextEntry={true} style={styles.plainTextInput} placeholder="비밀번호" placeholderTextColor={'#303030'} onChangeText={this.onChangeUserPw} returnKeyType='done' onSubmitEditing={this.onPressLoginButton} />
                                 </View>
                             </View>
 
@@ -82,7 +83,7 @@ class ModalSignin  extends Component {
                                     비밀번호 찾기
                                 </Text>    
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.bottomButton}>
+                            <TouchableOpacity style={styles.bottomButton} onPress={() => { this.props.ModalActions.modalSignupShow() }}>
                                 <Icon style={{color : '#EEE' , marginRight : 3}} size={16} name={'user-plus'} solid />
                                 <Text style={{color : '#EEE'}}>
                                     회원가입
@@ -161,6 +162,7 @@ export default connect(
         isLoading : state.auth.isLoading,
     }),
     (dispatch) => ({
-        AuthActions : bindActionCreators(AuthActions , dispatch)
+        AuthActions : bindActionCreators(AuthActions , dispatch),
+        ModalActions : bindActionCreators(ModalActions , dispatch),
     })
 )(ModalSignin)

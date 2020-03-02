@@ -3,6 +3,7 @@ import React , { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { View, Text , TouchableOpacity , StyleSheet , Modal , ScrollView, TextInput, Alert} from 'react-native'
 
+
 export default class CustomDrawerComponent extends Component {
 
 
@@ -23,6 +24,7 @@ export default class CustomDrawerComponent extends Component {
 
     onReturnKeyPressAddList = (e) => {
         //e.nativeEvent.text
+        this.props.onMakeList({userId : this.props.userId , listName : e.nativeEvent.text})
     }
     //*******************************************************************/
 
@@ -34,7 +36,9 @@ export default class CustomDrawerComponent extends Component {
             '정말 삭제하시겠습니까?',
             [
                 {text : '아니오' , style : 'cancel'},
-                {text : '네' , onPress : () => {  }},
+                {text : '네' , onPress : () => { 
+                    this.props.onDeleteList({userId : this.props.userId , listId : this.props.list.getIn([this.state.focusedScreenIndex , '_id']) })
+                }},
             ],
             {
                 cancelable : true,
@@ -51,6 +55,12 @@ export default class CustomDrawerComponent extends Component {
 
     onReturnKeyPressChangeListName = (e) => {
         //e.nativeEvent.text
+        this.props.onRenameList({
+            userId : this.props.userId,
+            listId : this.props.list.getIn([this.state.focusedScreenIndex , '_id']),
+            name : e.nativeEvent.text,
+        })
+
     }
     //*******************************************************************/
     //==========================모달 버튼 끝=============================//

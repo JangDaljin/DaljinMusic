@@ -102,14 +102,14 @@ class MusicPlayerMini extends Component {
             musicTimer : setInterval(
                 () => {
                     if(this.state.isPlaying) {
-                        this.setState({currentPlayData : this.state.currentPlayData.update('duration' , value => value + 0.1) })
+                        this.setState({currentPlayData : this.state.currentPlayData.update('duration' , value => value + 1) })
                     }
                     if(this.state.currentPlayData.get('duration') >= this.props.playlist.getIn([this.state.currentPlayData.get('musicIndex') , 'duration'])) {
                         //음악 종료
                         this.onNext()
                     }
                 },
-                100
+                1000
             )
         })
     }
@@ -162,6 +162,7 @@ class MusicPlayerMini extends Component {
         let currentMusicIndex = this.state.currentPlayData.get('musicIndex')
 
         const removeIndexList = []
+
         this.props.playlist
         .filter((value , index) => (
             this.state.checkedPlaylist.get(index)
@@ -185,22 +186,29 @@ class MusicPlayerMini extends Component {
         })
     }
 
-    onPlay = () => {
+    onPlay = (index) => {
         if(this.props.playlist.size === 0) {
             return
         }
 
+        
         let playMusicIndex = this.state.currentPlayData.get('musicIndex')
 
-        //처음 음악 재생
-        if(playMusicIndex < 0) {
-            //랜덤 재생
-            if(this.state.playOptions.get('isRandom')) {
-                playMusicIndex = this.RandomIndexMaker()
-            }
-            //일반재생
-            else {
-                playMusicIndex = 0
+        if(typeof index === 'number') {
+            playMusicIndex = index
+        }
+
+        else {
+            //처음 음악 재생
+            if(playMusicIndex < 0) {
+                //랜덤 재생
+                if(this.state.playOptions.get('isRandom')) {
+                    playMusicIndex = this.RandomIndexMaker()
+                }
+                //일반재생
+                else {
+                    playMusicIndex = 0
+                }
             }
         }
 

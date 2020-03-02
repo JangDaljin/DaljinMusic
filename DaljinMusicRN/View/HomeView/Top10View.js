@@ -6,6 +6,11 @@ import { View , Text , StyleSheet , TouchableOpacity , TouchableHighlight, Toast
 
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
+import * as MusicPlayerActions from '../../Reducers/musicPlayer'
+import * as ModalActions from '../../Reducers/modal'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 class Top10View extends Component {
 
     state = {
@@ -26,6 +31,66 @@ class Top10View extends Component {
         this.setState({ checkedMusics : this.state.checkedMusics.update(index , value => !value) })
     }
 
+
+    onPlay = () => {
+        this.props.MusicPlayerActions.remotePlay({
+            userId : this.props.userId,
+            addList : this.props.musics
+                .filter(
+                    (value , index) => (
+                        this.state.checkedMusics.get(index)
+                    )
+                )
+                .map(
+                    value => (
+                        value.get('_id')
+                    )
+                )
+                .toJS()
+        })
+    }
+
+    onAddItemInPlaylist = () => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({
+            userId : this.props.userId,
+            addList : this.props.musics
+                .filter(
+                    (value , index) => (
+                        this.state.checkedMusics.get(index)
+                    )
+                )
+                .map(
+                    value => (
+                        value.get('_id')
+                    )
+                )
+                .toJS()
+        })
+    }
+
+    onAddItemInMyMusics = () => {
+        const selectedMusicIds = this.props.musics
+        .filter(
+            (value , index) => (
+                this.state.checkedMusics.get(index)
+            )
+        )
+        .map(
+            value => (
+                value.get('_id')
+            )
+        ).toJS()
+
+        if(selectedMusicIds.length <= 0) {
+            //
+        }
+
+        else {
+            this.props.ModalActions.modalMyMusicsShow({
+                selectedMusicIds : selectedMusicIds
+            })
+        }
+    }
 
     
     render () {
@@ -58,7 +123,7 @@ class Top10View extends Component {
                     }
                 </View>
                 <View style={styles.controller}>
-                    <TouchableOpacity style={styles.controllerButton}>
+                    <TouchableOpacity style={styles.controllerButton} onPress={() => { this.onPlay() }}>
                         <View style={styles.controllerButtonBody}>
                             
                         <Icon style={styles.controllerButtonTextColor} name={'play'} size={16} solid />
@@ -66,14 +131,14 @@ class Top10View extends Component {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.controllerButton , { marginLeft : 2 , marginRight : 2 }]}>
+                    <TouchableOpacity style={[styles.controllerButton , { marginLeft : 2 , marginRight : 2 }]} onPress={ () => { this.onAddItemInPlaylist() }}>
                         <View style={styles.controllerButtonBody}>
                             <Icon style={styles.controllerButtonTextColor} name={'plus'} size={16} solid />
                             <Text style={[styles.controllerButtonTextColor , styles.controllerButtonText]}>추가</Text>
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.controllerButton}>
+                    <TouchableOpacity style={styles.controllerButton} onPress={ () => { this.onAddItemInMyMusics() }}>
                         <View style={styles.controllerButtonBody}>
                             <Icon style={styles.controllerButtonTextColor} name={'list'} size={16} solid />
                             <Text style={[styles.controllerButtonTextColor , styles.controllerButtonText]}>내 리스트에 추가</Text>
@@ -161,4 +226,12 @@ const styles = StyleSheet.create({
 
 })
 
-export default Top10View
+export default connect(
+    (state) => ({
+        userId : state.auth.userId,
+    }),
+    (dispatch) => ({
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch),
+        ModalActions : bindActionCreators(ModalActions , dispatch),
+    })
+)(Top10View)

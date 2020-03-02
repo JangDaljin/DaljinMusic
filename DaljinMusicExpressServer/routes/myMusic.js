@@ -228,7 +228,13 @@ router.post('/addmusicinlist' , doAsync(async (req , res , next) => {
             }
             await user.save()
             
-            response.myMusicLists = user.myMusicLists
+
+            const afterSaveUser = await UserModel.findOne({'userId' : userId}).populate({
+                path : 'myMusicLists.list',
+                populate : 'singer album'
+            }).lean()
+
+            response.myMusicLists = afterSaveUser.myMusicLists
             console.log("음악 추가 성공")
             response.message = "음악 추가 성공"
         }

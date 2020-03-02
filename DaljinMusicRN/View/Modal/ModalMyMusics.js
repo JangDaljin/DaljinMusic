@@ -7,6 +7,42 @@ import LoadingView from '../LoadingView'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 class ModalMyMusics extends Component {
 
+    componentDidUpdate(prevProps , prevState) {
+        if(prevProps !== this.props) {
+            if(!prevProps.isLoading && this.props.isLoading) {
+                this.setState({
+                    checkedIndex : -1,
+                })
+            }
+        }
+    }
+
+    state = {
+        checkedIndex :  -1,
+    }
+
+    onCheck = (index) => {
+        let checkedIndex
+        if(this.state.checkedIndex === index) {
+            checkedIndex = -1
+        }
+        else {
+            checkedIndex = index
+        }
+        this.setState({
+            checkedIndex : checkedIndex
+        })
+    }
+
+    onClickAdd = () => {
+        this.props.MyMusicsActions.fetchAddMusicInList({
+            userId : this.props.userId,
+            listId : this.props.myMusicLists.getIn([this.state.checkedIndex , '_id']),
+            musicId : this.props.selectedMusicIds.toJS()
+        })
+        this.props.onClose()
+    }
+
     render () {
         return (
             <Modal
@@ -25,16 +61,16 @@ class ModalMyMusics extends Component {
                                     <ScrollView style={styles.list} onPress={() => { this.prevent }}>
                                         {this.props.myMusicLists.map(
                                             (value , index) => (
-                                                <TouchableOpacity key={index} style={styles.listItem}>
-                                                    <Text>{value.get('listName')}</Text>
+                                                <TouchableOpacity key={index} style={[styles.listItem , this.state.checkedIndex ===  index ?  styles.checkedListItem : styles.uncheckedListItem]} onPress={() => { this.onCheck(index) }}>
+                                                    <Text style={{fontFamily : 'jua'}}>{value.get('listName')}</Text>
                                                 </TouchableOpacity>
                                             )
                                         )
                                         }
                                     </ScrollView>
                                     <View style={styles.buttonsWrap}>
-                                        <TouchableOpacity style={styles.button}>
-                                            <Text>등록</Text>
+                                        <TouchableOpacity style={styles.button} onPress={() => { this.onClickAdd() }}>
+                                            <Text style={{fontFamily : 'jua'}}>등록</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </React.Fragment>
@@ -90,10 +126,17 @@ const styles = StyleSheet.create({
     listItem : {
         height : 50,
         backgroundColor : '#EEE',
-        borderBottomColor : '#303030',
-        borderBottomWidth : 5,
         justifyContent : 'center',
+        borderWidth : 4,
         paddingHorizontal : 10,
+    },
+
+    uncheckedListItem : {
+        borderColor : '#303030',
+    },
+
+    checkedListItem : {
+        borderColor : '#069'
     },
 
     nothingItem : {

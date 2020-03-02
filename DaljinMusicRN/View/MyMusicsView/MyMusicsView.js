@@ -7,7 +7,11 @@ import BottomMenuController from '../BottomMenuController'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
 import * as MyMusicsActions from '../../Reducers/myMusics'
+import * as MusicPlayerActions from '../../Reducers/musicPlayer'
+import * as ModalActions from '../../Reducers/modal'
+
 import { useRoute } from '@react-navigation/native'
 import LoadingView from '../LoadingView'
 import { url } from '../commonFunctions'
@@ -44,6 +48,7 @@ class MyMusicsView extends Component {
     }
 
     onPressContent = (index) => {
+
         let checkCounter = this.state.checkCounter
         let bottomMenuShow = this.state.bottomMenuShow
 
@@ -85,23 +90,102 @@ class MyMusicsView extends Component {
         this.props.navigation.openDrawer()
     }
 
+    onPressAllSelect = () => {
+        let checkCounter = 0
+        let bottomMenuShow = false
+        const checkedList = this.state.checkedList.map(value => {
+            if(!value) {
+                checkCounter++
+            }
+            return !value
+        })
+        if(checkCounter !== 0) {
+            bottomMenuShow = true
+        }
+        this.setState({
+            checkedList : checkedList,
+            checkCounter : checkCounter,
+            bottomMenuShow : bottomMenuShow,
+        })
+        this.popupMenuHide()
+    }
+
+
+    onPlay = () => {
+        this.props.MusicPlayerActions.remotePlay({
+            userId : this.props.userId,
+            addList : this.props.myMusicLists.getIn([this.state.myMusicListIndex  , 'list'])
+                .filter(
+                    (value , index) => (
+                        this.state.checkedList.get(index)
+                    )
+                )
+                .map(
+                    value => (
+                        value.get('_id')
+                    )
+                )
+                .toJS()
+        })
+    }
+
+    onAddItemInPlaylist = () => {
+        this.props.MusicPlayerActions.fetchPlayListItemAdd({
+            userId : this.props.userId,
+            addList : this.props.myMusicLists.getIn([this.state.myMusicListIndex  , 'list'])
+                .filter(
+                    (value , index) => (
+                        this.state.checkedList.get(index)
+                    )
+                )
+                .map(
+                    value => (
+                        value.get('_id')
+                    )
+                )
+                .toJS()
+        })
+    }
+
+    onDeleteMusicInList = () => {
+        const indexes = this.state.checkedList.map(
+            (value , index) => {
+                if(value) {
+                    return index
+                } 
+                else {
+                    return null
+                }
+            }
+        ).filter(value => value !== null)
+        
+        this.props.MyMusicsActions.fetchRemoveMusicInList({
+            userId : this.props.userId,
+            listId : this.props.myMusicLists.getIn([this.state.myMusicListIndex , '_id']),
+            indexes : indexes.toJS()
+        })
+        
+    }
+
+
+
     bottomMenuControllerButtons = ({}) => (
         <View style={{flex : 1, flexDirection : 'row'}}>
-            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton} onPress={() => { this.onPlay() }}>
                 <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'play'} size={16} solid />
                     <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생</Text>
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton} onPress={() => { this.onAddItemInPlaylist() }}>
                 <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'plus'} size={16} solid />
                     <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>재생목록에 추가</Text>
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton}>
+            <TouchableOpacity style={bottomMenuControllerStyles.bottomControllerButton} onPress={() => { this.onDeleteMusicInList() }}>
                 <View style={bottomMenuControllerStyles.bottomControllerButtonBody}>
                     <Icon style={bottomMenuControllerStyles.bottomControllerButtonIcon} name={'trash'} size={16} solid />
                     <Text style={bottomMenuControllerStyles.bottomControllerButtonFont}>삭제</Text>
@@ -112,15 +196,17 @@ class MyMusicsView extends Component {
 
     modalMenus = ({}) => (
         <TouchableOpacity style={styles.modalContainer} onPress={() => {this.popupMenuHide()}}>
-            <TouchableOpacity style={styles.modalItem}>
+            <TouchableOpacity style={styles.modalItem} onPress={() => { this.onPressAllSelect() }}>
                 <Icon style={[styles.modalItemFont , styles.modalItemIcon]}size={16} name={'check'} solid />
                 <Text style={[styles.modalItemFont , styles.modalItemText]}>전체선택</Text>
             </TouchableOpacity>
 
+            {/*
             <TouchableOpacity style={styles.modalItem}>
                 <Icon style={[styles.modalItemFont , styles.modalItemIcon]} size={16} name={'trash'} solid />
                 <Text style={[styles.modalItemFont , styles.modalItemText]}>삭제</Text>
             </TouchableOpacity>
+            */}
 
         </TouchableOpacity>
     )
@@ -154,7 +240,7 @@ class MyMusicsView extends Component {
                     {
                         this.props.myMusicLists.getIn([this.state.myMusicListIndex  , 'list']).map(
                             (value , index) => (
-                                    <TouchableOpacity key={index} style={[styles.content , this.state.checkedList.get(index) ? styles.checkedContent : null]} onPress={() => { this.onPressContent(index) }}>
+                                    <TouchableOpacity key={`${value}${index}`} style={[styles.content , this.state.checkedList.get(index) ? styles.checkedContent : null]} onPress={() => { this.onPressContent(index) }}>
                                         <View style={styles.imageWrap}>
                                             <Image style={styles.image} source={{uri : url(value.getIn(['album' , 'albumImgUri']))}} />
                                         </View>
@@ -344,11 +430,14 @@ const bottomMenuControllerStyles = {
 
 export default connect(
     (state) => ({
+        userId : state.auth.userId,
         isLoading : state.myMusics.isLoading,
         myMusicLists : state.myMusics.myMusicLists,
     }),
     (dispatch) => ({
-        MyMusicsActions : bindActionCreators(MyMusicsActions , dispatch)
+        MyMusicsActions : bindActionCreators(MyMusicsActions , dispatch),
+        MusicPlayerActions : bindActionCreators(MusicPlayerActions , dispatch),
+        ModalActions : bindActionCreators(ModalActions , dispatch),
     })
 )(function(props) {
     const route = useRoute()

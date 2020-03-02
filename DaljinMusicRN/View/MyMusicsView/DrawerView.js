@@ -52,7 +52,13 @@ class DrawerView extends Component {
                 }}
                 drawerContent={props => (
                     <DrawerContentScrollView {...props}>
-                        <CustomDrawerComponent list={this.props.myMusicLists} {...props} />
+                        <CustomDrawerComponent 
+                        list={this.props.myMusicLists} 
+                        onMakeList={this.props.MyMusicsActions.fetchMakeMusicList} 
+                        onDeleteList={this.props.MyMusicsActions.fetchDeleteMusicList}
+                        onRenameList={this.props.MyMusicsActions.fetchRenameMusicList}
+                        userId={this.props.userId}
+                        {...props} />
                     </DrawerContentScrollView>
                 )}
                 >
