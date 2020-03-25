@@ -24,5 +24,6 @@ FrontEnd - React / BackEnd - Node / Mobile - ReactNative
 > ▶ "~/admin" Password : 1234
 
 <b>WEBCLIENT - Screen Shot</b>
-<img src="https://user-images.githubusercontent.com/45301224/77556258-9c848a80-6efb-11ea-85c4-895665f943fd.png" width="50%"></img>
+<br />
+<img src="https://user-images.githubusercontent.com/45301224/77556258-9c848a80-6efb-11ea-85c4-895665f943fd.png" width="80%"></img>
 
