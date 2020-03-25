@@ -21,3 +21,4 @@ FrontEnd - React / BackEnd - Node / Mobile - ReactNative
 
 > How to start : write npm start / yarn start in your prompt
 
+> ▶ "~/admin" Password : 1234
